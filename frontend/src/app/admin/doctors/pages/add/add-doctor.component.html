@@ -1,0 +1,74 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Add New Doctor</h2>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <div class="card shadow-sm p-4">
+    <div class="row g-3">
+
+      <!-- User ID -->
+      <div class="col-12 col-sm-6 col-md-2">
+        <label class="form-label">User ID</label>
+        <input type="number" class="form-control" placeholder="Enter User ID" [(ngModel)]="newDoctor.user_id">
+      </div>
+
+      <!-- Specialty ID -->
+      <div class="col-12 col-sm-6 col-md-2">
+        <label class="form-label">Specialty ID</label>
+        <input type="number" class="form-control" placeholder="Enter Specialty ID" [(ngModel)]="newDoctor.specialty_id">
+      </div>
+
+      <!-- Bio -->
+      <div class="col-12 col-md-3">
+        <label class="form-label">Bio</label>
+        <input type="text" class="form-control" placeholder="Doctor Bio" [(ngModel)]="newDoctor.bio">
+      </div>
+
+      <!-- Education -->
+      <div class="col-12 col-md-3">
+        <label class="form-label">Education</label>
+        <input type="text" class="form-control" placeholder="Doctor Education" [(ngModel)]="newDoctor.education">
+      </div>
+
+      <!-- Years Experience -->
+      <div class="col-6 col-md-1">
+        <label class="form-label">Years Exp</label>
+        <input type="number" class="form-control" placeholder="Years Exp" [(ngModel)]="newDoctor.years_experience">
+      </div>
+
+      <!-- Gender -->
+      <div class="col-6 col-md-1">
+        <label class="form-label">Gender</label>
+        <select class="form-select" [(ngModel)]="newDoctor.gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <!-- Consultation Fee -->
+      <div class="col-6 col-md-2">
+        <label class="form-label">Consultation Fee</label>
+        <input type="number" class="form-control" placeholder="Fee" [(ngModel)]="newDoctor.consultation_fee">
+      </div>
+
+      <!-- Available for Online -->
+      <div class="col-6 col-md-2">
+        <label class="form-label">Available Online</label>
+        <select class="form-select" [(ngModel)]="newDoctor.available_for_online">
+          <option [value]="true">Yes</option>
+          <option [value]="false">No</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 text-center">
+      <button class="btn btn-success me-2" (click)="addDoctor()" [disabled]="loading">
+        {{ loading ? 'Adding...' : 'Add Doctor' }}
+      </button>
+      <a routerLink="/admin/doctors" class="btn btn-secondary">Cancel</a>
+    </div>
+  </div>
+</div>

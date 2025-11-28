@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Medical Specialties</h2>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <!-- Add New Specialty -->
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Enter specialty name" [(ngModel)]="newSpecialtyName">
+    <button class="btn btn-primary" (click)="addSpecialty()">Add</button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Specialties Table -->
+  <table class="table table-bordered table-hover" *ngIf="!loading && specialties.length">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Created At</th>
+        <th>Updated At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of specialties">
+        <td>{{ s.id }}</td>
+        <td *ngIf="editSpecialty?.id !== s.id">{{ s.name }}</td>
+        <td *ngIf="editSpecialty?.id === s.id">
+          <input type="text" class="form-control" [(ngModel)]="editSpecialty!.name">
+        </td>
+        <td>{{ s.created_at | date:'short' }}</td>
+        <td>{{ s.updated_at | date:'short' }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-1" *ngIf="editSpecialty?.id !== s.id" (click)="startEdit(s)">Edit</button>
+          <button class="btn btn-sm btn-success me-1" *ngIf="editSpecialty?.id === s.id" (click)="saveEdit()">Save</button>
+          <button class="btn btn-sm btn-secondary me-1" *ngIf="editSpecialty?.id === s.id" (click)="cancelEdit()">Cancel</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteSpecialty(s.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && specialties.length === 0" class="alert alert-info text-center">
+    No specialties found.
+  </div>
+</div>

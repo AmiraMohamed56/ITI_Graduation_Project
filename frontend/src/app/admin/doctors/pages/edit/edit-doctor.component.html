@@ -1,0 +1,56 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Edit Doctor</h2>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Edit Form Card -->
+  <div *ngIf="doctor" class="card shadow-sm p-4">
+    <div class="row g-3">
+
+      <div class="col-md-2">
+        <input type="number" class="form-control" placeholder="User ID" [(ngModel)]="doctor.user_id">
+      </div>
+
+      <div class="col-md-2">
+        <input type="number" class="form-control" placeholder="Specialty ID" [(ngModel)]="doctor.specialty_id">
+      </div>
+
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Bio" [(ngModel)]="doctor.bio">
+      </div>
+
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Education" [(ngModel)]="doctor.education">
+      </div>
+
+      <div class="col-md-1">
+        <input type="number" class="form-control" placeholder="Years Exp" [(ngModel)]="doctor.years_experience">
+      </div>
+
+      <div class="col-md-1">
+        <select class="form-select" [(ngModel)]="doctor.gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+
+
+      <!-- Buttons -->
+      <div class="col-12 mt-3 text-end">
+        <button class="btn btn-success" (click)="updateDoctor()" [disabled]="loading">
+          {{ loading ? 'Saving...' : 'Save Changes' }}
+        </button>
+        <a routerLink="/admin/doctors" class="btn btn-secondary ms-2">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>

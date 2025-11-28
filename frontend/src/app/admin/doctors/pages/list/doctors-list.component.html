@@ -1,0 +1,85 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Doctors List</h2>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <!-- Add Doctor Button -->
+  <div class="mb-3 text-end">
+    <a [routerLink]="['/add']" class="btn btn-primary">Add New Doctor</a>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Doctors Table -->
+  <table class="table table-bordered table-hover" *ngIf="!loading && doctors.length">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>User ID</th>
+        <th>Specialty ID</th>
+        <th>Bio</th>
+        <th>Education</th>
+        <th>Experience</th>
+        <th>Consultation Fee</th>
+        <th>Rating</th>
+        <th>Online Availability</th>
+        <th>Gender</th>
+        <th>Clinic Address</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let doctor of doctors">
+        <td>{{ doctor.id }}</td>
+        <td>{{ doctor.user_id }}</td>
+        <td>{{ doctor.specialty_id }}</td>
+        <td>{{ doctor.bio }}</td>
+        <td>{{ doctor.education }}</td>
+        <td>{{ doctor.years_experience }} years</td>
+
+        <td>
+          {{ doctor.consultation_fee ? doctor.consultation_fee + ' EGP' : 'N/A' }}
+        </td>
+
+        <td>
+          <span class="badge bg-success" *ngIf="doctor.rating">{{ doctor.rating }} ★</span>
+          <span class="text-muted" *ngIf="!doctor.rating">No rating</span>
+        </td>
+
+        <td>
+          <span class="badge bg-primary" *ngIf="doctor.available_for_online">Available</span>
+          <span class="badge bg-secondary" *ngIf="!doctor.available_for_online">Offline</span>
+        </td>
+
+        <td>{{ doctor.gender | titlecase }}</td>
+        
+
+        <td>
+          <a [routerLink]="['/admin/doctors/details', doctor.id]"
+             class="btn btn-sm btn-info me-1">Details</a>
+
+          <a [routerLink]="['/admin/doctors/edit', doctor.id]"
+             class="btn btn-sm btn-warning me-1">Edit</a>
+
+          <button class="btn btn-sm btn-danger"
+                  (click)="deleteDoctor(doctor.id!)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && doctors.length === 0" class="alert alert-info text-center">
+    No doctors found
+  </div>
+</div>
