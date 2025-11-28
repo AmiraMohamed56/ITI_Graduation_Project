@@ -1,17 +1,26 @@
 import { Routes } from '@angular/router';
-import { CategoriesComponent } from './categories/categories.component';
-// import { DoctorsComponent } from './admin/doctors/doctors.component';
-import { DoctorsListComponent } from './admin/doctors/pages/list/doctors-list.component';
-import { AddDoctorComponent } from './admin/doctors/pages/add/add-doctor.component';
-import { EditDoctorComponent } from './admin/doctors/pages/edit/edit-doctor.component';
-import { DoctorDetailsComponent } from './admin/doctors/pages/details/doctor-details.component';
-
+import { Login } from './auth/login/login';
+import { Register } from './auth/register/register';
+import { PatientProfile } from './patient-profile/patient-profile';
+import { PaymentFormComponent } from './payments/payment-form/payment-form';
+import { LandingComponent } from './LandinPage/landing/landing.component';
+import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profile.component';
 
 export const routes: Routes = [
-  { path: '', component: DoctorsListComponent },
-  { path: 'add', component: AddDoctorComponent },
-  { path: 'edit/:id', component: EditDoctorComponent },
-  { path: 'details/:id', component: DoctorDetailsComponent },
-  { path: 'categories', component: CategoriesComponent }
+    {path: '', redirectTo: 'login', pathMatch: 'full' },
+    {path: 'login', component: Login },
+    {path: 'register', component: Register },
+    {path: 'patient-profile', component: PatientProfile },
+    {path: 'payment-form', component:PaymentFormComponent},
+
+  // Landing Page Route
+    { path: 'Landing', component: LandingComponent },
+{
+  path: 'landing/doctors/:id',
+  loadComponent: () => import('./LandinPage/doctors-by-categor/doctors-by-category.component').then(m => m.DoctorsByCategoryComponent)
+},
+{ path: 'doctor/:id', component: DoctorProfileComponent }
+
+
 
 ];

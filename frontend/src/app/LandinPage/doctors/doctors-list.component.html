@@ -1,0 +1,38 @@
+<div class="container mx-auto mt-10">
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="text-red-600 text-center mb-4">{{ error }}</div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="flex justify-center my-6">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-b-4"></div>
+  </div>
+
+  <!-- Doctors Grid -->
+  <div *ngIf="!loading && doctors.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div *ngFor="let doctor of doctors" class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-2xl transform hover:-translate-y-1 transition duration-300 flex flex-col items-center text-center">
+
+      <!-- Doctor Image or Initial -->
+      <div class="w-32 h-32 mb-4 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 text-3xl font-bold overflow-hidden">
+        <img *ngIf="doctor.user_id" src="https://via.placeholder.com/150" alt="Doctor Image" class="w-full h-full object-cover rounded-full" />
+        <span *ngIf="!doctor.user_id">{{ doctor.bio.charAt(0) }}</span>
+      </div>
+
+      <h3 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2">{{ doctor.bio }}</h3>
+      <p class="text-sm text-gray-500 mb-1"><strong>Education:</strong> {{ doctor.education }}</p>
+      <p class="text-sm text-gray-500 mb-1"><strong>Experience:</strong> {{ doctor.years_experience }} years</p>
+      <p class="text-sm text-gray-500 mb-1"><strong>Gender:</strong> {{ doctor.gender }}</p>
+      <p class="text-sm text-gray-500 mb-1"><strong>Fee:</strong> ${{ doctor.consultation_fee }}</p>
+      <p class="text-sm text-gray-500 mb-1"><strong>Rating:</strong> {{ doctor.rating }} ⭐</p>
+      <p class="text-sm text-gray-500 mb-3"><strong>Online:</strong> {{ doctor.available_for_online ? 'Yes' : 'No' }}</p>
+
+      <a [routerLink]="['/doctor', doctor.id]" class="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition">View Profile</a>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && doctors.length === 0" class="text-center text-gray-500 py-8">
+    No doctors found.
+  </div>
+</div>
