@@ -169,6 +169,28 @@
                 <button id="theme-toggle" class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
                     <span class="material-icons">dark_mode</span>
                 </button>
+                {{-- <button id="notification-btn" class="relative p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <span class="material-icons">notifications</span>
+                    <!-- Notification badge -->
+                    <span id="notification-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">0</span>
+                </button> --}}
+
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="relative p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <span class="material-icons">notifications</span>
+                        <span id="notification-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">3</span>
+                    </button>
+
+                    <div x-show="open" @click.outside="open = false"
+                         class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-50">
+                        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">New user registered</li>
+                            <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">New appointment booked</li>
+                            <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">Server updated</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <img src="{{ asset('storage/profile_pics/' . Auth::user()->profile_pic) }}" class="w-10 h-10 object-cover rounded-full" alt="Admin">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

@@ -20,7 +20,7 @@ Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
-})->middleware(['auth'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
