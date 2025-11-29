@@ -1,0 +1,41 @@
+<div class="container mx-auto px-4 py-8">
+
+  <div *ngIf="loading" class="text-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-b-4 mx-auto"></div>
+    <p class="text-gray-500 mt-2">Loading doctor details...</p>
+  </div>
+
+  <div *ngIf="error" class="text-red-600 text-center mb-4">{{ error }}</div>
+
+  <div *ngIf="doctor && !loading" class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 flex flex-col md:flex-row items-center md:items-start gap-8">
+
+    <!-- Doctor Image or Initial -->
+    <div class="w-40 h-40 flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center"
+         [ngClass]="doctor.user_id ? '' : 'bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white text-5xl font-bold'">
+      <img *ngIf="doctor.user_id" src="https://via.placeholder.com/150" alt="Doctor Image" class="w-full h-full object-cover">
+      <span *ngIf="!doctor.user_id">{{ doctor.bio.charAt(0) }}</span>
+    </div>
+
+    <!-- Doctor Info -->
+    <div class="flex-1">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ doctor.bio }}</h1>
+      <p class="text-gray-500 mb-4">{{ doctor.education }} | {{ doctor.years_experience }} years experience</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <p><strong>Gender:</strong> {{ doctor.gender }}</p>
+        <p><strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}</p>
+        <p><strong>Rating:</strong> {{ doctor.rating }} ⭐</p>
+        <p><strong>Online:</strong> {{ doctor.available_for_online ? 'Yes' : 'No' }}</p>
+      </div>
+
+      <p class="text-gray-600 mb-6"><strong>Bio:</strong> {{ doctor.bio }}</p>
+
+      <button (click)="bookAppointment()"
+              class="bg-blue-500 text-white py-2 px-6 rounded-xl hover:bg-blue-600 transition">
+        Book Appointment
+      </button>
+    </div>
+
+  </div>
+
+</div>
