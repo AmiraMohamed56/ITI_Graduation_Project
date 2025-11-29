@@ -1,0 +1,39 @@
+<div class="booking-form">
+  <h2>Book an Appointment</h2>
+  <label for="speciality">Speciality</label>
+  <select [(ngModel)]="selectedSpecialityId" (change)="onSpecialityChange()" name="speciality" id="speciality">
+    <option value="">Select Spaciality</option>
+    <option *ngFor="let s of specialities" [value]="s.id">{{ s.name }}</option>
+  </select>
+
+  <label for="doctor">Doctor</label>
+  <select [(ngModel)]="selectedDoctorId" (change)="onDoctorChange()" name="doctor" id="doctor">
+    <option value="">Select Docotor</option>
+    <option *ngFor="let d of doctors" [value]="d.id">{{ d.name }}</option>
+  </select>
+
+  <!-- <label for="date">Date</label>
+  <input type="date" [(ngModel)]="selectedDate" (change)="onDateChange()"> -->
+  <label for="date">Dates</label>
+  <select [(ngModel)]="selectedDate" (change)="onDateChange()" name="date" id="date"></select>
+
+  <!-- <label for="time">Time</label>
+  <select [(ngModel)]="selectedTime" name="time" id="time">
+    <option *ngFor="let t of availableTimes" [value]="t">{{ t }}</option>
+  </select> -->
+  <select [(ngModel)]="selectedScheduleId">
+    <option *ngFor="let t of availableTimes" [value]="t.scheduleId">{{t.time}}</option>
+  </select>
+
+  <label for="type">Type</label>
+  <select [(ngModel)]="appointmentType" name="type" id="type">
+    <option value="consultation">Consultation</option>
+    <option value="follow_up">Follow Up</option>
+    <option value="telemedicine">Telemedicine</option>
+  </select>
+
+  <label for="notes">Notes</label>
+  <textarea [(ngModel)]="notes" name="notes" id="notes"></textarea>
+
+  <button (click)="submitBooking()">Book Appointment</button>
+</div>

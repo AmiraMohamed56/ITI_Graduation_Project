@@ -22,7 +22,7 @@ class AdminSettingsController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
-            'phone' => 'required|string|max:5',
+            'phone' => 'required|string|max:20',
             'password' => 'nullable|confirmed|min:6',
             'profile_pic' => 'nullable|image',
         ]);

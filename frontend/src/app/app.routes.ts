@@ -16,6 +16,7 @@ import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { Contact } from './features/contact/contact';
 import { AboutUs } from './features/about-us/about-us';
 import { Services } from './features/services/services';
+import { BookingComponent } from './booking/booking.component';
 
 export const routes: Routes = [
   // Auth routes (login/register)
@@ -47,7 +48,7 @@ export const routes: Routes = [
     children: [
       { path: 'patient-profile', component: PatientProfile },
       { path: 'payment-form', component: PaymentFormComponent },
-      // add other authenticated pages here
+      { path: 'book-appointment', component: BookingComponent },
     ],
   },
 
