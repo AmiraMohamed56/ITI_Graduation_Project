@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Admin\DoctorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,5 +28,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// =========================================== doctor start =====================================================
+Route::get('/doctors', [DoctorController::class, 'index'])->name('admin.doctors.index');
+Route::get('/doctors/create', [DoctorController::class, 'create'])->name('admin.doctors.create');
+Route::post('/doctors', [DoctorController::class, 'store'])->name('admin.doctors.store');
+Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('admin.doctors.show');
+Route::get('/doctors/{doctor}/edit', [DoctorController::class, 'edit'])->name('admin.doctors.edit');
+Route::put('/doctors/{doctor}', [DoctorController::class, 'update'])->name('admin.doctors.update');
+Route::delete('/doctors/{doctor}', [DoctorController::class, 'destroy'])->name('admin.doctors.destroy');
+Route::get('/doctors/trashed', [DoctorController::class, 'trashed'])->name('admin.doctors.trashed');
+Route::post('/doctors/{id}/restore', [DoctorController::class, 'restore'])->name('admin.doctors.restore');
+// ===========================================  doctor end  =====================================================
+
+
+
 
 require __DIR__.'/auth.php';
