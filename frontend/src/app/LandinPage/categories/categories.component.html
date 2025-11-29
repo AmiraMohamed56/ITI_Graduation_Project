@@ -1,0 +1,27 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  <div *ngFor="let c of categories"
+       class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl cursor-pointer transition transform hover:-translate-y-1 duration-300 flex flex-col items-center justify-center text-center"
+       (click)="onCategoryClick(c.id)">
+
+    <!-- أيقونة صغيرة لكل كتيجورى -->
+    <div class="bg-blue-100 text-blue-600 rounded-full p-4 mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-3.866 0-7 3.134-7 7h14c0-3.866-3.134-7-7-7z" />
+      </svg>
+    </div>
+
+    <h3 class="text-lg sm:text-xl font-semibold text-gray-800">{{ c.name }}</h3>
+    <p class="text-gray-500 text-sm mt-1">Medical Specialty</p>
+  </div>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="text-center py-8">
+  <div class="spinner-border animate-spin inline-block w-10 h-10 border-4 rounded-full border-blue-500 border-t-transparent"></div>
+  <p class="text-gray-500 mt-2">Loading categories...</p>
+</div>
+
+<!-- Empty state -->
+<div *ngIf="!loading && categories.length === 0" class="text-center text-gray-500 py-8">
+  No medical specialties available.
+</div>
