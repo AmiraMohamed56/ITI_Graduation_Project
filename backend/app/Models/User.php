@@ -70,4 +70,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class, 'patient_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'patient_id');
+    }
+
 }
