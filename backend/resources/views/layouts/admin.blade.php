@@ -89,7 +89,7 @@
                     </div>
                 </div>
 
-                <img src="{{ asset('storage/profile_pics/' . Auth::user()->profile_pic) }}" class="w-10 h-10 object-cover rounded-full" alt="Admin">
+                {{-- <img src="{{ asset('storage/profile_pics/' . Auth::user()->profile_pic) }}" class="w-10 h-10 object-cover rounded-full" alt="Admin"> --}}
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
