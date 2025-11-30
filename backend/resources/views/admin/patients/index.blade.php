@@ -130,7 +130,7 @@
                 <button @click="deleteModal=false"
                     class="px-4 py-2 bg-gray-300 dark:bg-gray-700 dark:text-gray-100 rounded hover:bg-gray-400 dark:hover:bg-gray-600">Cancel</button>
 
-                <form :action="`/admin/patients/${deleteId}`" method="POST">
+                <form :action="`patients/${deleteId}`" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">

@@ -45,6 +45,7 @@ Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name
 
 Route::get('/patients', [PatientController::class, 'index'])->name('admin.patients.index');
 Route::get('/patients/create', [PatientController::class, 'create'])->name('admin.patients.create');
+Route::get('/patients/trashed', [PatientController::class, 'trashed'])->name('admin.patients.trashed');
 Route::post('/patients', [PatientController::class, 'store'])->name('admin.patients.store');
 Route::get('/patients/{patient}', [PatientController::class, 'show'])->name('admin.patients.show');
 Route::get('/patients/{patient}/edit', [PatientController::class, 'edit'])->name('admin.patients.edit');
@@ -52,7 +53,6 @@ Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('a
 Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('admin.patients.destroy');
 
 // Trashed / Soft Delete
-Route::get('/patients/trashed', [PatientController::class, 'trashed'])->name('admin.patients.trashed');
 Route::post('/patients/{id}/restore', [PatientController::class, 'restore'])->name('admin.patients.restore');
 
 
