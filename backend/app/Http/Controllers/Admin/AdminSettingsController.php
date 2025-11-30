@@ -16,7 +16,6 @@ class AdminSettingsController extends Controller
     }
 
     public function update (Request $request) {
-        // dd($request->all());
         $admin = Auth::user();
 
         $request->validate([
@@ -26,6 +25,7 @@ class AdminSettingsController extends Controller
             'password' => 'nullable|confirmed|min:6',
             'profile_pic' => 'nullable|image',
         ]);
+        // dd($request->all());
 
         $admin->name = $request->name;
         $admin->email = $request->email;
