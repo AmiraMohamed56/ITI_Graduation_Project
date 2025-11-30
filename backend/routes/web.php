@@ -6,6 +6,7 @@ use App\Http\Controllers\Doctor\AppointmentController;
 use App\Http\Controllers\Doctor\DoctorDashboardController;
 
 use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Admin\DoctorController;
 
 Route::get('/', function () {
     return view('Doctors_Dashboard.schedule.show');
@@ -36,4 +37,33 @@ Route::get('admin/settings', [AdminSettingsController::class, 'edit'])->name('ad
 Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
 
 // ===========================================  admin end  =====================================================
+
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// =========================================== doctor start =====================================================
+Route::get('/doctors', [DoctorController::class, 'index'])->name('admin.doctors.index');
+Route::get('/doctors/create', [DoctorController::class, 'create'])->name('admin.doctors.create');
+Route::get('/doctors/trashed', [DoctorController::class, 'trashed'])->name('admin.doctors.trashed');
+Route::post('/doctors', [DoctorController::class, 'store'])->name('admin.doctors.store');
+Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('admin.doctors.show');
+Route::get('/doctors/{doctor}/edit', [DoctorController::class, 'edit'])->name('admin.doctors.edit');
+Route::put('/doctors/{doctor}', [DoctorController::class, 'update'])->name('admin.doctors.update');
+Route::delete('/doctors/{doctor}', [DoctorController::class, 'destroy'])->name('admin.doctors.destroy');
+Route::post('/doctors/{id}/restore', [DoctorController::class, 'restore'])->name('admin.doctors.restore');
+// ===========================================  doctor end  =====================================================
+
+
+
+
+
 require __DIR__.'/auth.php';
