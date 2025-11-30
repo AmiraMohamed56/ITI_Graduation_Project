@@ -25,6 +25,8 @@ import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profi
 //   loadComponent: () => import('./LandinPage/doctors-by-categor/doctors-by-category.component').then(m => m.DoctorsByCategoryComponent)
 // },
 // { path: 'doctor/:id', component: DoctorProfileComponent }
+import { BookingComponent } from './booking/booking.component';
+
 export const routes: Routes = [
   // Auth routes (login/register)
   {
@@ -62,7 +64,7 @@ export const routes: Routes = [
     children: [
       { path: 'patient-profile', component: PatientProfile },
       { path: 'payment-form', component: PaymentFormComponent },
-      // add other authenticated pages here
+      { path: 'book-appointment', component: BookingComponent },
     ],
   },
 

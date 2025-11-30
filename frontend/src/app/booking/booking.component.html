@@ -1,0 +1,162 @@
+<div class="min-h-screen bg-gray-50 flex items-start justify-center py-8 px-4">
+  <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- ===================== LEFT: FORM ===================== -->
+    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow border-gray-100">
+      <h2 class="text-2xl text-center font-semibold mb-6 text-gray-800">Book an Appointment</h2>
+
+      <div class="space-y-4">
+        <!-- Speciality -->
+        <div>
+          <label class="block mb-1 font-medium">Speciality</label>
+          <select
+            [(ngModel)]="selectedSpecialityId"
+            (change)="onSpecialityChange()"
+            class="w-full border-1 border-gray-400 rounded-lg px-3 py-2"
+          >
+            <option value="">Select Speciality</option>
+            <option *ngFor="let s of specialities" [value]="s.id">{{ s.name }}</option>
+          </select>
+        </div>
+
+        <!-- Doctor -->
+        <div>
+          <label class="block mb-1 font-medium">Doctor</label>
+          <select
+            [(ngModel)]="selectedDoctorId"
+            (change)="onDoctorChange()"
+            class="w-full border-1 border-gray-400 rounded-lg px-3 py-2"
+          >
+            <option value="">Select Doctor</option>
+            <option *ngFor="let d of doctors" [value]="d.id">{{ d.user.name }}</option>
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div>
+          <label class="block mb-1 font-medium">Date</label>
+          <select
+            [(ngModel)]="selectedDate"
+            (change)="onDateChange()"
+            class="w-full border-1 border-gray-400 rounded-lg px-3 py-2"
+          >
+            <option value="">Select Date</option>
+            <option *ngFor="let date of availableDates" [value]="date">{{ date }}</option>
+          </select>
+        </div>
+
+        <!-- Time -->
+        <div>
+          <label class="block mb-1 font-medium">Time</label>
+          <select
+            [(ngModel)]="selectedTime"
+            (change)="onTimeSelect($event)"
+            class="w-full border-1 border-gray-400 rounded-lg px-3 py-2"
+          >
+            <option value="">Select Time</option>
+            <option *ngFor="let t of availableTimes" [value]="t.time" [disabled]="t.booked">{{ t.booked ? t.time + '(Booked)' : t.time }}</option>
+          </select>
+        </div>
+
+        <!-- Appointment Type -->
+        <div>
+          <label class="block mb-1 font-medium">Type</label>
+          <select
+            [(ngModel)]="appointmentType"
+            class="w-full border-1 border-gray-400 rounded-lg px-3 py-2"
+          >
+            <option value="consultation">Consultation</option>
+            <option value="follow_up">Follow Up</option>
+            <option value="telemedicine">Telemedicine</option>
+          </select>
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block mb-1 font-medium">Notes</label>
+          <textarea
+            [(ngModel)]="notes"
+            rows="4"
+            class="w-full border-1 border-gray-400 border rounded-lg px-3 py-2"
+          ></textarea>
+        </div>
+
+        <button
+          (click)="submitBooking()"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Book Appointment
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================== RIGHT: SIDEBAR ===================== -->
+    <!-- <div class="bg-white p-5 rounded-xl shadow-sm border h-fit sticky top-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">Appointment Summary</h3>
+
+      <div class="space-y-3 text-gray-700">
+
+        <div>
+          <p class="font-medium text-gray-600">Doctor:</p>
+          <p class="text-lg font-semibold text-gray-900">
+            {{ selectedDoctor.name }}
+          </p>
+        </div>
+
+        <div>
+          <p class="font-medium text-gray-600">Speciality:</p>
+          <p class="text-gray-900">
+            {{ selectedSpecialityName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="font-medium text-gray-600">Date:</p>
+          <p class="text-gray-900">{{ selectedDate || '—' }}</p>
+        </div>
+
+        <div>
+          <p class="font-medium text-gray-600">Time:</p>
+          <p class="text-gray-900">{{ selectedTime || '—' }}</p>
+        </div>
+
+        <div>
+          <p class="font-medium text-gray-600">Type:</p>
+          <p class="text-gray-900 capitalize">{{ appointmentType }}</p>
+        </div>
+
+        <div>
+          <p class="font-medium text-gray-600">Notes:</p>
+          <p class="text-gray-900 whitespace-pre-line">{{ notes || '—' }}</p>
+        </div>
+
+      </div>
+    </div> -->
+
+    <aside class="bg-white p-5 rounded-xl shadow border-gray-100 h-fit sticky top-10">
+      <h3 class="text-xl text-center font-bold mb-4">Appointment Summary</h3>
+
+      <div
+        *ngIf="selectedDoctor; else noDoctor"
+        class="flex flex-col items-center bg-gray-50 p-4 rounded-lg shadow"
+      >
+        <img
+          [src]="selectedDoctorProfilePic"
+          class="w-24 h-24 rounded-full border-2 border-gray-400 mb-3 object-cover"
+        />
+        <h4 class="text-lg font-semibold">{{ selectedDoctorName }}</h4>
+        <p class="text-gray-600">{{ selectedDoctorSpeciality }}</p>
+
+        <hr class="my-3 w-full border-gray-300" />
+
+        <p><strong>Date:</strong> {{ selectedDate || '—' }}</p>
+        <p><strong>Time:</strong> {{ selectedTime || '—' }}</p>
+        <p><strong>Type:</strong> {{ appointmentType | titlecase }}</p>
+        <p><strong>Notes:</strong>{{ notes || '—' }}</p>
+      </div>
+
+      <ng-template #noDoctor>
+        <p class="text-gray-500 text-center">Select a doctor to see the profile</p>
+      </ng-template>
+    </aside>
+  </div>
+</div>
