@@ -1,74 +1,81 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-form',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './payment-form.html',
-  styleUrl: './payment-form.css',
+  styleUrls: ['./payment-form.css'],
 })
-export class PaymentFormComponent {
+export class PaymentComponent implements OnInit {
   paymentForm!: FormGroup;
   isCard = false;
   showModal = false;
-  minExpiryDate!: string; // for input[min]
+  minExpiryDate: string;
+  currentDate = new Date();
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router) {
+    // Set minimum expiry date to current month
+    const today = new Date();
+    this.minExpiryDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  }
 
   ngOnInit(): void {
     this.paymentForm = this.fb.group({
-      invoice_id: ['123', Validators.required],
-      appointment_id: ['10', Validators.required],
-      patient_id: ['5', Validators.required],
-      amount: ['200', Validators.required],
+      invoice_id: ['INV-2024-001234', Validators.required],
+      amount: ['150.00', Validators.required],
       method: ['cash', Validators.required],
       card_holder: [''],
       card_number: [''],
       expiry_date: [''],
       cvv: ['']
     });
-
-    // Set minimum expiry date to current month
-    const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // months 01-12
-    const year = today.getFullYear();
-    this.minExpiryDate = `${year}-${month}`;
   }
 
-  onMethodChange() {
-    this.isCard = this.paymentForm.value.method === 'card';
+  onMethodChange(): void {
+    const method = this.paymentForm.get('method')?.value;
+    this.isCard = method === 'card';
+
+    // Update validators based on payment method
     if (this.isCard) {
       this.paymentForm.get('card_holder')?.setValidators([Validators.required]);
-      this.paymentForm.get('card_number')?.setValidators([Validators.required]);
+      this.paymentForm.get('card_number')?.setValidators([Validators.required, Validators.minLength(16)]);
       this.paymentForm.get('expiry_date')?.setValidators([Validators.required]);
-      this.paymentForm.get('cvv')?.setValidators([Validators.required]);
+      this.paymentForm.get('cvv')?.setValidators([Validators.required, Validators.minLength(3)]);
     } else {
       this.paymentForm.get('card_holder')?.clearValidators();
       this.paymentForm.get('card_number')?.clearValidators();
       this.paymentForm.get('expiry_date')?.clearValidators();
       this.paymentForm.get('cvv')?.clearValidators();
     }
+
+    // Update validation status
     this.paymentForm.get('card_holder')?.updateValueAndValidity();
     this.paymentForm.get('card_number')?.updateValueAndValidity();
     this.paymentForm.get('expiry_date')?.updateValueAndValidity();
     this.paymentForm.get('cvv')?.updateValueAndValidity();
   }
 
-  confirmPayment() {
+  confirmPayment(): void {
     if (this.paymentForm.valid) {
-      // Here would typically send the payment data to the backend
-      this.showModal = true;   
+      this.showModal = true;
+      console.log('Payment Data:', this.paymentForm.value);
     } else {
-      console.log("Form invalid:", this.paymentForm.value);
+      console.log('Form is invalid');
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.paymentForm.controls).forEach(key => {
+        this.paymentForm.get(key)?.markAsTouched();
+      });
     }
   }
 
-  closeModal() {
+  closeModal(): void {
     this.showModal = false;
-    this.router.navigate(['/patient-profile']); 
+    this.router.navigate(['/']);
+    // Optionally reset form or navigate away
+    // this.paymentForm.reset();
   }
 }
-
