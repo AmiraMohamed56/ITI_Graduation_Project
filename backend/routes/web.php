@@ -8,6 +8,9 @@ use App\Http\Controllers\Doctor\DoctorDashboardController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\DoctorController;
 
+
+use App\Http\Controllers\Admin\PatientController;
+
 Route::get('/', function () {
     return view('Doctors_Dashboard.schedule.show');
 });
@@ -35,6 +38,18 @@ Route::middleware('auth')->group(function () {
 // });
 Route::get('admin/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
 Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
+
+
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::resource('patients', PatientController::class);
+});
+
+Route::get('/admin/patients/{patient}', [PatientController::class, 'show'])->name('admin.patients.show');
+
+
 
 // ===========================================  admin end  =====================================================
 
