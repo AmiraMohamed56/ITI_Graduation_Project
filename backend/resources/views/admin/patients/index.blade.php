@@ -64,9 +64,24 @@
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">#{{ $patient->id }}</td>
 
                         <td class="px-6 py-4 flex items-center gap-3">
-                            <img src="{{ asset('images/patient.jpg') }}" alt="Patient"
+                            @php
+                            $image = $patient->user->profile_pic ?? null;
+                            $name = $patient->user->name;
+                            $initial = strtoupper(substr($name,0,1));
+                            @endphp
+
+                            @if ($image)
+                            <img src="{{ asset('uploads/profile/' . $image) }}"
                                 class="w-10 h-10 rounded-full object-cover">
-                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $patient->user->name }}</span>
+                            @else
+                            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
+                                {{ $initial }}
+                            </div>
+                            @endif
+
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {{ $patient->user->name }}
+                            </span>
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">{{ $patient->user->email }}</td>
