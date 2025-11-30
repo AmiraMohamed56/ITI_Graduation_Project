@@ -84,7 +84,7 @@
                 <button @click="restoreModal=false"
                     class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded hover:bg-gray-400 dark:hover:bg-gray-500">Cancel</button>
 
-                <form x-ref="restoreForm" :action="`{{ route('admin.patients.restore', '') }}/${actionId}`" method="POST">
+                <form x-ref="restoreForm" :action="`/patients/${actionId}/restore`" method="POST">
                     @csrf
                     <button type="submit" class="px-4 py-2 bg-green-600 dark:bg-green-700 text-white rounded hover:bg-green-700 dark:hover:bg-green-600">
                         Yes, Restore
