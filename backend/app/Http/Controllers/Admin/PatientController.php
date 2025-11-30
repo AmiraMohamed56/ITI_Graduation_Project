@@ -11,9 +11,22 @@ use Illuminate\Support\Facades\Hash;
 class PatientController extends Controller
 {
     // ================== INDEX ==================
-    public function index()
+    public function index(Request $request)
     {
-        $patients = Patient::with('user')->paginate(10);
+        $query = Patient::with('user');
+
+        // Sorting
+        if ($request->sort == 'name') {
+            $query->join('users', 'patients.user_id', '=', 'users.id')
+                ->orderBy('users.name');
+        } elseif ($request->sort == 'oldest') {
+            $query->oldest();
+        } else {
+            $query->latest();
+        }
+
+        $patients = $query->paginate(10);
+
         return view('admin.patients.index', compact('patients'));
     }
 
@@ -35,7 +48,6 @@ class PatientController extends Controller
             'chronic_diseases' => 'nullable'
         ]);
 
-        // 1) أنشئ user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -45,7 +57,6 @@ class PatientController extends Controller
             'status' => 'active'
         ]);
 
-        // 2) أنشئ patient مرتبط باليوزر
         Patient::create([
             'user_id' => $user->id,
             'blood_type' => $request->blood_type,
@@ -53,6 +64,14 @@ class PatientController extends Controller
         ]);
 
         return redirect()->route('admin.patients.index')->with('success', 'Patient created successfully.');
+    }
+
+    // ================== SHOW ==================
+    public function show(Patient $patient)
+    {
+        $appointments = $patient->appointments()->with('doctor')->get();
+
+        return view('admin.patients.show', compact('patient', 'appointments'));
     }
 
     // ================== EDIT ==================
@@ -101,10 +120,18 @@ class PatientController extends Controller
         return redirect()->back()->with('success', 'Patient deleted successfully.');
     }
 
-    public function show(Patient $patient)
+    // ================== Soft Deleted / Trash ==================
+    public function trashed()
     {
-        $appointments = $patient->appointments()->with('doctor')->get();
+        $patients = Patient::onlyTrashed()->with('user')->paginate(10);
+        return view('admin.patients.trashed', compact('patients'));
+    }
 
-        return view('admin.patients.show', compact('patient', 'appointments'));
+    public function restore($id)
+    {
+        $patient = Patient::onlyTrashed()->findOrFail($id);
+        $patient->restore();
+
+        return redirect()->route('admin.patients.index')->with('success', 'Patient restored successfully.');
     }
 }
