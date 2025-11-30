@@ -1,46 +1,132 @@
-{{-- @extends('admin.layouts.app') --}}
-{{-- @section('content') --}}
-<div class="p-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">Doctor Details</h1>
-    <a href="{{ route('admin.doctors.index') }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl text-gray-700 text-sm font-medium">← Back</a>
-  </div>
+@extends('layouts.admin')
+@section('title', 'Doctor Details')
+@section('content')
 
-  <div class="bg-white shadow-lg rounded-2xl p-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div x-data="{ bio: false, education: false, experience: false, rating: false, created_at: false }" class="flex gap-6 p-6 bg-gray-50 min-h-screen">
 
-      <!-- Left Section -->
-      <div class="space-y-4">
-        <h2 class="text-2xl font-bold text-gray-800">{{ $doctor->user->name }}</h2>
-        <p class="text-gray-600"><strong>Email:</strong> {{ $doctor->user->email }}</p>
-        <p class="text-gray-600"><strong>Specialty:</strong> {{ $doctor->specialty->name }}</p>
-        <p class="text-gray-600"><strong>Gender:</strong> {{ ucfirst($doctor->gender) }}</p>
-        <p class="text-gray-600"><strong>Experience:</strong> {{ $doctor->years_experience }} years</p>
-        <p class="text-gray-600"><strong>Consultation Fee:</strong> ${{ number_format($doctor->consultation_fee, 2) }}</p>
-        <p class="text-gray-600"><strong>Online Consultations:</strong> {{ $doctor->available_for_online ? 'Available' : 'Not Available' }}</p>
-      </div>
+    <!-- Left Sidebar -->
+    <div class="w-96 bg-white rounded-lg shadow-sm p-6">
+        <!-- Doctor Header -->
+        <div class="text-center mb-6">
+            <img 
+                src="{{ $doctor->user->profile_pic ?? 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop' }}" 
+                alt="{{ $doctor->user->name }}" 
+                class="w-24 h-24 rounded-lg mx-auto mb-3 object-cover"
+            />
+            <p class="text-blue-600 text-sm font-medium mb-1">#DR{{ $doctor->id }}</p>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ $doctor->user->name }}</h1>
+            <p class="text-gray-600 text-sm">{{ $doctor->specialty->name }}</p>
+        </div>
 
-      <!-- Right Section -->
-      <div class="space-y-4">
-        <p class="text-gray-700"><strong>Bio:</strong></p>
-        <p class="text-gray-600">{{ $doctor->bio ?? 'No bio provided.' }}</p>
-
-        <p class="text-gray-700"><strong>Education:</strong></p>
-        <p class="text-gray-600">{{ $doctor->education ?? 'No education info.' }}</p>
-      </div>
+        <!-- Basic Information -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Basic Information</h2>
+            <div class="space-y-3">
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Specialty</span>
+                    <span class="text-gray-900 font-medium">{{ $doctor->specialty->name }}</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Gender</span>
+                    <span class="text-gray-900 font-medium">{{ ucfirst($doctor->gender) }}</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Experience</span>
+                    <span class="text-gray-900 font-medium">{{ $doctor->years_experience }} years</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Email</span>
+                    <span class="text-gray-900 font-medium">{{ $doctor->user->email }}</span>
+                </div>
+                @if($doctor->user->phone)
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Phone</span>
+                    <span class="text-gray-900 font-medium">{{ $doctor->user->phone }}</span>
+                </div>
+                @endif
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Consultation Fee</span>
+                    <span class="text-gray-900 font-medium">{{ number_format($doctor->consultation_fee, 2) }} EGP</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-600">Online Consultation</span>
+                    <span class="text-gray-900 font-medium">{{ $doctor->available_for_online ? 'Available' : 'Not Available' }}</span>
+                </div>
+            </div>
+        </div>
 
     </div>
 
-    <!-- Action Buttons -->
-    <div class="mt-8 flex space-x-4">
-      <a href="{{ route('admin.doctors.edit', $doctor->id) }}" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md">Edit</a>
+    <!-- Right Content -->
+    <div class="flex-1 space-y-4">
 
-      <form method="POST" action="{{ route('admin.doctors.destroy', $doctor->id) }}" onsubmit="return confirm('Are you sure you want to delete this doctor?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-md">Delete</button>
-      </form>
+        <!-- About Section -->
+        <div class="bg-white rounded-lg shadow-sm">
+            <button @click="bio = !bio" class="w-full flex justify-between items-center p-6 text-left">
+                <h2 class="text-xl font-bold text-gray-900">Bio</h2>
+                <span x-show="bio">▲</span>
+                <span x-show="!bio">▼</span>
+            </button>
+            <div x-show="bio" class="px-6 pb-6" x-cloak>
+                <p class="text-gray-600">{{ $doctor->bio ?? 'No bio provided.' }}</p>
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="bg-white rounded-lg shadow-sm">
+            <button @click="education = !education" class="w-full flex justify-between items-center p-6 text-left">
+                <h2 class="text-xl font-bold text-gray-900">Education</h2>
+                <span x-show="education">▲</span>
+                <span x-show="!education">▼</span>
+            </button>
+            <div x-show="education" class="px-6 pb-6" x-cloak>
+                <p class="text-gray-600">{{ $doctor->education ?? 'No education info.' }}</p>
+            </div>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="bg-white rounded-lg shadow-sm">
+            <button @click="experience = !experience" class="w-full flex justify-between items-center p-6 text-left">
+                <h2 class="text-xl font-bold text-gray-900">Experience</h2>
+                <span x-show="experience">▲</span>
+                <span x-show="!experience">▼</span>
+            </button>
+            <div x-show="experience" class="px-6 pb-6" x-cloak>
+                <p class="text-gray-600">{{ $doctor->years_experience }} years of experience</p>
+            </div>
+        </div>
+
+        <!-- Rating Section -->
+        <div class="bg-white rounded-lg shadow-sm">
+            <button @click="rating = !rating" class="w-full flex justify-between items-center p-6 text-left">
+                <h2 class="text-xl font-bold text-gray-900">Rating</h2>
+                <span x-show="rating">▲</span>
+                <span x-show="!rating">▼</span>
+            </button>
+            <div x-show="rating" class="px-6 pb-6" x-cloak>
+                <p class="text-gray-600">{{ $doctor->rating ?? 'No rating info.' }}</p>
+            </div>
+        </div>
+
+        <!-- Created At Section -->
+        <div class="bg-white rounded-lg shadow-sm">
+            <button @click="created_at = !created_at" class="w-full flex justify-between items-center p-6 text-left">
+                <h2 class="text-xl font-bold text-gray-900">Created At</h2>
+                <span x-show="created_at">▲</span>
+                <span x-show="!created_at">▼</span>
+            </button>
+            <div x-show="created_at" class="px-6 pb-6" x-cloak>
+                <p class="text-gray-600">{{ $doctor->created_at ?? 'No created at info.' }}</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+                <a href="{{ route('admin.doctors.index') }}"
+                   class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm font-medium">
+                   ← Back to Doctors
+                </a>
+            </div>
     </div>
-  </div>
 </div>
-{{-- @endsection --}}
+
+@endsection

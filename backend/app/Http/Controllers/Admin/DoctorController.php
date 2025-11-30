@@ -3,22 +3,39 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDoctorRequest;
-use App\Http\Requests\UpdateDoctorRequest;
+use App\Http\Requests\Admin\Doctors\StoreDoctorRequest;
+use App\Http\Requests\Admin\Doctors\UpdateDoctorRequest;
 use App\Models\Doctor;
 use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DoctorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $doctors = Doctor::with(['user', 'specialty'])->paginate(10);
+        $sort = $request->get('sort', 'newest');
+        $query = Doctor::with(['user', 'specialty'])
+            ->select('doctors.*')
+            ->join('users', 'doctors.user_id', '=', 'users.id');
+        switch ($sort) {
+            case 'name':
+                $query->orderBy('users.name', 'asc');
+                break;
+            case 'oldest':
+                $query->orderBy('doctors.created_at', 'asc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('doctors.created_at', 'desc');
+        }
+        $doctors = $query->paginate(5)->withQueryString();
+
         return view('admin.doctors.index', compact('doctors'));
     }
 
@@ -36,19 +53,30 @@ class DoctorController extends Controller
      */
     public function store(StoreDoctorRequest $request)
     {
+        DB::transaction(function ()  use ($request) {
+            
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'role' => 'doctor',
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password),
         ]);
 
-        Doctor::create(array_merge(
-            $request->only([
-                'specialty_id', 'bio', 'education', 'years_experience',
-                'gender', 'consultation_fee', 'available_for_online'
-            ]),
-            ['user_id' => $user->id]
-        ));
+        Doctor::create([
+            'user_id' => $user->id,
+            'specialty_id' => $request->specialty_id,
+            'bio' => $request->bio,
+            'education' => $request->education,
+            'years_experience' => $request->years_experience,
+            'gender' => $request->gender,
+            'consultation_fee' => $request->consultation_fee,
+            'available_for_online' => $request->has('available_for_online'),
+        ]);
+
+        });
 
         return redirect()->route('admin.doctors.index')->with('success', 'Doctor created successfully.');
     }
@@ -81,6 +109,7 @@ class DoctorController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone ?? $user->phone,
         ]);
 
         if ($request->filled('password')) {
@@ -88,8 +117,13 @@ class DoctorController extends Controller
         }
 
         $doctor->update($request->only([
-            'specialty_id', 'bio', 'education', 'years_experience',
-            'gender', 'consultation_fee', 'available_for_online'
+            'specialty_id',
+            'bio',
+            'education',
+            'years_experience',
+            'gender',
+            'consultation_fee',
+            'available_for_online'
         ]));
 
         return redirect()->route('admin.doctors.index')->with('success', 'Doctor updated successfully.');
@@ -104,9 +138,24 @@ class DoctorController extends Controller
         return redirect()->route('admin.doctors.index')->with('success', 'Doctor deleted successfully.');
     }
 
-    public function trashed()
+    public function trashed(Request $request)
     {
-        $doctors = Doctor::onlyTrashed()->with(['user', 'specialty'])->paginate(10);
+        $sort = $request->get('sort', 'newest');
+        $query = Doctor::onlyTrashed()->with(['user', 'specialty'])
+            ->select('doctors.*')
+            ->join('users', 'doctors.user_id', '=', 'users.id');
+        switch ($sort) {
+            case 'name':
+                $query->orderBy('users.name', 'asc');
+                break;
+            case 'oldest':
+                $query->orderBy('doctors.created_at', 'asc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('doctors.created_at', 'desc');
+        }
+        $doctors = $query->paginate(5)->withQueryString();
         return view('admin.doctors.trashed', compact('doctors'));
     }
 
@@ -114,6 +163,6 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::onlyTrashed()->findOrFail($id);
         $doctor->restore();
-        return redirect()->route('admin.doctors.index')->with('success', 'Doctor restored successfully.');
+        return redirect()->route('admin.doctors.trashed')->with('success', 'Doctor restored successfully.');
     }
 }

@@ -43,12 +43,12 @@ Route::middleware('auth')->group(function () {
 // =========================================== doctor start =====================================================
 Route::get('/doctors', [DoctorController::class, 'index'])->name('admin.doctors.index');
 Route::get('/doctors/create', [DoctorController::class, 'create'])->name('admin.doctors.create');
+Route::get('/doctors/trashed', [DoctorController::class, 'trashed'])->name('admin.doctors.trashed');
 Route::post('/doctors', [DoctorController::class, 'store'])->name('admin.doctors.store');
 Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('admin.doctors.show');
 Route::get('/doctors/{doctor}/edit', [DoctorController::class, 'edit'])->name('admin.doctors.edit');
 Route::put('/doctors/{doctor}', [DoctorController::class, 'update'])->name('admin.doctors.update');
 Route::delete('/doctors/{doctor}', [DoctorController::class, 'destroy'])->name('admin.doctors.destroy');
-Route::get('/doctors/trashed', [DoctorController::class, 'trashed'])->name('admin.doctors.trashed');
 Route::post('/doctors/{id}/restore', [DoctorController::class, 'restore'])->name('admin.doctors.restore');
 // ===========================================  doctor end  =====================================================
 
