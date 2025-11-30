@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Doctor\AppointmentController;
+use App\Http\Controllers\Doctor\DoctorDashboardController;
 
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\DoctorController;
@@ -9,10 +11,18 @@ use App\Http\Controllers\Admin\DoctorController;
 Route::get('/', function () {
     return view('Doctors_Dashboard.schedule.show');
 });
+Route::middleware('auth')->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
+    Route::get('appointments/{id}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    Route::put('appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::get('/docdashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
+});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
