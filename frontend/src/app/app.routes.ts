@@ -16,7 +16,15 @@ import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { Contact } from './features/contact/contact';
 import { AboutUs } from './features/about-us/about-us';
 import { Services } from './features/services/services';
-
+import { LandingComponent } from './LandinPage/landing/landing.component';
+import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profile.component';
+// Landing Page Route
+//     { path: 'Landing', component: LandingComponent },
+// {
+//   path: 'landing/doctors/:id',
+//   loadComponent: () => import('./LandinPage/doctors-by-categor/doctors-by-category.component').then(m => m.DoctorsByCategoryComponent)
+// },
+// { path: 'doctor/:id', component: DoctorProfileComponent }
 export const routes: Routes = [
   // Auth routes (login/register)
   {
@@ -26,6 +34,7 @@ export const routes: Routes = [
       { path: 'login', component: Login },
       { path: 'register', component: Register },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
+      
     ],
   },
 
@@ -37,6 +46,12 @@ export const routes: Routes = [
       { path: 'about-us', component: AboutUs },
       { path: 'contact', component: Contact },
       { path: 'services', component: Services },
+      { path: 'Landing', component: LandingComponent },
+      {path: 'landing/doctors/:id',
+      loadComponent: () => import('./LandinPage/doctors-by-categor/doctors-by-category.component').then(m => m.DoctorsByCategoryComponent)
+      },
+      { path: 'doctor/:id', component: DoctorProfileComponent }
+      
     ],
   },
 
