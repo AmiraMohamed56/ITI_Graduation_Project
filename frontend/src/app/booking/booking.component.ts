@@ -1,30 +1,32 @@
-import { Component, OnInit } from "@angular/core";
-import { AppointmentService } from "../services/appointment.service";
-import { scheduled } from "rxjs";
-
+import { Component, OnInit } from '@angular/core';
+import { AppointmentService } from '../services/appointment.service';
+import { scheduled } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ToastService } from '../services/toast.service';
 @Component({
   selector: 'app-booking',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './booking.component.html',
-  styleUrls: ['./booking.component.css']
+  styleUrls: ['./booking.component.css'],
 })
-
 export class BookingComponent implements OnInit {
-
   specialities: any[] = [];
   doctors: any[] = [];
-  availableTimes: {time: string, scheduleId: number}[] = [];
-  selectedScheduleId: number | null = null;
-  patient_id = 1;
   availableDates: any[] = [];
+  availableTimes: { time: string; scheduleId: number, booked: boolean }[] = [];
+  patient_id = 1;
 
   selectedSpecialityId: number | null = null;
   selectedDoctorId: number | null = null;
+  selectedScheduleId: number | null = null;
   selectedDate: string | '' = '';
   selectedTime: string | '' = '';
   appointmentType: string = 'consultation';
   notes: string = '';
 
-  constructor(private appointmentService: AppointmentService) {}
+  constructor(private appointmentService: AppointmentService, private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.loadSpecialities();
@@ -32,28 +34,42 @@ export class BookingComponent implements OnInit {
 
   loadSpecialities() {
     // fetch from api
-    this.specialities = [
-      {id: 1, name: 'Cardiology'},
-      {id: 2, name: 'Dermatology'},
-      {id: 3, name: 'Neurology'}
-    ];
+    // this.specialities = [
+    //   { id: 1, name: 'Cardiology' },
+    //   { id: 2, name: 'Dermatology' },
+    //   { id: 3, name: 'Neurology' },
+    // ];
+    this.appointmentService.getSpecialities().subscribe((res: any) => {
+      this.specialities = [];
+      res.forEach((s: any) => {
+        this.specialities.push(s);
+      });
+    });
   }
 
   onSpecialityChange() {
+    this.selectedSpecialityId = Number(this.selectedSpecialityId);
     this.loadDoctors();
   }
 
   loadDoctors() {
-    if(!this.selectedSpecialityId) return;
+    if (!this.selectedSpecialityId) return;
 
     this.appointmentService.getDoctors().subscribe((res: any) => {
-      this.doctors = res.filter((d: any) => d.speciality_id === this.selectedSpecialityId);
+      this.doctors = res
+        .filter((d: any) => d.specialty_id === this.selectedSpecialityId)
+        .map((d: any) => ({
+          ...d,
+          id: Number(d.id),
+          user: d.user || { name: '-', profile_pic: 'assets/default-profile.png' },
+          speciality: d.speciality || { name: this.selectedSpecialityName },
+        }));
     });
   }
 
   onDoctorChange() {
-    this.availableTimes = [];
-    if(this.selectedDoctorId) {
+    // this.availableTimes = [];
+    if (this.selectedDoctorId) {
       // this.loadAvailableTimes();
       this.loadAvailableDates();
     }
@@ -67,7 +83,6 @@ export class BookingComponent implements OnInit {
       res.forEach((d: any) => {
         this.availableDates.push(d.day_of_week);
       });
-
     });
   }
 
@@ -77,33 +92,118 @@ export class BookingComponent implements OnInit {
     }
   }
 
+  // loadAvailableTimes() {
+  //   if (!this.selectedDoctorId || !this.selectedDate) return;
+  //   // step 1: load schedule definition
+  //   this.appointmentService
+  //     .getDoctorSchedule(this.selectedDoctorId!, this.selectedDate)
+  //     .subscribe((schedules: any) => {
+  //       this.availableTimes = [];
+
+  //       if (!schedules.length) return;
+
+  //       // step 2: load booked appointments for this doctor
+  //       this.appointmentService.getAppointments(Number(this.selectedDoctorId)!, this.selectedDate!).subscribe((appointments: any[]) => {
+  //         const bookedTimes = appointments.map(a => a.schedule_time);
+
+  //         schedules.forEach((schedule: any) => {
+  //           // each schedule has start_time and appointment_duration
+  //           const start = new Date(`1970-01-01T${schedule.start_time}`);
+  //           const end = new Date(`1970-01-01T${schedule.end_time}`);
+  //           const duration = schedule.appointment_duration || 20; // 20 minutes per appointment
+  //           while (start < end) {
+  //             const timeStr = start.toTimeString().slice(0, 5);
+
+  //             // skip if booked
+  //             if (!bookedTimes.includes(timeStr)) {
+  //               this.availableTimes.push({ time: timeStr, scheduleId: schedule.id });
+  //             }
+  //             start.setMinutes(start.getMinutes() + duration);
+  //           }
+  //         });
+  //       });
+
+
+  //     });
+  // }
+
   loadAvailableTimes() {
-    this.appointmentService.getDoctorSchedule(this.selectedDoctorId!, this.selectedDate).subscribe((res: any) => {
-      this.availableTimes = [];
+    if (!this.selectedDoctorId || !this.selectedDate) return;
 
-      res.forEach((schedule: any) => {
-        // each schedule has start_time and appointment_duration
-        const start = new Date(`1970-01-01T${schedule.start_time}`);
-        const end = new Date(`1970-01-01T${schedule.end_time}`);
-        const duration = 20; // 20 minutes per appointment
-        while (start < end) {
-          const timeStr = start.toTimeString().slice(0, 5);
-          this.availableTimes.push({time: timeStr, scheduleId: schedule.id});
-          start.setMinutes(start.getMinutes() + duration);
-        }
+    this.appointmentService
+      .getDoctorSchedule(this.selectedDoctorId!, this.selectedDate)
+      .subscribe((schedules: any[]) => {
+        this.availableTimes = [];
+
+        if (!schedules.length) return;
+
+        this.appointmentService
+          .getAppointments(Number(this.selectedDoctorId), this.selectedDate)
+          .subscribe((appointments: any[]) => {
+            const bookedTimes = appointments.map(a => a.schedule_time);
+
+            schedules.forEach((schedule: any) => {
+              const start = new Date(`1970-01-01T${schedule.start_time}`);
+              const end = new Date(`1970-01-01T${schedule.end_time}`);
+              const duration = schedule.appointment_duration || 20;
+
+              while (start < end) {
+                const timeStr = start.toTimeString().slice(0, 5);
+
+                this.availableTimes.push({
+                  time: timeStr,
+                  scheduleId: schedule.id,
+                  booked: bookedTimes.includes(timeStr)
+                });
+
+                start.setMinutes(start.getMinutes() + duration);
+              }
+            });
+          });
       });
-    });
   }
 
 
-  onTimeSelect(timeSlot: any) {
-    this.selectedScheduleId = timeSlot.scheduleId;
-    this.selectedTime = timeSlot.time;
+  onTimeSelect(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    this.selectedTime = target.value;
+
+    const slot = this.availableTimes.find((t) => t.time === this.selectedTime);
+    this.selectedScheduleId = slot ? slot.scheduleId : null;
+
+    // this.selectedScheduleId = timeSlot.scheduleId;
+    // this.selectedTime = timeSlot.time;
   }
+
+  // ===================================== live preview =======================================
+  get selectedDoctor(): any | null {
+    if (!this.selectedDoctorId) return null;
+    const doc = this.doctors.find((d) => d.id === Number(this.selectedDoctorId));
+    return doc ? doc : null;
+  }
+
+  get selectedDoctorName(): string {
+    return this.selectedDoctor?.user?.name || '';
+  }
+
+  get selectedDoctorProfilePic(): string {
+    return this.selectedDoctor?.user?.profile_pic || 'assets/default-profile.png';
+  }
+
+  get selectedDoctorSpeciality(): string {
+    return this.selectedDoctor?.speciality?.name || this.selectedSpecialityName;
+  }
+
+  get selectedSpecialityName(): string {
+    if (!this.selectedSpecialityId) return '—';
+    const sp = this.specialities.find((s) => s.id == Number(this.selectedSpecialityId));
+    return sp ? sp.name : '—';
+  }
+  // ====================================== live preview =====================================
 
   submitBooking() {
-    if(!this.selectedDoctorId || !this.selectedDate || !this.selectedTime) {
-      return alert('please select doctor, date and time.');
+    if (!this.selectedDoctorId || !this.selectedDate || !this.selectedTime) {
+      return this.toastService.show('Please select doctor, date and time', 'error');
     }
 
     const data = {
@@ -113,15 +213,22 @@ export class BookingComponent implements OnInit {
       schedule_date: this.selectedDate,
       schedule_time: this.selectedTime,
       type: this.appointmentType,
-      notes: this.notes
+      notes: this.notes,
     };
 
-    this.appointmentService.bookAppointment(data).subscribe(res => {
-      alert('appointment booked successfully.');
-      // redirect to the confirmation
-    }, err => {
-      console.error(err);
-      alert('Faild to book appointment.');
-    });
+    this.appointmentService.bookAppointment(data).subscribe(
+      (res) => {
+        this.toastService.show('Appointment booked successfully', 'success');
+        // redirect to the confirmation
+
+        // remove selected time from available times (load the new data from the backend)
+        this.selectedTime = '';
+        this.loadAvailableTimes();
+      },
+      (err) => {
+        console.error(err);
+        this.toastService.show('Failed to book appointment', 'error');
+      }
+    );
   }
 }
