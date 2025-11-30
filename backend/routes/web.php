@@ -6,6 +6,8 @@ use App\Http\Controllers\Doctor\AppointmentController;
 use App\Http\Controllers\Doctor\DoctorDashboardController;
 
 use App\Http\Controllers\Admin\AdminSettingsController;
+
+
 use App\Http\Controllers\Admin\PatientController;
 
 Route::get('/', function () {
