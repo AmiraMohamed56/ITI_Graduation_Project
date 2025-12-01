@@ -1,38 +1,55 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NgIf, NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { Component, HostListener } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgIf, NgFor],
   templateUrl: './navbar.html',
+  styleUrls: ['./navbar.css']
 })
-export class Navbar {
-  showMenu = false;
+export class NavbarComponent {
   showNotifications = false;
+  showProfile = false;
+  showMobileMenu = false;
 
-  // unreadCount = 3;
-  notifications: { message: string; time: string, read: boolean }[]  = [
-    { message: 'New message from Admin', time: '2 mins ago', read: false },
-    { message: 'Your post has a new comment', time: '10 mins ago', read: false },
-    { message: 'System update scheduled', time: '1 hour ago', read: false },
-  ];
+  constructor(private router: Router) {}
 
-  get unreadCount(): number {
-    return this.notifications.filter(n=> !n.read).length;
-  }
-
-  toggleMenu() {
-    this.showMenu = !this.showMenu;
-  }
-
-  toggleNotifications() {
+  toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
+    this.showProfile = false;
+  }
 
-    // mark all notifications as read when opeing the dropdown
-    if(this.showNotifications) {
-      this.notifications = this.notifications.map(n=> ({...n, read:true}));
+  toggleProfile(): void {
+    this.showProfile = !this.showProfile;
+    this.showNotifications = false;
+  }
+
+  toggleMobileMenu(): void {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
+
+  closeMobileMenu(): void {
+    this.showMobileMenu = false;
+  }
+
+  logout(): void {
+    // Add your logout logic here
+    console.log('Logging out...');
+    this.showProfile = false;
+    this.router.navigate(['/login']);
+  }
+
+  // Close dropdowns when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    
+    // Check if click is outside notification dropdown
+    if (!target.closest('.relative')) {
+      this.showNotifications = false;
+      this.showProfile = false;
     }
   }
 }

@@ -4,6 +4,7 @@ import { scheduled } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../services/toast.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-booking',
   standalone: true,
@@ -26,7 +27,7 @@ export class BookingComponent implements OnInit {
   appointmentType: string = 'consultation';
   notes: string = '';
 
-  constructor(private appointmentService: AppointmentService, private toastService: ToastService) {}
+  constructor(private appointmentService: AppointmentService, private toastService: ToastService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadSpecialities();
@@ -230,5 +231,11 @@ export class BookingComponent implements OnInit {
         this.toastService.show('Failed to book appointment', 'error');
       }
     );
+  }
+
+
+  goToPayment() {
+    // optionally do validation or save form data here
+    this.router.navigate(['/payment-form']);
   }
 }

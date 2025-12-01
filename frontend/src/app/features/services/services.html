@@ -1,134 +1,284 @@
-<div class="min-h-screen bg-gray-50">
-        <!-- Header Section -->
-        <div class="bg-gradient-to-r from-teal-400 to-teal-500 text-white py-16">
-            <div class="container mx-auto px-4">
-                <h1 class="text-4xl md:text-5xl font-bold text-center mb-4">SERVICES</h1>
-                <div class="flex items-center justify-center space-x-3 text-sm">
-                    <a href="#" class="hover:underline">HOME</a>
-                    <span>/</span>
-                    <span>SERVICES</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - Dentino Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .float-animation { animation: float 6s ease-in-out infinite; }
+        .gradient-text {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .blob {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            animation: blob-morph 8s ease-in-out infinite;
+        }
+        @keyframes blob-morph {
+            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-32 overflow-hidden min-h-[80vh] flex items-center">
+        <!-- Decorative Blobs -->
+        <div class="absolute top-20 right-20 w-64 h-64 blob opacity-30"></div>
+        <div class="absolute bottom-20 left-20 w-48 h-48 blob opacity-20" style="animation-delay: 2s;"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-block mb-6">
+                    <span class="bg-blue-100 text-blue-600 px-6 py-3 rounded-full text-sm font-semibold">What We Offer</span>
                 </div>
+                <h1 class="text-6xl md:text-8xl font-bold text-gray-900 mb-8 leading-tight">
+                    Our <span class="gradient-text">Services</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+                    Comprehensive dental care tailored to your needs. From routine checkups to advanced treatments, we're here to keep your smile healthy and bright.
+                </p>
             </div>
         </div>
+        
+        <!-- Floating Decorations -->
+        <div class="absolute top-1/4 right-10 float-animation">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-2xl opacity-20 rotate-12"></div>
+        </div>
+        <div class="absolute bottom-1/4 left-10 float-animation" style="animation-delay: 1s;">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-20"></div>
+        </div>
+    </section>
 
-        <!-- Services Grid -->
-        <div class="container mx-auto px-4 py-20">
+    <!-- Services Grid -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
                 <!-- Service Card 1 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            <circle cx="12" cy="5" r="2" fill="currentColor" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-blue-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-blue-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-tooth text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">BEST</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">TREATMENT</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt labore dolore magna
+                    <h3 class="text-blue-600 text-xs font-bold mb-2 uppercase tracking-wider">Premium</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Dental Care</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Comprehensive dental treatments using the latest technology and techniques for optimal oral health.
                     </p>
+                    <button class="mt-6 text-blue-600 font-semibold hover:text-blue-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 2 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-red-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-red-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-ambulance text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">EMERGENCY</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">HELP</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Aliquyam erat, sed diam voluptua at vero eos et accusam et justo duo dolores rebum
+                    <h3 class="text-red-600 text-xs font-bold mb-2 uppercase tracking-wider">24/7</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Emergency Care</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Immediate assistance for dental emergencies available around the clock. We're here when you need us most.
                     </p>
+                    <button class="mt-6 text-red-600 font-semibold hover:text-red-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 3 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-indigo-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-indigo-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-user-md text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">MEDICAL</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">STAFF</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet
+                    <h3 class="text-indigo-600 text-xs font-bold mb-2 uppercase tracking-wider">Expert</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Specialists</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Board-certified dental specialists with years of experience in providing exceptional patient care.
                     </p>
+                    <button class="mt-6 text-indigo-600 font-semibold hover:text-indigo-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 4 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-purple-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-purple-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-stethoscope text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">QUALIFIED</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">DOCTORS</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Lorem ipsum dolormet consetetur sadipscing elitr'd diam nonumy eirmod invidunt
+                    <h3 class="text-purple-600 text-xs font-bold mb-2 uppercase tracking-wider">Certified</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Qualified Team</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Our experienced medical professionals are dedicated to delivering personalized, quality healthcare.
                     </p>
+                    <button class="mt-6 text-purple-600 font-semibold hover:text-purple-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 5 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-green-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-green-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-shield-alt text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">GROUND</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">ROUND</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Kielbasa shankle meatloaf pork chop tongue sausage prosciutto, pork andouille kevin
+                    <h3 class="text-green-600 text-xs font-bold mb-2 uppercase tracking-wider">Preventive</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Oral Health</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Regular checkups and preventive care to maintain healthy teeth and gums for a lifetime.
                     </p>
+                    <button class="mt-6 text-green-600 font-semibold hover:text-green-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 6 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-pink-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-pink-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-smile text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">BILTONG</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">CORNED</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Pork tongue chicken meatloaf, biltong shankle ground round rump jowl kielbasa pork
+                    <h3 class="text-pink-600 text-xs font-bold mb-2 uppercase tracking-wider">Cosmetic</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Smile Design</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Transform your smile with whitening, veneers, and other cosmetic dental procedures.
                     </p>
+                    <button class="mt-6 text-pink-600 font-semibold hover:text-pink-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 7 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-orange-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-orange-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-x-ray text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">FLANK</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">FRANKFURTER</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Consetetur adipiscing elitr, sed diam nonumy eirmod tempor invidunt labore dolore magna
+                    <h3 class="text-orange-600 text-xs font-bold mb-2 uppercase tracking-wider">Advanced</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Diagnostics</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        State-of-the-art imaging and diagnostic tools for accurate treatment planning and results.
                     </p>
+                    <button class="mt-6 text-orange-600 font-semibold hover:text-orange-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
                 <!-- Service Card 8 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 text-center group">
-                    <div class="flex justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-12 h-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                <div class="bg-gradient-to-br from-white to-teal-50 p-8 rounded-3xl shadow-lg hover-lift text-center group border border-teal-100">
+                    <div class="w-20 h-20 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl mx-auto mb-6 flex items-center justify-center transform group-hover:rotate-6 transition-transform duration-300">
+                        <i class="fas fa-child text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-gray-400 text-sm font-medium mb-1">CHUCK</h3>
-                    <h2 class="text-gray-900 text-xl font-bold mb-4">SIRLOIN</h2>
-                    <p class="text-gray-500 text-sm leading-relaxed">
-                        Aliquyam erat, sed diam voluptua at vero eos et accusam et justo duo dolores rebum
+                    <h3 class="text-teal-600 text-xs font-bold mb-2 uppercase tracking-wider">Family</h3>
+                    <h2 class="text-gray-900 text-2xl font-bold mb-4">Pediatric Care</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Gentle, compassionate dental care for children in a fun and friendly environment.
                     </p>
+                    <button class="mt-6 text-teal-600 font-semibold hover:text-teal-700 transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
 
             </div>
         </div>
-    </div>
+    </section>
 
+    <!-- Why Choose Our Services Section -->
+    <section class="py-24 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle, #3B82F6 1px, transparent 1px); background-size: 50px 50px;"></div>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-blue-600 font-semibold text-sm tracking-wider uppercase inline-block mb-4">Excellence in Care</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-6">Why Choose <span class="gradient-text">Our Services</span></h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    We combine cutting-edge technology with compassionate care to deliver exceptional dental services
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white rounded-3xl p-10 shadow-xl text-center hover-lift">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                        <i class="fas fa-award text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">30+ Years</h3>
+                    <p class="text-gray-600">
+                        Three decades of trusted dental excellence and patient satisfaction
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-10 shadow-xl text-center hover-lift">
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">50k+ Patients</h3>
+                    <p class="text-gray-600">
+                        Thousands of happy patients trust us with their dental health
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-10 shadow-xl text-center hover-lift">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                        <i class="fas fa-star text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">100% Quality</h3>
+                    <p class="text-gray-600">
+                        Committed to providing the highest standard of dental care
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-16 text-center text-white relative overflow-hidden shadow-2xl">
+                    <!-- Decorative Elements -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-32 -mt-32"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-5 rounded-full -ml-24 -mb-24"></div>
+                    
+                    <div class="relative z-10">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
+                        <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+                            Book your appointment today and experience the difference of quality dental care
+                        </p>
+                        <div class="flex flex-wrap gap-4 justify-center">
+                            <button (click)="goToBooking()" class="bg-white text-blue-600 px-10 py-5 rounded-full hover:shadow-2xl hover:scale-105 transition-all duration-300 font-semibold text-lg">
+                                <i class="fas fa-calendar-check mr-2"></i>Book Appointment
+                            </button>
+                            <button class="bg-white text-blue-600 px-10 py-5 rounded-full hover:shadow-2xl hover:scale-105 transition-all duration-300 font-semibold text-lg">
+                                <i class="fas fa-phone-alt mr-2"></i>Call Us Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

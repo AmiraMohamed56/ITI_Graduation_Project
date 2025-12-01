@@ -6,7 +6,7 @@ import { Register } from './auth/register/register';
 
 // Authenticated pages
 import { PatientProfile } from './patient-profile/patient-profile';
-import { PaymentFormComponent } from './payments/payment-form/payment-form';
+import { PaymentComponent } from './payments/payment-form/payment-form';
 
 // Layouts
 import { MainLayout } from './layouts/main-layout/main-layout';
@@ -16,45 +16,47 @@ import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { Contact } from './features/contact/contact';
 import { AboutUs } from './features/about-us/about-us';
 import { Services } from './features/services/services';
+import { LandingComponent } from './LandinPage/landing/landing.component';
+import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profile.component';
 import { BookingComponent } from './booking/booking.component';
 
 export const routes: Routes = [
   // Auth routes (login/register)
   {
-    path: '',
+    path: 'auth',
     component: AuthLayout,
     children: [
       { path: 'login', component: Login },
       { path: 'register', component: Register },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
+
     ],
   },
 
-  // Public pages (accessible without login)
+  // Public pages (accessible without login) - Default layout
   {
     path: '',
     component: MainLayout,
     children: [
+      { path: '', component: LandingComponent },
       { path: 'about-us', component: AboutUs },
       { path: 'contact', component: Contact },
       { path: 'services', component: Services },
-    ],
-  },
-
-  // Protected pages (after login)
-  {
-    path: '',
-    component: MainLayout,
-    children: [
+      { path: 'landing/doctors/:id',
+      loadComponent: () => import('./LandinPage/doctors-by-categor/doctors-by-category.component').then(m => m.DoctorsByCategoryComponent)
+      },
+      { path: 'doctor/:id', component: DoctorProfileComponent },
       { path: 'patient-profile', component: PatientProfile },
-      { path: 'payment-form', component: PaymentFormComponent },
+      { path: 'payment-form', component: PaymentComponent },
       { path: 'book-appointment', component: BookingComponent },
+
     ],
   },
-
-  // Fallback: redirect unknown routes to login
-  { path: '**', redirectTo: 'login' },
+  // Fallback: redirect unknown routes to home
+  { path: '**', redirectTo: '' },
 ];
+
+
 
 
 
