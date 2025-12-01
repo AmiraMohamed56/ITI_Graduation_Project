@@ -116,7 +116,7 @@
         const toggleIcon = document.getElementById('sidebar-toggle-icon');
         const sidebarTitle = document.getElementById('sidebar-title');
         const navTexts = document.querySelectorAll('#sidebar nav ul li a span.ml-3');
-
+        const navLinks = document.querySelectorAll('#sidebar nav ul li a');
         let open = true;
 
         toggleBtn.addEventListener('click', () => {

@@ -142,35 +142,6 @@
     </div>
 
     <!-- Dark Mode Script -->
-    <script>
-        const themeBtn = document.getElementById('theme-toggle');
-        if (themeBtn) {
-            const icon = themeBtn.querySelector('.material-icons');
-            const htmlEl = document.documentElement;
-
-            function updateIcon() {
-                if (htmlEl.classList.contains('dark')) {
-                    icon.textContent = 'light_mode';
-                } else {
-                    icon.textContent = 'dark_mode';
-                }
-            }
-
-            if (localStorage.theme === 'dark') {
-                htmlEl.classList.add('dark');
-                updateIcon();
-            } else {
-                htmlEl.classList.remove('dark');
-                updateIcon();
-            }
-
-            themeBtn.addEventListener('click', () => {
-                htmlEl.classList.toggle('dark');
-                localStorage.theme = htmlEl.classList.contains('dark') ? 'dark' : 'light';
-                updateIcon();
-            });
-        }
-    </script>
 
 </div>
 
