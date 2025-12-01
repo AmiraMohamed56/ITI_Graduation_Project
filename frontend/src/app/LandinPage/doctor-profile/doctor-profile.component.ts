@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DoctorService } from '../doctors/doctor.service';
 import { Doctor } from '../doctors/doctor.model';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,9 @@ export class DoctorProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private doctorService: DoctorService
+    private doctorService: DoctorService,
+    private router: Router
+
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,8 @@ export class DoctorProfileComponent implements OnInit {
 
   bookAppointment() {
     // هنا ممكن تعمل navigate لصفحة الحجز مع ID الدكتور
-    alert(`Booking appointment for Dr. ${this.doctor?.bio}`);
+    // alert(`Booking appointment for Dr. ${this.doctor?.bio}`);
+    this.router.navigate(['/book-appointment']);
+
   }
 }
