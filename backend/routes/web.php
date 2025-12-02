@@ -6,6 +6,7 @@ use App\Http\Controllers\Doctor\AppointmentController;
 use App\Http\Controllers\Doctor\DoctorDashboardController;
 
 use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\DoctorController;
 
 
@@ -37,12 +38,22 @@ Route::middleware('auth')->group(function () {
 // Route::get('/test-flash', function () {
 //     return redirect('/admin/settings')->with('success', 'It works!');
 // });
+
+// settings
 Route::get('admin/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
 Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
 
+// appointments
+Route::get('/admin/appointments', [AdminAppointmentController::class, 'index'])->name('admin.appointments.index');
+Route::get('/admin/appointments/create', [AdminAppointmentController::class, 'create'])->name('admin.appointments.create');
+Route::get('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'show'])->name('admin.appointments.show');
+Route::get('/admin/appointments/edit/{appointment}', [AdminAppointmentController::class, 'edit'])->name('admin.appointments.edit');
+Route::patch('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'update'])->name('admin.appointments.update');
+Route::post('/admin/appointments', [AdminAppointmentController::class, 'store'])->name('admin.appointments.store');
+Route::delete('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
 
 
-
+// patients
 Route::get('/patients', [PatientController::class, 'index'])->name('admin.patients.index');
 Route::get('/patients/create', [PatientController::class, 'create'])->name('admin.patients.create');
 Route::get('/patients/trashed', [PatientController::class, 'trashed'])->name('admin.patients.trashed');
