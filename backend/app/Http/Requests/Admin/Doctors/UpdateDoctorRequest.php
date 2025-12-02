@@ -28,7 +28,7 @@ class UpdateDoctorRequest extends FormRequest
         return [
             // From User model
             'name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users,email,'. $userId,
+            'email' => 'required|email|unique:users,email,' . $userId,
             'phone' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:8|confirmed',
 
@@ -40,13 +40,6 @@ class UpdateDoctorRequest extends FormRequest
             'gender' => 'nullable|in:male,female',
             'consultation_fee' => 'nullable|numeric|min:0',
             'available_for_online' => 'nullable|boolean',
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'name.min' => 'The name must be at least 3 characters.',
         ];
     }
 }
