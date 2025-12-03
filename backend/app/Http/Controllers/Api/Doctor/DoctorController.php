@@ -15,7 +15,7 @@ class DoctorController extends Controller
      */
     public function index(DoctorFilterRequest $request)
     {
-        $query = Doctor::with(['user', 'specialty', 'schedules']);
+        $query = Doctor::with(['user', 'specialty', 'schedules', 'reviews.patient.user:id,name']);
 
         //Search by doctor name
         if ($request->filled('name')) {
@@ -67,7 +67,7 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-        $doctor = Doctor::with(['user', 'specialty', 'schedules'])->find($id);
+        $doctor = Doctor::with(['user', 'specialty', 'schedules', 'reviews.patient.user:id,name'])->find($id);
 
     if (!$doctor) {
         return response()->json([
