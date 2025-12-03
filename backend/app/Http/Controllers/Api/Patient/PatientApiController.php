@@ -13,8 +13,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
-class ProfileControllerapi extends Controller
+class PatientApiController extends Controller
 {
+    public function index()
+    {
+        $patients = Patient::with([
+            'user',
+            'appointments.doctor.user',
+            'medicalRecords'
+        ])->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'All patients fetched successfully',
+            'data' => PatientProfileResource::collection($patients),
+        ]);
+    }
+
+
     /**
      * Show patient profile by patient id
      */
