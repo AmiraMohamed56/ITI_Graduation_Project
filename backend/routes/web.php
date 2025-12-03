@@ -1,9 +1,16 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Doctor\ProfileSettingController;
 use App\Http\Controllers\Doctor\AppointmentController;
 use App\Http\Controllers\Doctor\DoctorDashboardController;
+use App\Http\Controllers\Doctor\MedicalRecordController;
+use App\Http\Controllers\Doctor\ScheduleController;
+use Illuminate\Support\Facades\Route;
+
+
+
 
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminAppointmentController;
@@ -12,6 +19,10 @@ use App\Http\Controllers\Admin\DoctorController;
 
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
+
+// Route::get('/', function () {
+//     return view('Doctors_Dashboard.medical_records.index');
+// });
 use App\Http\Controllers\Api\Patient\PatientApiController ;
 Route::get('/', function () {
     return view('Doctors_Dashboard.schedule.show');
@@ -30,6 +41,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
+    // doctore profile setting routes
+    Route::get('/profile-settings', [ProfileSettingController::class, 'edit'])->name('profile.settings.edit');
+    Route::put('/profile-settings', [ProfileSettingController::class, 'update'])->name('profile.settings.update');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -42,6 +58,8 @@ Route::middleware('auth')->group(function () {
 // settings
 Route::get('admin/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
 Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
+// ===========================================  admin end  =====================================================
+
 
 // appointments
 Route::get('/admin/appointments', [AdminAppointmentController::class, 'index'])->name('admin.appointments.index');
@@ -99,5 +117,22 @@ Route::get('/visits', [VisitController::class, 'index'])->name('admin.visits.ind
 
 
 
+// doctor dashboard routes
+// --------------------------------------
+// medical records routes
+Route::resource('medical_records', MedicalRecordController::class);
+Route::get('/medical-files/{file}', [MedicalRecordController::class, 'downloadFile'])
+    ->name('medical_files.download');
+
+// schedule routes
+Route::resource('schedules', ScheduleController::class);
+
+// profile routes
+Route::resource('profile_setting', ProfileSettingController::class);
+
+// notification routes
+Route::resource('notifications', NotificationController::class);
+
+// ---------------------------------------------------------------------------------------------------------------
 
 require __DIR__.'/auth.php';

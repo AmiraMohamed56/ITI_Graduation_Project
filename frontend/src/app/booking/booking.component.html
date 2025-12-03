@@ -23,10 +23,10 @@
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-  
+
   <div class="py-12 px-4">
     <div class="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
+
       <!-- ===================== LEFT: FORM ===================== -->
       <div class="lg:col-span-2 bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 slide-in">
         <!-- Header -->
@@ -131,7 +131,7 @@
                   <p class="text-sm font-semibold text-gray-700">Consultation</p>
                 </div>
               </label>
-              
+
               <label class="relative cursor-pointer">
                 <input type="radio" name="type" value="follow_up" class="peer sr-only">
                 <div class="p-4 border-2 border-gray-200 rounded-xl text-center transition-all peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-blue-300">
@@ -141,7 +141,7 @@
                   <p class="text-sm font-semibold text-gray-700">Follow Up</p>
                 </div>
               </label>
-              
+
               <label class="relative cursor-pointer">
                 <input type="radio" name="type" value="telemedicine" class="peer sr-only">
                 <div class="p-4 border-2 border-gray-200 rounded-xl text-center transition-all peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-blue-300">
@@ -303,7 +303,7 @@
     // In real implementation, this would be triggered by form selection
     const doctorProfile = document.getElementById('doctor-profile');
     const noDoctor = document.getElementById('no-doctor');
-    
+
     // Show doctor profile after 2 seconds (demo)
     setTimeout(() => {
       noDoctor.classList.add('hidden');

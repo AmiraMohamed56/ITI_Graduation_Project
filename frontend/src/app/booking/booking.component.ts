@@ -42,7 +42,7 @@ export class BookingComponent implements OnInit {
     // ];
     this.appointmentService.getSpecialities().subscribe((res: any) => {
       this.specialities = [];
-      res.forEach((s: any) => {
+      (res.data).forEach((s: any) => {
         this.specialities.push(s);
       });
     });
@@ -57,7 +57,7 @@ export class BookingComponent implements OnInit {
     if (!this.selectedSpecialityId) return;
 
     this.appointmentService.getDoctors().subscribe((res: any) => {
-      this.doctors = res
+      this.doctors = (res.data)
         .filter((d: any) => d.specialty_id === this.selectedSpecialityId)
         .map((d: any) => ({
           ...d,

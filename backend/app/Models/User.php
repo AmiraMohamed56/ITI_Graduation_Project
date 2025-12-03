@@ -5,13 +5,14 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -74,6 +75,19 @@ class User extends Authenticatable
     public function appointments()
     {
         return $this->hasMany(Appointment::class, 'patient_id');
+    }
+
+
+     /**
+     * Get the full profile picture URL
+     */
+    public function getProfilePictureUrlAttribute(): string
+    {
+        if ($this->profile_pic) {
+            return asset('storage/' . $this->profile_pic);
+        }
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4F46E5&color=fff&size=200';
     }
 
 }
