@@ -1,21 +1,75 @@
-<div class="container mx-auto mt-10">
-
-  <!-- Header / Banner -->
-  <div class="bg-blue-500 text-white rounded-lg p-8 mb-10 text-center shadow-lg">
-    <h1 class="text-3xl font-bold mb-2">Welcome to Our Clinic</h1>
-    <p class="text-lg">Find the best doctors and book your appointment online easily</p>
+<!-- slider.component.html -->
+<div class="relative overflow-hidden h-[500px] md:h-[600px]">
+  <!-- Slides -->
+  <div *ngFor="let slide of slides; let i = index" 
+       class="slide absolute inset-0 transition-opacity duration-1000"
+       [class.opacity-100]="currentSlide === i"
+       [class.opacity-0]="currentSlide !== i">
+    <img
+      [src]="slide.image"
+      [alt]="slide.title"
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 flex items-center justify-center">
+      <div class="text-center text-white px-4 max-w-4xl">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">
+          {{ slide.title }}
+        </h1>
+        <p class="text-lg md:text-2xl">
+          {{ slide.subtitle }}
+        </p>
+      </div>
+    </div>
   </div>
 
+  <!-- Navigation Buttons -->
+  <button
+    (click)="prevSlide()"
+    class="absolute left-8 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-100 rounded-full p-3 transition-all shadow-lg z-10"
+    aria-label="Previous slide"
+  >
+    <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <button
+    (click)="nextSlide()"
+    class="absolute right-8 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-100 rounded-full p-3 transition-all shadow-lg z-10"
+    aria-label="Next slide"
+  >
+    <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <!-- Slide Indicators -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+    <button
+      *ngFor="let slide of slides; let i = index"
+      (click)="goToSlide(i)"
+      class="indicator w-3 h-3 rounded-full transition-all"
+      [class.bg-white]="currentSlide === i"
+      [class.bg-white/50]="currentSlide !== i"
+      [attr.aria-label]="'Go to slide ' + (i + 1)"
+    ></button>
+  </div>
+</div>
+
+<!-- Content Container -->
+<div class="container mx-auto px-4">
   <!-- Categories Section -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6 text-center">Medical Specialties</h2>
-    <app-categories></app-categories>
+  <section class="py-16">
+    <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Medical Specialties</h2>
+    <div class="bg-gray-100 rounded-lg p-8 text-center">
+      <app-categories></app-categories>
+    </div>
   </section>
 
   <!-- Doctors Section -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6 text-center">Our Doctors</h2>
-    <app-doctors-list></app-doctors-list>
+  <section class="py-16">
+    <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Our Doctors</h2>
+    <div class="bg-gray-100 rounded-lg p-8 text-center">
+      <app-doctors-list></app-doctors-list>
+    </div>
   </section>
-
 </div>
