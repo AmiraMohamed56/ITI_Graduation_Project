@@ -38,25 +38,5 @@ class StoreDoctorRequest extends FormRequest
             'consultation_fee' => 'required|numeric|min:0',
             'available_for_online' => 'nullable|boolean',
         ];
-
-    }
-
-
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'The name field is required.',
-            'name.min' => 'The name must be at least 3 characters.',
-            'email.required' => 'The email field is required.',
-            'email.unique' => 'The email has already been taken.',
-            'password.required' => 'The password field is required.',
-            'password.min' => 'The password must be at least 8 characters.',
-            'password.confirmed' => 'The password confirmation does not match.',
-            'specialty_id.required' => 'The specialty field is required.',
-            'specialty_id.exists' => 'The selected specialty is invalid.',
-            'years_experience.required' => 'The years of experience field is required.',
-            'gender.required' => 'The gender field is required.',
-            'consultation_fee.required' => 'The consultation fee field is required.',
-        ];
     }
 }

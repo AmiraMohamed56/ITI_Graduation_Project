@@ -52,9 +52,10 @@
             <nav class="mt-6">
                 <ul class="space-y-1">
                     <x-admin.nav-item icon="group" text="Patients" href="{{ route('admin.patients.index') }}" />
-                    <x-admin.nav-item icon="person" text="Doctors" href="#" />
+                    <x-admin.nav-item icon="person" text="Doctors" href="{{ route('admin.doctors.index') }}" />
                     <x-admin.nav-item icon="category" text="Categories" href="#" />
-                    <x-admin.nav-item icon="calendar_today" text="Appointments" href="#" />
+                    <x-admin.nav-item icon="calendar_today" text="Appointments" href="{{ route('admin.appointments.index') }}" />
+                    <x-admin.nav-item icon="how_to_reg" text="Visits" href="{{ route('admin.visits.index') }}" />
                     <x-admin.nav-item icon="payment" text="Payments" href="#" />
                     <x-admin.nav-item icon="settings" text="Profile" href="{{ route('admin.settings.edit') }}" />
                 </ul>
@@ -116,7 +117,7 @@
         const toggleIcon = document.getElementById('sidebar-toggle-icon');
         const sidebarTitle = document.getElementById('sidebar-title');
         const navTexts = document.querySelectorAll('#sidebar nav ul li a span.ml-3');
-
+        const navLinks = document.querySelectorAll('#sidebar nav ul li a');
         let open = true;
 
         toggleBtn.addEventListener('click', () => {
