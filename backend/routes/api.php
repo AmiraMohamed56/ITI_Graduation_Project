@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
 use App\Http\Controllers\Api\Booking\BookingAppointmentController;
 use App\Http\Controllers\Api\Booking\BookingDoctorController;
 
-Route::get('/specialties', function() {
+Route::get('/specialties', function () {
     return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
 });
 
@@ -36,5 +36,3 @@ Route::delete('patient/{id}/profile-pic', [PatientApiController::class, 'removeP
 //Api Routes for Doctor management
 Route::apiResource('doctors', DoctorController::class);
 Route::apiResource('reviews', ReviewController::class);
-
-
