@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Patients\Api\UpdatePatientRequest;
-use App\Http\Requests\Patients\Api\UpdateUserRequest;
+use App\Http\Requests\Patients\UpdatePatientRequest;
+use App\Http\Requests\Patients\UpdateUserRequest;
 use App\Http\Resources\Patient\PatientProfileResource;
 use App\Models\Patient;
 use App\Models\User;
@@ -13,24 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
-class PatientApiController extends Controller
+class ProfileControllerapi extends Controller
 {
-    public function index()
-    {
-        $patients = Patient::with([
-            'user',
-            'appointments.doctor.user',
-            'medicalRecords'
-        ])->get();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'All patients fetched successfully',
-            'data' => PatientProfileResource::collection($patients),
-        ]);
-    }
-
-
     /**
      * Show patient profile by patient id
      */
