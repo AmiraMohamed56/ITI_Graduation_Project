@@ -23,6 +23,10 @@ use App\Http\Controllers\Admin\VisitController;
 // Route::get('/', function () {
 //     return view('Doctors_Dashboard.medical_records.index');
 // });
+use App\Http\Controllers\Api\Patient\PatientApiController ;
+Route::get('/', function () {
+    return view('Doctors_Dashboard.schedule.show');
+});
 Route::middleware('auth')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
