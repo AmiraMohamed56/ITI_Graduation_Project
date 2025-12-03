@@ -16,16 +16,16 @@ class AdminSettingsController extends Controller
     }
 
     public function update (Request $request) {
-        // dd($request->all());
         $admin = Auth::user();
 
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
-            'phone' => 'required|string|max:5',
+            'phone' => 'required|string|max:20',
             'password' => 'nullable|confirmed|min:6',
             'profile_pic' => 'nullable|image',
         ]);
+        // dd($request->all());
 
         $admin->name = $request->name;
         $admin->email = $request->email;

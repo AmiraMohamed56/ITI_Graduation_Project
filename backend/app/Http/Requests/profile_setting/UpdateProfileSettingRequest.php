@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\profile_setting;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateProfileSettingRequest extends FormRequest
 {
@@ -11,32 +13,35 @@ class UpdateProfileSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+          return true; // Allow authenticated users
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
     public function rules(): array
     {
+        $userId = Auth::id();
+
         return [
             // User fields
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . $this->route('doctor'),
-            'phone' => 'sometimes|string|max:20',
-            'password' => 'sometimes|nullable|string|min:8|confirmed',
-            'password_confirmation' => 'sometimes|nullable|required_with:password',
-            'profile_pic' => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($userId)
+            ],
+            'phone' => 'nullable|string|max:20',
+            'password' => 'nullable|string|min:8|confirmed',
+            'password_confirmation' => 'nullable|required_with:password',
+            'profile_pic' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
             // Doctor fields
-            'specialty_id' => 'sometimes|exists:specialties,id',
+            'specialty_id' => 'required|exists:specialties,id',
             'bio' => 'nullable|string|max:1000',
-            'education' => 'sometimes|string|max:255',
-            'years_experience' => 'sometimes|integer|min:0|max:70',
-            'gender' => 'sometimes|in:male,female',
+            'education' => 'required|string|max:255',
+            'years_experience' => 'required|integer|min:0|max:70',
+            'gender' => 'required|in:male,female',
             'consultation_fee' => 'nullable|numeric|min:0|max:99999999.99',
             'available_for_online' => 'nullable|boolean',
         ];
@@ -46,7 +51,9 @@ class UpdateProfileSettingRequest extends FormRequest
     {
         return [
             // User messages
+            'name.required' => 'Name is required',
             'name.string' => 'Name must be a valid string',
+            'email.required' => 'Email is required',
             'email.email' => 'Please provide a valid email address',
             'email.unique' => 'This email is already taken',
             'phone.max' => 'Phone number cannot exceed 20 characters',
@@ -58,10 +65,16 @@ class UpdateProfileSettingRequest extends FormRequest
             'profile_pic.max' => 'Profile picture cannot exceed 2MB',
 
             // Doctor messages
+            'specialty_id.required' => 'Specialty is required',
             'specialty_id.exists' => 'Selected specialty does not exist',
+            'education.required' => 'Education is required',
+            'years_experience.required' => 'Years of experience is required',
             'years_experience.min' => 'Years of experience cannot be negative',
+            'years_experience.max' => 'Years of experience cannot exceed 70',
+            'gender.required' => 'Gender is required',
             'gender.in' => 'Gender must be either male or female',
             'consultation_fee.numeric' => 'Consultation fee must be a valid number',
+            'consultation_fee.min' => 'Consultation fee cannot be negative',
         ];
     }
 }

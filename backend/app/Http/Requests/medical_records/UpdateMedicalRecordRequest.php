@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
-
+namespace App\Http\Requests\medical_records;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMedicalRecordRequest extends FormRequest
@@ -11,7 +10,7 @@ class UpdateMedicalRecordRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -19,7 +18,7 @@ class UpdateMedicalRecordRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-   public function rules(): array
+     public function rules(): array
     {
         return [
             'symptoms' => 'nullable|string|max:2000',
@@ -32,6 +31,11 @@ class UpdateMedicalRecordRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
@@ -42,6 +46,19 @@ class UpdateMedicalRecordRequest extends FormRequest
             'medical_files.*.mimes' => 'Medical files must be PDF, JPG, PNG, DOC, or DOCX',
             'medical_files.*.max' => 'Each medical file cannot exceed 10MB',
             'remove_files.*.exists' => 'Selected file does not exist',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'medical_files.*' => 'medical file',
+            'remove_files.*' => 'file to remove',
         ];
     }
 }

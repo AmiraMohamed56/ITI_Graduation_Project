@@ -70,4 +70,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class, 'patient_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'patient_id');
+    }
+
+
+     /**
+     * Get the full profile picture URL
+     */
+    public function getProfilePictureUrlAttribute(): string
+    {
+        if ($this->profile_pic) {
+            return asset('storage/' . $this->profile_pic);
+        }
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4F46E5&color=fff&size=200';
+    }
+
 }

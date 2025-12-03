@@ -50,4 +50,5 @@ class Appointment extends Model
     {
         return $this->hasOne(Invoice::class);
     }
+
 }

@@ -1,21 +1,59 @@
 import { Routes } from '@angular/router';
 
-// global pages
+// Auth pages
+import { Login } from './auth/login/login';
+import { Register } from './auth/register/register';
+
+// Authenticated pages
+import { PatientProfile } from './patient-profile/patient-profile';
+import { PaymentFormComponent } from './payments/payment-form/payment-form';
+
+// Layouts
+import { MainLayout } from './layouts/main-layout/main-layout';
+import { AuthLayout } from './layouts/auth-layout/auth-layout';
+
+// Public pages
 import { Contact } from './features/contact/contact';
 import { AboutUs } from './features/about-us/about-us';
 import { Services } from './features/services/services';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-
-  // public pages in layout
+  // Auth routes (login/register)
   {
     path: '',
-    component: Layout,
+    component: AuthLayout,
     children: [
-      { path: 'about us', component: AboutUs },
+      { path: 'login', component: Login },
+      { path: 'register', component: Register },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
+  },
+
+  // Public pages (accessible without login)
+  {
+    path: '',
+    component: MainLayout,
+    children: [
+      { path: 'about-us', component: AboutUs },
       { path: 'contact', component: Contact },
       { path: 'services', component: Services },
     ],
   },
+
+  // Protected pages (after login)
+  {
+    path: '',
+    component: MainLayout,
+    children: [
+      { path: 'patient-profile', component: PatientProfile },
+      { path: 'payment-form', component: PaymentFormComponent },
+      // add other authenticated pages here
+    ],
+  },
+
+  // Fallback: redirect unknown routes to login
+  { path: '**', redirectTo: 'login' },
 ];
+
+
+

@@ -1,106 +1,3 @@
-{{-- <!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dashboard')</title>
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
-
-<div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
-
-    <!-- Sidebar backdrop for mobile -->
-    <div
-        class="fixed inset-0 bg-black bg-opacity-25 z-20 lg:hidden"
-        x-show="sidebarOpen"
-        x-transition.opacity
-        @click="sidebarOpen = false"
-    ></div>
-
-    <!-- Sidebar -->
-    <aside
-        :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-        class="fixed z-30 inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-md border-r transform transition-transform duration-300 lg:static lg:translate-x-0 flex-shrink-0"
-    >
-        <div class="p-6 font-bold text-xl border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <span>Admin Panel</span>
-            <!-- Close button for mobile -->
-            <button @click="sidebarOpen = false" class="lg:hidden p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-                <span class="material-icons">close</span>
-            </button>
-        </div>
-
-        <nav class="mt-6">
-            <ul class="space-y-1">
-                <x-admin.nav-item icon="dashboard" text="Dashboard" href="#"/>
-                <x-admin.nav-item icon="person" text="Doctors" href="#"/>
-                <x-admin.nav-item icon="group" text="Patients" href="#"/>
-                <x-admin.nav-item icon="calendar_today" text="Appointments" href="#"/>
-                <x-admin.nav-item icon="settings" text="Profile" href="#"/>
-            </ul>
-        </nav>
-    </aside>
-
-    <!-- Main content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-
-        <!-- Header -->
-        <header class="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-
-            <div class="flex items-center space-x-4">
-                <!-- Mobile menu button -->
-                <button @click="sidebarOpen = true" class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 lg:hidden">
-                    <span class="material-icons">menu</span>
-                </button>
-
-                <!-- Breadcrumb -->
-                <nav class="text-gray-500 dark:text-gray-400 text-sm">
-                    @yield('breadcrumb')
-                </nav>
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <button id="theme-toggle" class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-                    <span class="material-icons">dark_mode</span>
-                </button>
-                <div>
-                    <img src="https://via.placeholder.com/32" class="rounded-full" alt="Admin">
-                </div>
-            </div>
-
-        </header>
-
-        <!-- Page content -->
-        <main class="flex-1 overflow-y-auto p-6">
-            @yield('content')
-        </main>
-    </div>
-
-</div>
-
-<!-- Theme toggle -->
-<script>
-    const toggleBtn = document.getElementById('theme-toggle');
-    const htmlEl = document.documentElement;
-
-    if(localStorage.theme === 'dark') htmlEl.classList.add('dark');
-    else htmlEl.classList.remove('dark');
-
-    toggleBtn.addEventListener('click', () => {
-        htmlEl.classList.toggle('dark');
-        localStorage.theme = htmlEl.classList.contains('dark') ? 'dark' : 'light';
-    });
-</script>
-
-<script src="//unpkg.com/alpinejs" defer></script>
-
-</body>
-</html> --}}
-
-
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -150,10 +47,11 @@
 
         <nav class="mt-6">
             <ul class="space-y-1">
-                {{-- <x-admin.nav-item icon="dashboard" text="Dashboard" href="#"/>
-                <x-admin.nav-item icon="person" text="Doctors" href="#"/>
                 <x-admin.nav-item icon="group" text="Patients" href="#"/>
-                <x-admin.nav-item icon="calendar_today" text="Appointments" href="#"/> --}}
+                <x-admin.nav-item icon="person" text="Doctors" href="#"/>
+                <x-admin.nav-item icon="category" text="Categories" href="#"/>
+                <x-admin.nav-item icon="calendar_today" text="Appointments" href="#"/>
+                <x-admin.nav-item icon="payment" text="Payments" href="#"/>
                 <x-admin.nav-item icon="settings" text="Profile" href="{{ route('admin.settings.edit') }}"/>
             </ul>
         </nav>

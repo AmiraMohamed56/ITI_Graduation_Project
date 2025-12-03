@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\schedule;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpdateScheduleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -19,9 +19,10 @@ class UpdateScheduleRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-        public function rules(): array
+  public function rules(): array
     {
         return [
+            'doctor_id' => 'sometimes|required|exists:doctors,id',
             'day_of_week' => 'sometimes|in:sunday,monday,tuesday,wednesday,thursday,friday,saturday',
             'start_time' => 'sometimes|date_format:H:i',
             'end_time' => 'sometimes|date_format:H:i|after:start_time',
@@ -33,6 +34,7 @@ class UpdateScheduleRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'doctor_id.exists' => 'Selected doctor does not exist',
             'day_of_week.in' => 'Invalid day of week',
             'start_time.date_format' => 'Start time must be in HH:MM format',
             'end_time.date_format' => 'End time must be in HH:MM format',

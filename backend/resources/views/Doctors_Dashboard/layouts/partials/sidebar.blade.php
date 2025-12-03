@@ -19,9 +19,13 @@
 
             <!-- MAIN Section -->
             <div class="mb-6">
-                <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 text-gray-300 hover:text-white' }}">
+                <a href="{{ route('doctor.dashboard') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('doctor.dashboard') ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 text-gray-300 hover:text-white' }}">
                     <i class="fas fa-th-large w-5"></i>
                     <span class="menu-text ml-3">Dashboard</span>
+                </a>
+                <a href="{{ route('appointments.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('appointments.index') ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 text-gray-300 hover:text-white' }}">
+                    <i class="fas fa-clock w-5"></i>
+                    <span class="menu-text ml-3">Appointments</span>
                 </a>
             </div>
             <div class="mb-6">
