@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\DoctorController;
 
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
-
+use App\Http\Controllers\Api\Patient\PatientApiController ;
 Route::get('/', function () {
     return view('Doctors_Dashboard.schedule.show');
 });
