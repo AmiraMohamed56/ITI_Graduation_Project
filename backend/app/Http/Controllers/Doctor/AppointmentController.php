@@ -36,21 +36,20 @@ class AppointmentController extends Controller
 
     public function update(UpdateAppointmentRequest $request, $id)
     {
-        $appointment = Appointment::findOrFail($id);
+        $appointments = Appointment::findOrFail($id);
 
         $validated = $request->validated();
-        $appointment->fill($validated);
+        $appointments->fill($validated);
 
         // keep old price if not provided
         if (!isset($validated['price'])) {
-            $appointment->price = $appointment->price;
+            $appointments->price = $appointments->price;
         }
 
-        $appointment->save();
-
+        $appointments->save();
         return redirect()
-            ->route('Doctors_Dashboard.appointments.index')
-            ->with('success', 'Appointment updated successfully!');
+        ->route('appointments.index')
+        ->with('success', 'Appointment updated successfully!');
     }
 
 
