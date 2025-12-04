@@ -80,11 +80,8 @@ onImageSelected(event: any) {
 
 
   /** Update All (User + Patient Info) */
-
-  
   saveChanges() {
     const formData = new FormData();
-
     if (this.editUser.name) formData.append("name", this.editUser.name);
     if (this.editUser.email) formData.append("email", this.editUser.email);
     if (this.editUser.phone) formData.append("phone", this.editUser.phone);
