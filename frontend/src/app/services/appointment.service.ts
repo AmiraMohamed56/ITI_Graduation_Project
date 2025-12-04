@@ -8,13 +8,37 @@ import { Observable } from "rxjs";
 
 export class AppointmentService {
 
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'http://backend.test/api';
 
   constructor(private http: HttpClient) {}
 
-  // getDoctors(): Observable<any> {
-  //   return this.http.get(`${this.apiUrl}/doctors`);
-  // }
+  getSpecialities(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/specialties`);
+  }
+
+  getDoctors(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/doctors`);
+  }
+
+  // Get appointments filtered by doctor ID and schedule date
+  getAppointments(doctorId: number, date: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/appointments?doctor_id=${doctorId}&schedule_date=${date}`);
+  }
+
+  // Get all schedules for a doctor
+  getDoctorSchedules(doctorId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}`);
+  }
+
+  // Get schedule for a specific day
+  getDoctorSchedule(doctorId: number, dayOfWeek: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}&day_of_week=${dayOfWeek}`);
+  }
+
+  // Book a new appointment
+  bookAppointment(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/appointments`, data);
+  }
 
   // getDoctorSchedule(doctorId: number, date: string): Observable<any> {
   //   return this.http.get(`${this.apiUrl}/doctors/${doctorId}/schedule?date=${date}`);
@@ -30,29 +54,27 @@ export class AppointmentService {
 
 
 
-  getSpecialities(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/specialties`);
-  }
 
-  getDoctors(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/doctors?_expand=user&_expand=specialty`);
-  }
 
-  getAppointments(doctorId: number, date: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/appointments?doctor_id=${doctorId}&schedule_date=${date}`);
-  }
+  // getDoctors(): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/doctors?_expand=user&_expand=specialty`);
+  // }
 
-  getDoctorSchedules(doctorId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}`);
-  }
+  // getAppointments(doctorId: number, date: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/appointments?doctor_id=${doctorId}&schedule_date=${date}`);
+  // }
 
-  getDoctorSchedule(doctorId: number, dayOfWeek: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}&day_of_week=${dayOfWeek}`);
-  }
+  // getDoctorSchedules(doctorId: number): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}`);
+  // }
 
-  bookAppointment(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/appointments`, data);
-  }
+  // getDoctorSchedule(doctorId: number, dayOfWeek: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}&day_of_week=${dayOfWeek}`);
+  // }
+
+  // bookAppointment(data: any): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/appointments`, data);
+  // }
 
 
 

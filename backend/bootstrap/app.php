@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // API middleware
         $middleware->api([
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\Cors::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
