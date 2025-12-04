@@ -1,19 +1,37 @@
 <?php
 
+use App\Http\Controllers\Api\medical_specialities\MedicalSpecialitiesController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Patient\PatientApiController;
+use App\Http\Controllers\Api\Doctor\DoctorController;
+use App\Http\Controllers\Api\Reviews\ReviewController;
+// ============================== Booking Appointment start =======================================
+use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
+use App\Http\Controllers\Api\Booking\BookingAppointmentController;
+use App\Http\Controllers\Api\Booking\BookingDoctorController;
+
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+// Protected routes (authentication required)
+Route::middleware(['auth:sanctum'])->group(function () {
+
+});
+
+// Specialty routes
+Route::prefix('specialties')->group(function () {
+    Route::get('/', [MedicalSpecialitiesController::class, 'index']); // Get all specialties
+    Route::get('/{id}', [MedicalSpecialitiesController::class, 'show']); // Get specific specialty
+    Route::get('/{id}/doctors', [MedicalSpecialitiesController::class, 'doctors']); // Get doctors by specialty
+});
 
 Route::options('{any}', function () {
     return response()->noContent();
 })->where('any', '.*');
 
-use App\Http\Controllers\Api\Patient\PatientApiController;
-use App\Http\Controllers\Api\Doctor\DoctorController;
-use App\Http\Controllers\Api\Reviews\ReviewController;
-
-// ============================== Booking Appointment start =======================================
-use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
-use App\Http\Controllers\Api\Booking\BookingAppointmentController;
-use App\Http\Controllers\Api\Booking\BookingDoctorController;
 
 Route::get('/specialties', function () {
     return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
