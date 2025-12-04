@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Resources\Doctor;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Doctor\SpecialtyResource;
@@ -56,8 +57,8 @@ class DoctorResource extends JsonResource
             'schedules' => ScheduleResource::collection($this->schedules),
 
             // rating & reviews information
-            'rating_avg'    => round($this->reviews->avg('rating'), 1),
-            'reviews_count' => $this->reviews->count(),
+            'rating_avg'    => $this->whenLoaded('reviews', fn() => round($this->reviews->avg('rating'), 1), 0),
+            'reviews_count' => $this->whenLoaded('reviews', fn() => $this->reviews->count(), 0),
             'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
         ];
     }
