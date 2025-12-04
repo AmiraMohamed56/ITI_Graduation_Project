@@ -92,7 +92,7 @@ class MedicalSpecialitiesController extends Controller
         }
 
         $doctors = $specialty->doctors()
-            ->with(['user', 'specialty'])
+            ->with(['user', 'specialty','reviews'])
             ->paginate($request->input('per_page', 10));
 
         return response()->json([
