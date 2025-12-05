@@ -15,8 +15,10 @@ import { DoctorsListComponent } from '../doctors/doctors-list.component';
 export class DoctorsByCategoryComponent implements OnInit {
 
   categoryId!: number;
+  categoryName: string = '';
   doctors: Doctor[] = [];
   loading: boolean = true;
+  error: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -32,12 +34,24 @@ export class DoctorsByCategoryComponent implements OnInit {
 
   loadDoctors() {
     this.loading = true;
+    this.error = '';
+    
     this.doctorService.getDoctorsBySpecialty(this.categoryId).subscribe({
       next: data => {
         this.doctors = data;
+        
+        // Get category name from first doctor's specialty
+        if (data.length > 0 && data[0].specialty) {
+          this.categoryName = data[0].specialty.name;
+        }
+        
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: (err) => {
+        console.error('Error loading doctors:', err);
+        this.error = 'Failed to load doctors. Please try again.';
+        this.loading = false;
+      }
     });
   }
 }
