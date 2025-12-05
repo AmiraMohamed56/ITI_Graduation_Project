@@ -80,7 +80,11 @@ onImageSelected(event: any) {
 
 
   /** Update All (User + Patient Info) */
-  saveChanges() {
+  saveChanges(editForm: any) {
+    if (editForm.invalid) {
+    Object.values(editForm.controls).forEach((ctrl: any) => ctrl.markAsTouched());
+    return;
+  }
     const formData = new FormData();
     if (this.editUser.name) formData.append("name", this.editUser.name);
     if (this.editUser.email) formData.append("email", this.editUser.email);
@@ -108,6 +112,35 @@ onImageSelected(event: any) {
       }
     });
   }
+getNameError(ctrl: any) {
+  if (ctrl.errors?.['required']) return "Name is required";
+  if (ctrl.errors?.['minlength']) return "Name must be at least 3 characters";
+  return "";
+}
+
+getEmailError(ctrl: any) {
+  if (ctrl.errors?.['required']) return "Email is required";
+  if (ctrl.errors?.['email']) return "Invalid email format";
+  return "";
+}
+
+getPhoneError(ctrl: any) {
+  if (ctrl.errors?.['required']) return "Phone number is required";
+  if (ctrl.errors?.['pattern']) return "Phone must be 10-15 digits";
+  return "";
+}
+
+getBloodError(ctrl: any) {
+  if (ctrl.errors?.['required']) return "Blood type is required";
+  if (ctrl.errors?.['pattern']) return "Format must be A+, O-, AB+, etc.";
+  return "";
+}
+
+getChronicError(ctrl: any) {
+  if (ctrl.errors?.['required']) return "Chronic diseases information required";
+  if (ctrl.errors?.['minlength']) return "Minimum 5 characters";
+  return "";
+}
 
   /** Remove Profile Picture */
   removeProfilePic() {
