@@ -1,306 +1,362 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patient Profile</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in {
-      animation: fadeIn 0.6s ease-out;
-    }
-    .gradient-border {
-      background: linear-gradient(white, white) padding-box,
-                  linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4) border-box;
-      border: 2px solid transparent;
-    }
-  </style>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-  
-  <div class="max-w-7xl mx-auto px-4 py-8 lg:px-8">
-
-    <!-- Profile Header with Glass Morphism Effect -->
-    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden mb-8 border border-white/20 fade-in">
-      <!-- Cover Image with Animated Gradient -->
-      <div class="h-40 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-400/50 to-purple-400/50 animate-pulse"></div>
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 md:p-8">
+  <!-- Skeleton Loader -->
+  <div *ngIf="loading" class="space-y-6 animate-pulse">
+    <div class="h-40 bg-gray-200 rounded-3xl"></div>
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1 space-y-4">
+        <div class="h-10 bg-gray-200 rounded-lg w-3/4"></div>
+        <div class="h-6 bg-gray-200 rounded-lg w-1/2"></div>
+        <div class="h-6 bg-gray-200 rounded-lg w-1/4"></div>
       </div>
-      
-      <div class="px-6 md:px-10 pb-8">
-        <div class="flex flex-col md:flex-row items-center md:items-end -mt-20 md:-mt-24">
-          <!-- Profile Picture with Ring Animation -->
-          <div class="relative group">
-            <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-            <div class="relative w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-white bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-5xl font-bold shadow-2xl overflow-hidden">
-              <img src="https://i.pravatar.cc/200?img=33" alt="Patient" class="w-full h-full object-cover">
-            </div>
-            <!-- Status Badge -->
-            <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
+      <div class="flex-1 space-y-4">
+        <div class="h-10 bg-gray-200 rounded-lg w-full"></div>
+        <div class="h-6 bg-gray-200 rounded-lg w-5/6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading" class="max-w-7xl mx-auto space-y-6">
+    <!-- Tabs -->
+    <div class="flex border-b-2 border-gray-200 mb-4 overflow-x-auto">
+      <button
+        (click)="activeTab = 'profile'"
+        [ngClass]="activeTab === 'profile' ? 'border-blue-500 text-blue-600' : 'text-gray-500'"
+        class="pb-2 px-4 font-semibold transition-colors whitespace-nowrap"
+      >
+        Profile
+      </button>
+      <button
+        (click)="activeTab = 'history'"
+        [ngClass]="activeTab === 'history' ? 'border-blue-500 text-blue-600' : 'text-gray-500'"
+        class="pb-2 px-4 font-semibold transition-colors whitespace-nowrap"
+      >
+        Medical History
+      </button>
+      <button
+        (click)="activeTab = 'appointments'"
+        [ngClass]="activeTab === 'appointments' ? 'border-blue-500 text-blue-600' : 'text-gray-500'"
+        class="pb-2 px-4 font-semibold transition-colors whitespace-nowrap"
+      >
+        Appointments
+      </button>
+    </div>
+
+    <!-- Profile Tab -->
+    <div *ngIf="activeTab === 'profile'" class="space-y-6">
+      <!-- Header Card -->
+      <div
+        class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 flex flex-col md:flex-row items-center gap-6 transition-transform hover:-translate-y-1 duration-300"
+      >
+        <div class="relative">
+          <div
+            *ngIf="patient.profile_pic; else initials"
+            class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-white overflow-hidden shadow-lg"
+          >
+            <img [src]="patient.profile_pic" class="w-full h-full object-cover" />
           </div>
-          
-          <!-- Info Section -->
-          <div class="mt-6 md:mt-0 md:ml-8 text-center md:text-left flex-1">
-            <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
-              <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                John Anderson
-              </h1>
-              <svg class="w-7 h-7 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-              </svg>
+          <ng-template #initials>
+            <div
+              class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-white bg-blue-400 flex items-center justify-center text-white text-4xl font-bold shadow-lg"
+            >
+              {{ getInitials() }}
             </div>
-            <p class="text-gray-600 text-lg mb-1 flex items-center justify-center md:justify-start gap-2">
-              <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-              </svg>
-              john.anderson@email.com
-            </p>
-            <div class="flex items-center justify-center md:justify-start gap-4 text-gray-600">
-              <span class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                </svg>
-                Age: 34 years
-              </span>
-              <span class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                </svg>
-                Member since 2023
-              </span>
-            </div>
-          </div>
-          
-          <!-- Action Button -->
-          <button onclick="openEditModal()" class="mt-6 md:mt-0 group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-            </svg>
-            Edit Profile
+          </ng-template>
+          <div
+            class="absolute bottom-2 right-2 w-5 h-5 bg-green-500 rounded-full border-2 border-white"
+          ></div>
+        </div>
+        <div class="flex-1 text-center md:text-left space-y-2">
+          <h1
+            class="text-3xl mb-4 md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
+          >
+            {{ patient.name }}
+          </h1>
+          <p class="text-gray-600">{{ patient.email }}</p>
+          <p class="text-gray-600">{{ patient.phone }}</p>
+          <p class="text-gray-600">Member since: {{ patient.member_since }}</p>
+          <p class="text-gray-600" *ngIf="patient.chronic_diseases">
+            Chronic Diseases: {{ patient.chronic_diseases }}
+          </p>
+          <p class="text-gray-600">
+            Status: <span class="capitalize">{{ patient.status }}</span>
+          </p>
+        </div>
+        <button
+          (click)="openEditModal()"
+          class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition"
+        >
+          Edit
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div
+          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
+        >
+          <p class="text-gray-500">Total Appointments</p>
+          <h3 class="text-2xl font-bold text-blue-600">{{ patient.appointments_count }}</h3>
+        </div>
+        <div
+          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
+        >
+          <p class="text-gray-500">Medical Records</p>
+          <h3 class="text-2xl font-bold text-indigo-600">{{ patient.medical_records_count }}</h3>
+        </div>
+        <div
+          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
+        >
+          <p class="text-gray-500">Blood Type</p>
+          <h3 class="text-2xl font-bold text-purple-600">{{ patient.blood_type }}</h3>
+        </div>
+        <div
+          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
+          *ngIf="patient.age"
+        >
+          <p class="text-gray-500">Age</p>
+          <h3 class="text-2xl font-bold text-green-600">{{ patient.age }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medical History Tab -->
+    <div *ngIf="activeTab === 'history'" class="space-y-4">
+      <div
+        *ngFor="let record of pagedRecords; let i = index"
+        class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
+        [style.animationDelay]="i * 100 + 'ms'"
+      >
+        <h3 class="text-lg font-bold text-blue-600 mb-2">Medical Record #{{ record.id }}</h3>
+        <p class="flex">
+          <span class="font-semibold text-gray-700 mr-1">Symptoms:</span>
+          <span class="text-gray-500">{{ record.symptoms }}</span>
+        </p>
+
+        <p class="flex">
+          <span class="font-semibold text-gray-700 mr-1">Diagnosis:</span>
+          <span class="text-gray-500">{{ record.diagnosis }}</span>
+        </p>
+
+        <p class="flex">
+          <span class="font-semibold text-gray-700 mr-1">Medication:</span>
+          <span class="text-gray-500">{{ record.medication }}</span>
+        </p>
+
+        <p class="text-gray-400 text-sm mt-2">
+          <span class="font-semibold text-gray-700 mr-1">Date:</span>
+          <span>{{ record.created_at | date : 'mediumDate' }}</span>
+        </p>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex justify-center mt-4 space-x-2">
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        <button
+          *ngFor="let page of [].constructor(totalPages); let idx = index"
+          (click)="goToPage(idx + 1)"
+          [ngClass]="
+            currentPage === idx + 1
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          "
+          class="px-3 py-1 rounded-lg"
+        >
+          {{ idx + 1 }}
+        </button>
+
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- Appointments Tab -->
+    <div *ngIf="activeTab === 'appointments'" class="space-y-4">
+      <div
+        *ngFor="let app of pagedAppointments; let i = index"
+        class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
+        [style.animationDelay]="i * 100 + 'ms'"
+      >
+        <p class="flex">
+          <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
+          <span class="text-gray-500">{{ app.doctor_name }}</span>
+        </p>
+
+        <p class="flex">
+          <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
+          <span class="text-gray-500">{{ app.specialty.name }}</span>
+        </p>
+
+        <p class="flex">
+          <span class="font-semibold text-gray-700 mr-1">Status:</span>
+          <span class="text-gray-500">{{ app.status }}</span>
+        </p>
+
+        <p class="text-gray-400 text-sm mt-2">
+          <span class="font-semibold text-gray-700 mr-1">Date:</span>
+          <span>{{ app.date || 'TBD' }}</span>
+        </p>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div *ngIf="activeTab === 'appointments'" class="space-y-4">
+        <div
+          *ngFor="let app of pagedAppointments; let i = index"
+          class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
+          [style.animationDelay]="i * 100 + 'ms'"
+        >
+          <p class="flex">
+            <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
+            <span class="text-gray-500">{{ app.doctor_name }}</span>
+          </p>
+
+          <p class="flex">
+            <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
+            <span class="text-gray-500">{{ app.specialty.name }}</span>
+          </p>
+
+          <p class="flex">
+            <span class="font-semibold text-gray-700 mr-1">Status:</span>
+            <span class="text-gray-500">{{ app.status }}</span>
+          </p>
+
+          <p class="text-gray-400 text-sm mt-2">
+            <span class="font-semibold text-gray-700 mr-1">Date:</span>
+            <span>{{ app.date || 'TBD' }}</span>
+          </p>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-center mt-4 space-x-2">
+          <button
+            (click)="goToAppPage(currentAppPage - 1)"
+            [disabled]="currentAppPage === 1"
+            class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          <button
+            *ngFor="let page of [].constructor(totalAppPages); let idx = index"
+            (click)="goToAppPage(idx + 1)"
+            [ngClass]="
+              currentAppPage === idx + 1
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            "
+            class="px-3 py-1 rounded-lg"
+          >
+            {{ idx + 1 }}
+          </button>
+
+          <button
+            (click)="goToAppPage(currentAppPage + 1)"
+            [disabled]="currentAppPage === totalAppPages"
+            class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            Next
           </button>
         </div>
       </div>
     </div>
+    <!-- Edit Modal -->
+    <div
+      *ngIf="showModal"
+      class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 transition-opacity duration-300"
+    >
+      <div
+        class="bg-white rounded-3xl shadow-xl w-full max-w-xl p-6 space-y-4 relative transform transition-all duration-300 scale-95 opacity-0"
+        [ngClass]="{ 'scale-100 opacity-100': showModal }"
+      >
+        <button
+          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          (click)="closeModal()"
+        >
+          ✕
+        </button>
+        <h2 class="text-2xl font-bold">Edit Profile</h2>
+        <form (ngSubmit)="saveChanges()" class="space-y-4">
+          <!-- Name -->
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Name</label>
+            <input [(ngModel)]="editUser.name" name="name" class="border rounded-lg p-2 w-full" />
+          </div>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <!-- Total Appointments -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-blue-100 hover:shadow-xl transition-all duration-300 cursor-pointer group fade-in">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm font-medium">Total Visits</p>
-            <h3 class="text-3xl font-bold text-blue-600 mt-1">24</h3>
+          <!-- Email -->
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Email</label>
+            <input
+              [(ngModel)]="editUser.email"
+              name="email"
+              type="email"
+              class="border rounded-lg p-2 w-full"
+            />
           </div>
-          <div class="bg-blue-100 group-hover:bg-blue-200 p-4 rounded-xl transition-colors">
-            <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-            </svg>
-          </div>
-        </div>
-      </div>
 
-      <!-- Prescriptions -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-indigo-100 hover:shadow-xl transition-all duration-300 cursor-pointer group fade-in">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm font-medium">Prescriptions</p>
-            <h3 class="text-3xl font-bold text-indigo-600 mt-1">5</h3>
+          <!-- Phone -->
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Phone</label>
+            <input
+              [(ngModel)]="editUser.phone"
+              name="phone"
+              type="text"
+              class="border rounded-lg p-2 w-full"
+            />
           </div>
-          <div class="bg-indigo-100 group-hover:bg-indigo-200 p-4 rounded-xl transition-colors">
-            <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
-            </svg>
-          </div>
-        </div>
-      </div>
 
-      <!-- Next Appointment -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-purple-100 hover:shadow-xl transition-all duration-300 cursor-pointer group fade-in">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm font-medium">Next Visit</p>
-            <h3 class="text-xl font-bold text-purple-600 mt-1">Dec 15</h3>
+          <!-- Profile Image -->
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Profile Image</label>
+            <input type="file" (change)="onImageSelected($event)" class="border rounded-lg p-2" />
+            <div *ngIf="editUser.profile_pic; instanceof: File">
+              <div *ngIf="imagePreview">
+                <img [src]="imagePreview" class="w-32 h-32 object-cover rounded-lg mt-2" />
+              </div>
+            </div>
           </div>
-          <div class="bg-purple-100 group-hover:bg-purple-200 p-4 rounded-xl transition-colors">
-            <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-            </svg>
-          </div>
-        </div>
-      </div>
 
-      <!-- Health Score -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-green-100 hover:shadow-xl transition-all duration-300 cursor-pointer group fade-in">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm font-medium">Health Score</p>
-            <h3 class="text-3xl font-bold text-green-600 mt-1">92%</h3>
+          <!-- Blood Type -->
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Blood Type</label>
+            <input
+              [(ngModel)]="editPatient.blood_type"
+              name="blood_type"
+              type="text"
+              class="border rounded-lg p-2 w-full"
+            />
           </div>
-          <div class="bg-green-100 group-hover:bg-green-200 p-4 rounded-xl transition-colors">
-            <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
-            </svg>
+
+          <!-- Chronic Diseases -->
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Chronic Diseases</label>
+            <textarea
+              [(ngModel)]="editPatient.chronic_diseases"
+              name="chronic_diseases"
+              rows="3"
+              class="border rounded-lg p-2 w-full"
+            ></textarea>
           </div>
-        </div>
+
+          <button
+            type="submit"
+            class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Save
+          </button>
+        </form>
       </div>
     </div>
-
-    <!-- Main Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-      <!-- Left Column -->
-      <div class="lg:col-span-1 space-y-6">
-
-        <!-- Contact Info with Icons -->
-        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 fade-in">
-          <div class="flex items-center gap-3 mb-5">
-            <div class="bg-gradient-to-br from-blue-500 to-indigo-500 p-3 rounded-xl">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-              </svg>
-            </div>
-            <h2 class="text-xl font-bold text-gray-800">Contact Info</h2>
-          </div>
-          <div class="space-y-4">
-            <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <svg class="w-5 h-5 text-blue-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-              </svg>
-              <div>
-                <p class="text-xs text-gray-500 font-medium">Email</p>
-                <p class="text-gray-800">john.anderson@email.com</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-              </svg>
-              <div>
-                <p class="text-xs text-gray-500 font-medium">Phone</p>
-                <p class="text-gray-800">+1 (555) 123-4567</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <svg class="w-5 h-5 text-red-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-              </svg>
-              <div>
-                <p class="text-xs text-gray-500 font-medium">Address</p>
-                <p class="text-gray-800">123 Medical Center Dr, Suite 100<br>Healthcare City, HC 12345</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Medical History with Gradient -->
-        <div class="relative bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-2xl shadow-lg p-0.5 hover:shadow-xl transition-all duration-300 fade-in">
-          <div class="bg-white rounded-2xl p-6 h-full">
-            <div class="flex items-center gap-3 mb-5">
-              <div class="bg-gradient-to-br from-indigo-500 to-purple-500 p-3 rounded-xl">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                  <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-              </div>
-              <h2 class="text-xl font-bold text-gray-800">Medical History</h2>
-            </div>
-            <div class="space-y-3">
-              <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-                <p class="text-sm font-semibold text-indigo-700 mb-1">Previous Conditions</p>
-                <p class="text-gray-700 text-sm">Hypertension (controlled), Type 2 Diabetes</p>
-              </div>
-              <div class="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
-                <p class="text-sm font-semibold text-purple-700 mb-1">Surgeries</p>
-                <p class="text-gray-700 text-sm">Appendectomy (2015), Knee arthroscopy (2019)</p>
-              </div>
-              <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100">
-                <p class="text-sm font-semibold text-green-700 mb-1">Family History</p>
-                <p class="text-gray-700 text-sm">Heart disease (paternal), Diabetes (maternal)</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Prescriptions -->
-        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 fade-in">
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-3">
-              <div class="bg-gradient-to-br from-purple-500 to-pink-500 p-3 rounded-xl">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm11 1H6v8l4-2 4 2V6z" clip-rule="evenodd"/>
-                </svg>
-              </div>
-              <h2 class="text-xl font-bold text-gray-800">Prescriptions</h2>
-            </div>
-            <span class="bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">Active: 5</span>
-          </div>
-          <ul class="space-y-3">
-            <li class="flex items-start gap-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100 hover:shadow-md transition-all">
-              <div class="bg-purple-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">M</div>
-              <div class="flex-1">
-                <p class="font-semibold text-gray-800">Metformin</p>
-                <p class="text-sm text-gray-600">500mg - Twice daily</p>
-              </div>
-            </li>
-            <li class="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100 hover:shadow-md transition-all">
-              <div class="bg-blue-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">L</div>
-              <div class="flex-1">
-                <p class="font-semibold text-gray-800">Lisinopril</p>
-                <p class="text-sm text-gray-600">10mg - Once daily</p>
-              </div>
-            </li>
-            <li class="flex items-start gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100 hover:shadow-md transition-all">
-              <div class="bg-green-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">A</div>
-              <div class="flex-1">
-                <p class="font-semibold text-gray-800">Atorvastatin</p>
-                <p class="text-sm text-gray-600">20mg - Bedtime</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- Right Column -->
-      <div class="lg:col-span-2 space-y-6">
-
-        <!-- Appointments with Timeline -->
-        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 fade-in">
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-              <div class="bg-gradient-to-br from-blue-500 to-cyan-500 p-3 rounded-xl">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                </svg>
-              </div>
-              <h2 class="text-xl font-bold text-gray-800">Upcoming Appointments</h2>
-            </div>
-          </div>
-          
-          <div class="space-y-4">
-            <!-- Appointment Card 1 -->
-            <div class="relative pl-8 pb-4 border-l-2 border-blue-200">
-              <div class="absolute -left-2 top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
-              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100 hover:shadow-lg transition-all">
-                <div class="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 class="font-bold text-gray-800 text-lg">Dr. Sarah Johnson</h3>
-                    <p class="text-sm text-gray-600">Cardiologist</p>
-                  </div>
-                  <span class="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Upcoming</span>
-                </div>
-                <div class="grid grid-cols-2 gap-3 text-sm">
-                  <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000  2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                    </svg>      
-                      
+  </div>
+</div>

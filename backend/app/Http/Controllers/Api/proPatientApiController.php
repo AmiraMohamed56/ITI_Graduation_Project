@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api\Patient;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Patients\UpdatePatientRequest;
-use App\Http\Requests\Api\Patients\UpdateUserRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\Patients\UpdatePatientRequest;
+use App\Http\Requests\Patients\UpdateUserRequest;
 use App\Http\Resources\Patient\PatientProfileResource;
 use App\Models\Patient;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
-class PatientApiController extends Controller
+class proPatientApiController extends Controller
 {
     public function index()
     {

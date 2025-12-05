@@ -34,4 +34,11 @@ class MedicalRecord extends Model
     {
         return $this->hasMany(MedicalFile::class);
     }
+
+
+    // alias for consistency with the blade file
+    public function files()
+    {
+        return $this->medicalFiles();
+    }
 }
