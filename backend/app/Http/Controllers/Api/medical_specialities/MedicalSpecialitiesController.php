@@ -12,22 +12,27 @@ class MedicalSpecialitiesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+     public function index(Request $request)
     {
-        $specialties=Specialty::withCount('doctors')
-        ->latest()
-        ->paginate($request->input('per_page',8));
+        $query = Specialty::withCount('doctors');
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'LIKE', '%' . $searchTerm . '%');
+        }
+        
+        $query->latest();
+        $specialties = $query->get();
 
         return response()->json([
             'success' => true,
             'data' => MedicalSpecialitiesResource::collection($specialties),
             'meta' => [
-                'current_page' => $specialties->currentPage(),
-                'last_page' => $specialties->lastPage(),
-                'per_page' => $specialties->perPage(),
-                'total' => $specialties->total(),
-                'from' => $specialties->firstItem(),
-                'to' => $specialties->lastItem(),
+                'current_page' => 1,
+                'last_page' => 1,
+                'per_page' => $specialties->count(),
+                'total' => $specialties->count(),
+                'from' => $specialties->count() > 0 ? 1 : null,
+                'to' => $specialties->count(),
             ],
             'message' => 'Specialties retrieved successfully.'
         ]);
