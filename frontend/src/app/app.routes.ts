@@ -21,6 +21,7 @@ import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profi
 import { BookingComponent } from './booking/booking.component';
 import { AllDoctors } from './LandinPage/all-doctors/all-doctors';
 import { DoctorsByCategoryComponent } from './LandinPage/doctors-by-categor/doctors-by-category.component';
+import { AllSpecialtiesComponent } from './specialities/all-specialties';
 
 export const routes: Routes = [
   // Auth routes (login/register)
@@ -53,6 +54,8 @@ export const routes: Routes = [
       { path: 'book-appointment', component: BookingComponent },
       { path: 'doctors/all', component: AllDoctors },
       { path: 'doctors/category/:id', component: DoctorsByCategoryComponent },
+      { path: 'specialties', component: AllSpecialtiesComponent },
+
 
     ],
   },

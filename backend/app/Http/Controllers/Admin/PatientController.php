@@ -15,7 +15,30 @@ class PatientController extends Controller
     {
         $query = Patient::with('user');
 
-        // Sorting
+        // ======== Filtering ========
+        if ($request->name) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->name}%");
+            });
+        }
+
+        if ($request->email) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->email}%");
+            });
+        }
+
+        if ($request->phone) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('phone', 'like', "%{$request->phone}%");
+            });
+        }
+
+        if ($request->blood_type) {
+            $query->where('blood_type', $request->blood_type);
+        }
+
+        // ======== Sorting ========
         if ($request->sort == 'name') {
             $query->join('users', 'patients.user_id', '=', 'users.id')
                 ->orderBy('users.name');
@@ -25,10 +48,11 @@ class PatientController extends Controller
             $query->latest();
         }
 
-        $patients = $query->paginate(10);
+        $patients = $query->paginate(10)->withQueryString(); // important to keep query params in pagination
 
         return view('admin.patients.index', compact('patients'));
     }
+
 
     // ================== CREATE ==================
     public function create()

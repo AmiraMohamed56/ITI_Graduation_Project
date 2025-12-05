@@ -1,0 +1,30 @@
+.specialties-container {
+  width: 100%;
+  padding: 0;
+}
+
+/* Smooth transition for show more/less */
+.grid {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover effects for specialty cards */
+.group:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .group:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+                0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .specialties-container {
+    padding: 0 0.5rem;
+  }
+}
