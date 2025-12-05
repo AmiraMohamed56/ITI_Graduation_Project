@@ -54,15 +54,16 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CategoriesComponent } from '../categories/categories.component';
 import { DoctorsListComponent } from '../doctors/doctors-list.component';
-import { Category } from '../categories/category.model';
+// import { Category } from '../categories/category.model';
 import { Doctor } from '../doctors/doctor.model';
-import { CategoryService } from '../categories/category.service';
+// import { CategoryService } from '../categories/category.service';
 import { DoctorService } from '../doctors/doctor.service';
+import { Specialities } from '../../specialities/specialities.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, CategoriesComponent, DoctorsListComponent],
+  imports: [CommonModule, DoctorsListComponent ,Specialities],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css']
 })
@@ -91,7 +92,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.startAutoSlide();
-    this.loadCategories();
+    // this.loadCategories();
   }
 
   ngOnDestroy(): void {
@@ -134,30 +135,30 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.startAutoSlide();
   }
 
-  categories: Category[] = [];
-  doctors: Doctor[] = [];
-  loadingDoctors: boolean = false;
+  // categories: Category[] = [];
+  // doctors: Doctor[] = [];
+  // loadingDoctors: boolean = false;
 
-  constructor(
-    private categoryService: CategoryService,
-    private doctorsService: DoctorService
-  ) { }
+  // constructor(
+  //   private categoryService: CategoryService,
+  //   private doctorsService: DoctorService
+  // ) { }
 
-  loadCategories() {
-    this.categoryService.getCategories().subscribe({
-      next: data => this.categories = data,
-      error: () => console.warn('Failed to load categories')
-    });
-  }
+  // loadCategories() {
+  //   this.categoryService.getCategories().subscribe({
+  //     next: data => this.categories = data,
+  //     error: () => console.warn('Failed to load categories')
+  //   });
+  // }
 
-  onCategorySelected(categoryId: number) {
-    this.loadingDoctors = true;
-    this.doctorsService.getDoctorsBySpecialty(categoryId).subscribe({
-      next: data => {
-        this.doctors = data;
-        this.loadingDoctors = false;
-      },
-      error: () => this.loadingDoctors = false
-    });
-  }
+  // onCategorySelected(categoryId: number) {
+  //   this.loadingDoctors = true;
+  //   this.doctorsService.getDoctorsBySpecialty(categoryId).subscribe({
+  //     next: data => {
+  //       this.doctors = data;
+  //       this.loadingDoctors = false;
+  //     },
+  //     error: () => this.loadingDoctors = false
+  //   });
+  // }
 }

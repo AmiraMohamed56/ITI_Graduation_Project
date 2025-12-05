@@ -1,0 +1,174 @@
+<!-- all-specialties.component.html -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
+  <!-- Hero Section -->
+  <section class="relative flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto">
+      <!-- Back Button -->
+      <button (click)="goBack()"
+              class="absolute left-0 top-0 flex items-center gap-2 text-white hover:text-yellow-300 transition-colors">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+      </button>
+
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-xl">
+        All Medical <span class="text-yellow-400">Specialties</span>
+      </h1>
+      <p class="text-lg md:text-xl mb-8 opacity-95">
+        Explore our comprehensive range of medical specialties and find the right care for you.
+      </p>
+
+      <!-- Search bar -->
+      <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl flex items-center gap-3 p-5 transition-transform duration-300 hover:scale-105">
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <i class="fas fa-search text-gray-400"></i>
+          </div>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchInput()"
+            placeholder="Search medical specialties..."
+            class="w-full pl-12 pr-12 py-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          />
+          <button
+            *ngIf="searchTerm"
+            (click)="clearSearch()"
+            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            aria-label="Clear search"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div *ngIf="!loading" class="mt-4">
+        <p class="text-white/90">
+          <span *ngIf="searchTerm">Found </span>
+          <span class="font-bold text-yellow-300">{{ totalSpecialties }}</span>
+          {{ totalSpecialties === 1 ? 'specialty' : 'specialties' }}
+          <span *ngIf="searchTerm"> matching "{{ searchTerm }}"</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-12">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]"
+           class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 animate-pulse">
+        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4"></div>
+        <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-2"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto"></div>
+      </div>
+    </div>
+
+    <!-- Specialties Grid -->
+    <div *ngIf="!loading && specialties.length > 0">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div *ngFor="let specialty of paginatedSpecialties"
+             (click)="viewSpecialtyDoctors(specialty.id)"
+             class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6 cursor-pointer group">
+
+          <!-- Icon -->
+          <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <i [class]="'fas ' + getSpecialtyIcon(specialty.name) + ' text-white text-3xl'"></i>
+          </div>
+
+          <!-- Specialty Name -->
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white text-center mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            {{ specialty.name }}
+          </h3>
+
+          <!-- Doctors Count -->
+          <div class="text-center">
+            <span class="inline-flex items-center gap-1 px-4 py-2 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium">
+              <i class="fas fa-user-doctor"></i>
+              {{ specialty.doctors_count }}
+              {{ specialty.doctors_count === 1 ? 'Doctor' : 'Doctors' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="totalPages > 1" class="flex justify-center items-center mt-12 gap-2 flex-wrap">
+        <button
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+          class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <button
+          *ngFor="let page of pageNumbers"
+          (click)="goToPage(page)"
+          [class.bg-blue-600]="currentPage === page"
+          [class.text-white]="currentPage === page"
+          [class.bg-white]="currentPage !== page"
+          [class.text-gray-800]="currentPage !== page"
+          [class.dark:bg-blue-500]="currentPage === page"
+          [class.dark:bg-gray-800]="currentPage !== page"
+          [class.dark:text-gray-100]="currentPage !== page"
+          class="px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all">
+          {{ page }}
+        </button>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="text-center mt-6">
+        <p class="text-gray-600 dark:text-gray-400">
+          Page {{ currentPage }} of {{ totalPages }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Empty State - No Results -->
+    <div *ngIf="!loading && specialties.length === 0 && searchTerm"
+         class="text-center py-16">
+      <div class="max-w-md mx-auto">
+        <div class="mb-6">
+          <i class="fas fa-search text-6xl text-gray-300 dark:text-gray-600"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+          No Specialties Found
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          We couldn't find any specialties matching "<span class="font-semibold">{{ searchTerm }}</span>".
+          Try a different search term.
+        </p>
+        <button
+          (click)="clearSearch()"
+          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all">
+          Clear Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State - No Data -->
+    <div *ngIf="!loading && specialties.length === 0 && !searchTerm"
+         class="text-center py-16">
+      <div class="max-w-md mx-auto">
+        <div class="mb-6">
+          <i class="fas fa-hospital text-6xl text-gray-300 dark:text-gray-600"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+          No Specialties Available
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400">
+          We're currently updating our medical specialties. Please check back later.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
