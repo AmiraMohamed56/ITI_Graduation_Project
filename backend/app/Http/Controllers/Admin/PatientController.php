@@ -15,7 +15,30 @@ class PatientController extends Controller
     {
         $query = Patient::with('user');
 
-        // Sorting
+        // ======== Filtering ========
+        if ($request->name) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->name}%");
+            });
+        }
+
+        if ($request->email) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->email}%");
+            });
+        }
+
+        if ($request->phone) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('phone', 'like', "%{$request->phone}%");
+            });
+        }
+
+        if ($request->blood_type) {
+            $query->where('blood_type', $request->blood_type);
+        }
+
+        // ======== Sorting ========
         if ($request->sort == 'name') {
             $query->join('users', 'patients.user_id', '=', 'users.id')
                 ->orderBy('users.name');
@@ -25,10 +48,11 @@ class PatientController extends Controller
             $query->latest();
         }
 
-        $patients = $query->paginate(10);
+        $patients = $query->paginate(10)->withQueryString(); // important to keep query params in pagination
 
         return view('admin.patients.index', compact('patients'));
     }
+
 
     // ================== CREATE ==================
     public function create()
@@ -40,13 +64,19 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'phone' => 'required',
-            'password' => 'required|min:6',
-            'blood_type' => 'nullable',
-            'chronic_diseases' => 'nullable'
+            'name' => 'required|string|max:255',
+
+            'email' => 'required|email|max:255|unique:users,email',
+
+            'phone' => 'required|string|regex:/^[0-9\-\+\s()]{8,20}$/|unique:users,phone',
+
+            'password' => 'required|string|min:6|confirmed',
+
+            'blood_type' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+
+            'chronic_diseases' => 'nullable|string|max:500'
         ]);
+
 
         $user = User::create([
             'name' => $request->name,
@@ -88,12 +118,21 @@ class PatientController extends Controller
         $user = $patient->user;
 
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'required',
-            'blood_type' => 'nullable',
-            'chronic_diseases' => 'nullable'
+            'name' => 'required|string|max:255',
+
+            // unique email except current user
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+
+            // unique phone except current user + phone format
+            'phone' => 'required|string|regex:/^[0-9\-\+\s()]{8,20}$/|unique:users,phone,' . $user->id,
+
+            // Blood Type (A+, A-, B+, B-, O+, O-, AB+, AB-)
+            'blood_type' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+
+            // Chronic Diseases (text)
+            'chronic_diseases' => 'nullable|string|max:500',
         ]);
+
 
         // Update user
         $user->update([

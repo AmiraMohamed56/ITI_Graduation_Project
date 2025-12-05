@@ -97,5 +97,8 @@ class DatabaseSeeder extends Seeder
         });
 
         echo "\n✔ Database seeded successfully with realistic English data.\n";
+        $this->call([
+            AdminLogSeeder::class,
+        ]);
     }
 }

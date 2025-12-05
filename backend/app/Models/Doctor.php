@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Traits\AdminLoggable;
 class Doctor extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, AdminLoggable;
 
     protected $fillable = [
         'user_id', 'specialty_id', 'bio', 'education', 'years_experience',

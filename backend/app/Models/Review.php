@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\AdminLoggable;
 class Review extends Model
 {
-    use HasFactory;
+    use HasFactory, AdminLoggable;
 
     protected $fillable = ['patient_id', 'doctor_id', 'rating', 'comment'];
 

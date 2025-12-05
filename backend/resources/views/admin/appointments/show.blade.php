@@ -4,7 +4,7 @@
 @section('title', 'Appointment Details')
 
 @section('breadcrumb')
-    <a href="{{ route('admin.appointments.show', $appointment) }}">Appointment Details</a> / #{{ $appointment->id }}
+    <a href="{{ route('admin.appointments.index') }}" class="hover:underline">Appointments</a> / #{{ $appointment->id }}
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
     <div></div>
 
 
-    <x-admin.button size="sm"><a href="{{ route('admin.appointments.edit', $appointment) }}">edit appointment</a></x-admin.button>
+    <x-admin.button size="sm" type="secondary"><a href="{{ route('admin.appointments.edit', $appointment) }}">edit appointment</a></x-admin.button>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -38,13 +38,6 @@
                 ($appointment->status === 'confirmed' ? 'bg-green-100 text-green-800' :
                 ($appointment->status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'))
                  }}"> {{ ucfirst($appointment->status) }}</span>
-                {{-- <select name="appointment_status" id="appointment-status" class="px-1 py-1 mx-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-                    <option value="{{ $appointment->status }}">{{ ucfirst($appointment->status) }}</option>
-                    <option value="pending" {{ $appointment->status === 'pending' ? 'hidden' : '' }}>Pending</option>
-                    <option value="confirmed" {{ $appointment->status === 'confirmed' ? 'hidden' : '' }}>Confirmed</option>
-                    <option value="cancelled" {{ $appointment->status === 'cancelled' ? 'hidden' : '' }}>Cancelled</option>
-                    <option value="completed" {{ $appointment->status === 'completed' ? 'hidden' : '' }}>Completed</option>
-                </select> --}}
             </div>
 
             <div><strong>Duration: </strong> {{ $appointment->doctorSchedule->appointment_duration }} minutes</div>
@@ -102,7 +95,11 @@
             <div><strong>Created at: </strong> {{ $payment->created_at->format('d-m-Y H:i:s') ?? '-' }}</div>
         </div>
         @else
-        <div class="text-sm">No payment iformation for this appointment.</div>
+        <div class="text-sm mb-4">No payment iformation for this appointment.</div>
+
+        <a href="{{ route('admin.payments.create', $appointment) }}">
+            <x-admin.button type="secondary" size="sm">Pay</x-admin.button>
+        </a>
         @endif
     </x-admin.card>
 
