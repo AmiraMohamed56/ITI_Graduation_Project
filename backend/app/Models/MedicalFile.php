@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\AdminLoggable;
 class MedicalFile extends Model
 {
-    use HasFactory;
+    use HasFactory, AdminLoggable;
 
     protected $fillable = ['medical_record_id', 'file_path'];
 

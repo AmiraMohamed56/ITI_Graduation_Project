@@ -10,8 +10,7 @@ use App\Http\Controllers\Doctor\ScheduleController;
 use Illuminate\Support\Facades\Route;
 
 
-
-
+use App\Http\Controllers\Admin\AdminLogController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\DoctorController;
@@ -83,6 +82,8 @@ Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->nam
 
 // Trashed / Soft Delete
 Route::post('/patients/{id}/restore', [PatientController::class, 'restore'])->name('admin.patients.restore');
+Route::get('/logs', [AdminLogController::class, 'index'])->name('admin.logs.index');
+
 
 
 
