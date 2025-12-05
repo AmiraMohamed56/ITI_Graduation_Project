@@ -18,19 +18,16 @@
 @endif
 
 <x-admin.card>
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-10">
         <h2 class="text-lg font-semibold">All Payments</h2>
+        @if(request('status') || request('method') || request('transaction') || request('appointment') || request('patient'))
+            <x-admin.button type="secondary">
+                <a href="{{ route('admin.payments.index') }}" >Clear</a>
+            </x-admin.button>
+        @endif
     </div>
 
-    <div class="flex items-center justify-between mb-10">
-        <div></div>
-        <form method="GET">
-            @csrf
-            <div class="flex items-center space-x-2">
 
-            </div>
-        </form>
-    </div>
 
     <div class="overflow-x-auto">
         <x-admin.table>
