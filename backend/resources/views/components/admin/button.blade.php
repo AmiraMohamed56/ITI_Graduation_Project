@@ -47,7 +47,7 @@ $colors = match($type) {
          focus:ring-gray-500 shadow-sm hover:shadow",
 };
 
-$finalClasses = "$base $sizes $colors";
+$finalClasses = "$base $sizes $colors drop-shadow";
 @endphp
 
 <button {{ $attributes->merge(['class' => $finalClasses]) }} {{ $loading ? 'disabled' : '' }}>
