@@ -38,15 +38,13 @@ export class DoctorProfileComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'حدث خطأ أثناء تحميل بيانات الدكتور';
+        this.error = 'Error loading doctor profile.';
         this.loading = false;
       }
     });
   }
 
   bookAppointment() {
-    // هنا ممكن تعمل navigate لصفحة الحجز مع ID الدكتور
-    // alert(`Booking appointment for Dr. ${this.doctor?.bio}`);
     this.router.navigate(['/book-appointment']);
 
   }

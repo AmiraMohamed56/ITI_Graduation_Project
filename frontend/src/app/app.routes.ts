@@ -19,6 +19,9 @@ import { Services } from './features/services/services';
 import { LandingComponent } from './LandinPage/landing/landing.component';
 import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profile.component';
 import { BookingComponent } from './booking/booking.component';
+import { AllDoctors } from './LandinPage/all-doctors/all-doctors';
+import { DoctorsByCategoryComponent } from './LandinPage/doctors-by-categor/doctors-by-category.component';
+import { AllSpecialtiesComponent } from './specialities/all-specialties';
 
 export const routes: Routes = [
   // Auth routes (login/register)
@@ -49,6 +52,10 @@ export const routes: Routes = [
       { path: 'patient-profile', component: PatientProfile },
       { path: 'payment-form', component: PaymentComponent },
       { path: 'book-appointment', component: BookingComponent },
+      { path: 'doctors/all', component: AllDoctors },
+      { path: 'doctors/category/:id', component: DoctorsByCategoryComponent },
+      { path: 'specialties', component: AllSpecialtiesComponent },
+
 
     ],
   },

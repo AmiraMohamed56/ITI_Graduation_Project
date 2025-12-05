@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Patients\Api\UpdatePatientRequest;
-use App\Http\Requests\Patients\Api\UpdateUserRequest;
+use App\Http\Requests\Api\Patients\UpdatePatientRequest;
+use App\Http\Requests\Api\Patients\UpdateUserRequest;
 use App\Http\Resources\Patient\PatientProfileResource;
 use App\Models\Patient;
 use App\Models\User;

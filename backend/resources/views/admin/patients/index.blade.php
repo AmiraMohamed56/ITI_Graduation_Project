@@ -43,13 +43,87 @@
             {{ session('success') }}
         </div>
         @endif
+        <!-- Filters -->
+        <div class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+            <form method="GET" action="{{ route('admin.patients.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+                <!-- Name Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Search by name..."
+                        value="{{ request('name') }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm" />
+                </div>
+
+                <!-- Email Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Search by email..."
+                        value="{{ request('email') }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm" />
+                </div>
+
+                <!-- Phone Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
+                    <input
+                        type="text"
+                        name="phone"
+                        placeholder="Search by phone..."
+                        value="{{ request('phone') }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm" />
+                </div>
+
+                <!-- Blood Type Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Blood Type</label>
+                    <select
+                        name="blood_type"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm">
+                        <option value="">All Types</option>
+                        <option value="A+" {{ request('blood_type') == 'A+' ? 'selected' : '' }}>A+</option>
+                        <option value="A-" {{ request('blood_type') == 'A-' ? 'selected' : '' }}>A-</option>
+                        <option value="B+" {{ request('blood_type') == 'B+' ? 'selected' : '' }}>B+</option>
+                        <option value="B-" {{ request('blood_type') == 'B-' ? 'selected' : '' }}>B-</option>
+                        <option value="AB+" {{ request('blood_type') == 'AB+' ? 'selected' : '' }}>AB+</option>
+                        <option value="AB-" {{ request('blood_type') == 'AB-' ? 'selected' : '' }}>AB-</option>
+                        <option value="O+" {{ request('blood_type') == 'O+' ? 'selected' : '' }}>O+</option>
+                        <option value="O-" {{ request('blood_type') == 'O-' ? 'selected' : '' }}>O-</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-end gap-2">
+                    <button
+                        type="submit"
+                        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fas fa-filter text-xs"></i>
+                        Filter
+                    </button>
+
+                    <a
+                        href="{{ route('admin.patients.index') }}"
+                        class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fas fa-times text-xs"></i>
+                        Clear
+                    </a>
+                </div>
+
+            </form>
+        </div>
 
         <!-- Table -->
         <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow">
             <table class="w-full text-left">
                 <thead class="bg-gray-100 dark:bg-gray-700">
                     <tr>
-                        <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">#</th>
+                        <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Patient Name</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Email</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Phone</th>

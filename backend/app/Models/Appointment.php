@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use App\Traits\AdminLoggable;
 class Appointment extends Model
 {
-    use HasFactory;
+    use HasFactory, AdminLoggable;
 
     protected $fillable = [
         'patient_id', 'doctor_id', 'doctor_schedule_id',
@@ -50,4 +50,5 @@ class Appointment extends Model
     {
         return $this->hasOne(Invoice::class);
     }
+
 }

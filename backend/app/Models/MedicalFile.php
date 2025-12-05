@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\AdminLoggable;
 class MedicalFile extends Model
 {
-    use HasFactory;
+    use HasFactory, AdminLoggable;
 
     protected $fillable = ['medical_record_id', 'file_path'];
 
@@ -15,5 +15,23 @@ class MedicalFile extends Model
     public function medicalRecord()
     {
         return $this->belongsTo(MedicalRecord::class);
+    }
+
+    // Accessor for file URL
+    public function getUrlAttribute(): string
+    {
+        return asset('storage/' . $this->file_path);
+    }
+
+    // Accessor for file name
+    public function getNameAttribute(): string
+    {
+        return basename($this->file_path);
+    }
+
+    // Accessor for file extension
+    public function getExtensionAttribute(): string
+    {
+        return strtolower(pathinfo($this->file_path, PATHINFO_EXTENSION));
     }
 }

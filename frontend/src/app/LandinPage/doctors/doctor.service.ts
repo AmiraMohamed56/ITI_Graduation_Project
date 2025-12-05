@@ -1,113 +1,121 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { Doctor } from './doctor.model';
+
+export interface DoctorSearchParams {
+  name?: string;
+  specialty?: string;
+  gender?: string;
+  available_for_online?: boolean | string;
+  page?: number;
+  per_page?: number;
+}
+
+export interface PaginationMeta {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+  from: number;
+  to: number;
+}
+
+export interface PaginatedDoctorsResponse {
+  status: boolean;
+  message: string;
+  data: Doctor[];
+  meta: PaginationMeta;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
 
-  private apiUrl = 'http://localhost:8000/api/doctors';
-
-  // بيانات مؤقتة للاختبار
-  private fallbackDoctors: Doctor[] = [
-    {
-      id: 1,
-      user_id: 101,
-      specialty_id: 1,
-      bio: 'General Practitioner',
-      education: 'MBBS',
-      years_experience: 5,
-      gender: 'male',
-      consultation_fee: 200,
-      rating: 4.5,
-      available_for_online: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      deleted_at: null
-    },
-    {
-      id: 2,
-      user_id: 102,
-      specialty_id: 2,
-      bio: 'Pediatrician',
-      education: 'MBBS, Pediatrics',
-      years_experience: 7,
-      gender: 'female',
-      consultation_fee: 250,
-      rating: 4.8,
-      available_for_online: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      deleted_at: null
-    }
-  ];
+  private apiUrl = 'http://127.0.0.1:8000/api/doctors';
 
   constructor(private http: HttpClient) {}
 
-  // جلب كل الأطباء
+  // Get all doctors (without pagination) - for home page
   getDoctors(): Observable<Doctor[]> {
-    return this.http.get<Doctor[]>(this.apiUrl).pipe(
+    return this.http.get<any>(this.apiUrl).pipe(
+      map(res => res.data),
       catchError(err => {
-        console.warn('API failed, using fallback data', err);
-        return of(this.fallbackDoctors);
+        console.error(err);
+        return throwError(() => err);
       })
     );
   }
 
-  // جلب طبيب بالـ ID
-  getDoctorById(id: number): Observable<Doctor> {
-    return this.http.get<Doctor>(`${this.apiUrl}/${id}`).pipe(
+  // Get paginated doctors with filters
+  getDoctorsPaginated(params: DoctorSearchParams): Observable<PaginatedDoctorsResponse> {
+    let httpParams = new HttpParams();
+
+    if (params.name) {
+      httpParams = httpParams.set('name', params.name);
+    }
+    if (params.specialty) {
+      httpParams = httpParams.set('specialty', params.specialty);
+    }
+    if (params.gender) {
+      httpParams = httpParams.set('gender', params.gender);
+    }
+    if (params.available_for_online !== undefined && params.available_for_online !== '') {
+      // Convert boolean to 0 or 1
+      const value = params.available_for_online === true || params.available_for_online === 'true' ? '1' : '0';
+      httpParams = httpParams.set('available_for_online', value);
+    }
+    if (params.page) {
+      httpParams = httpParams.set('page', params.page.toString());
+    }
+    if (params.per_page) {
+      httpParams = httpParams.set('per_page', params.per_page.toString());
+    }
+
+    return this.http.get<PaginatedDoctorsResponse>(this.apiUrl, { params: httpParams }).pipe(
       catchError(err => {
-        console.warn(`API failed for doctor ${id}, using fallback data`, err);
-        const doctor = this.fallbackDoctors.find(d => d.id === id);
-        return of(doctor!);
+        console.error('Error fetching paginated doctors:', err);
+        return throwError(() => err);
       })
     );
   }
 
-  // إضافة طبيب جديد
-  addDoctor(data: Doctor): Observable<any> {
-    return this.http.post(this.apiUrl, data).pipe(
-      catchError(err => {
-        console.warn('API add failed, pretending to add doctor', err);
-        this.fallbackDoctors.push({ ...data, id: this.fallbackDoctors.length + 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
-        return of({ success: true });
-      })
-    );
-  }
-
-  // تعديل بيانات طبيب
-  updateDoctor(id: number, data: Doctor): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data).pipe(
-      catchError(err => {
-        console.warn('API update failed, updating fallback data', err);
-        const index = this.fallbackDoctors.findIndex(d => d.id === id);
-        if (index !== -1) this.fallbackDoctors[index] = { ...data, id, updated_at: new Date().toISOString() };
-        return of({ success: true });
-      })
-    );
-  }
-
-  // حذف طبيب
-  deleteDoctor(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
-      catchError(err => {
-        console.warn('API delete failed, removing from fallback data', err);
-        this.fallbackDoctors = this.fallbackDoctors.filter(d => d.id !== id);
-        return of({ success: true });
-      })
-    );
-  }
+  // Get doctors by specialty
   getDoctorsBySpecialty(specialtyId: number): Observable<Doctor[]> {
-  return this.http.get<Doctor[]>(`${this.apiUrl}?specialty_id=${specialtyId}`).pipe(
-    catchError(err => {
-      console.warn('API failed, using fallback doctors', err);
-      return of(this.fallbackDoctors.filter(d => d.specialty_id === specialtyId));
-    })
-  );
-}
+    return this.http.get<any>(`${this.apiUrl}?specialty_id=${specialtyId}`).pipe(
+      map(res => res.data),
+      catchError(err => {
+        console.error(err);
+        return throwError(() => err);
+      })
+    );
+  }
 
+  // Get single doctor by ID
+  getDoctorById(id: number): Observable<Doctor> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map(res => res.data),
+      catchError(err => {
+        console.error(err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  // Get all specialties (for filter dropdown)
+  getAllSpecialties(): Observable<string[]> {
+    return this.getDoctors().pipe(
+      map(doctors => {
+        const specialties = new Set<string>();
+        doctors.forEach(doctor => {
+          if (doctor.specialty?.name) {
+            specialties.add(doctor.specialty.name);
+          }
+        });
+        return Array.from(specialties).sort();
+      })
+    );
+  }
 }
