@@ -7,12 +7,15 @@ use App\Http\Controllers\Doctor\DoctorDashboardController;
 
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminAppointmentController;
+use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\DoctorController;
 
 
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Api\Patient\PatientApiController ;
+use App\Http\Controllers\Invoice\InvoiceController;
+
 Route::get('/', function () {
     return view('Doctors_Dashboard.schedule.show');
 });
@@ -35,9 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 // =========================================== admin start =====================================================
-// Route::get('/test-flash', function () {
-//     return redirect('/admin/settings')->with('success', 'It works!');
-// });
 
 // settings
 Route::get('admin/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
@@ -52,6 +52,11 @@ Route::patch('/admin/appointments/{appointment}', [AdminAppointmentController::c
 Route::post('/admin/appointments', [AdminAppointmentController::class, 'store'])->name('admin.appointments.store');
 Route::delete('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
 
+// payments
+Route::resource('/admin/payments', AdminPaymentController::class)->names('admin.payments');
+
+// Invoices
+Route::resource('/invoices', InvoiceController::class)->names('invoice');
 
 // patients
 Route::get('/patients', [PatientController::class, 'index'])->name('admin.patients.index');
