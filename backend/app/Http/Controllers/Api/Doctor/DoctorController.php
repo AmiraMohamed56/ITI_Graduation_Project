@@ -37,12 +37,20 @@ class DoctorController extends Controller
             $query->where('available_for_online', $request->available_for_online);
         }
 
-        $doctors = $query->get();
+        $doctors = $query->paginate($request->input('per_page', 8));
 
         return response()->json([
             'status' => true,
             'message' => 'Doctors retrieved successfully',
             'data' => DoctorResource::collection($doctors),
+            'meta' => [
+                'current_page' => $doctors->currentPage(),
+                'last_page' => $doctors->lastPage(),
+                'per_page' => $doctors->perPage(),
+                'total' => $doctors->total(),
+                'from' => $doctors->firstItem(),
+                'to' => $doctors->lastItem(),
+            ],
         ]);
     }
 
