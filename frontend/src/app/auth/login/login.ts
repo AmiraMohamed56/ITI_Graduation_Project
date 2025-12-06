@@ -1,37 +1,38 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
 
-  form: FormGroup
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-    });
-  }
+  form = {email: '', password: ''};
+  errorMessage = '';
 
-  login() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+  constructor(private router: Router, private auth: AuthService) { }
+
+  onSubmit(){
+    if (!this.form.email || !this.form.password) {
+      this.errorMessage = 'Please enter your email and password.';
       return;
     }
-    const { email, password } = this.form.value;
-    if (email === 'test@example.com' && password === 'password') {
-      this.router.navigate(['/home']);
-    } else {
-      this.form.setErrors({ invalidCredentials: true });
-    }
 
+    this.auth.login(this.form).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.errorMessage = this.auth.getErrorMessage(err);
+      }
+    });
   }
 
 

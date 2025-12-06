@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Patient\PatientApiController;
 use App\Http\Controllers\Api\Doctor\DoctorController;
+use App\Http\Controllers\Api\Patient\PatientAuthController;
 use App\Http\Controllers\Api\Reviews\ReviewController;
 // ============================== Booking Appointment start =======================================
 use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
@@ -54,3 +55,15 @@ Route::delete('patient/{id}/profile-pic', [PatientApiController::class, 'removeP
 //Api Routes for Doctor management
 Route::apiResource('doctors', DoctorController::class);
 Route::apiResource('reviews', ReviewController::class);
+
+
+// Auth API Routes for Patient
+Route::post('patient/register', [PatientAuthController::class, 'register']);
+Route::post('patient/login', [PatientAuthController::class, 'login']);
+Route::post('patient/send-verification-code', [PatientAuthController::class, 'sendVerificationCode']);
+Route::post('patient/verify-code', [PatientAuthController::class, 'verifyCode']);
+Route::post('patient/forgot-password', [PatientAuthController::class, 'forgotPassword']);
+Route::post('patient/reset-password', [PatientAuthController::class, 'resetPassword']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('patient/logout', [PatientAuthController::class, 'logout']);
+});
