@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\SymptomAnalysis;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Doctor;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Specialty;
 
 class SymptomsController extends Controller
 {
     public function analyze(Request $request)
     {
-
         $request->validate([
             'symptoms' => 'required|string|min:3|max:2000',
             'age' => 'nullable|integer',
@@ -81,6 +81,28 @@ Example:
         if (json_last_error() !== JSON_ERROR_NONE) {
             if (preg_match('/\{.*\}/s', $clean, $m)) {
                 $parsed = json_decode($m[0], true);
+            }
+        }
+
+        if ($parsed && isset($parsed['diagnoses'])) {
+            foreach ($parsed['diagnoses'] as &$diag) {
+                $specialty = Specialty::where('name', $diag['recommended_specialty'])->first();
+                if ($specialty) {
+                    $diag['doctors'] = Doctor::where('specialty_id', $specialty->id)
+                        ->with('user:id,name,email,phone') // جلب بيانات المستخدم المرتبط
+                        ->get()
+                        ->map(function ($doctor) {
+                            return [
+                                'id' => $doctor->id,
+                                'name' => $doctor->user->name ?? '',
+                                'email' => $doctor->user->email ?? '',
+                                'phone' => $doctor->user->phone ?? '',
+                                'specialty' => $doctor->specialty->name ?? '',
+                            ];
+                        });
+                } else {
+                    $diag['doctors'] = [];
+                }
             }
         }
 

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AiService } from '../services/ai.service';
+import { AiService, StructuredData } from '../services/ai.service';
 import { CommonModule } from '@angular/common';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-symptoms-checker',
   standalone: true,
@@ -14,10 +14,10 @@ export class SymptomsCheckerComponent {
   age?: number;
   gender?: string = '';
   loading = false;
-  result: any = null;
+  result: StructuredData | null = null;
   error: string | null = null;
 
-  constructor(private ai: AiService) {}
+  constructor(private router: Router,private ai: AiService) {}
 
   submit() {
     this.error = null;
@@ -32,10 +32,10 @@ export class SymptomsCheckerComponent {
     this.ai.analyzeSymptoms({ symptoms: this.symptomsText, age: this.age, gender: this.gender }).subscribe({
       next: res => {
         this.loading = false;
-        if (res.status && res.data) {
-          this.result = res.data;
+        if (res.status && res.data?.structured) {
+          this.result = res.data.structured;
         } else {
-          this.error = 'No result from AI.';
+          this.error = 'No structured result from AI.';
         }
       },
       error: err => {
@@ -52,7 +52,7 @@ export class SymptomsCheckerComponent {
     return 'bg-green-100 text-green-700';
   }
 
-  bookSpecialist(specialty: string) {
-    alert(`Redirect to book with ${specialty} (implement real flow).`);
-  }
+goToDoctorProfile(doctorId: number) {
+  this.router.navigate(['/doctor', doctorId]);
+}
 }

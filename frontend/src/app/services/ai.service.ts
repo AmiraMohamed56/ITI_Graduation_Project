@@ -2,12 +2,34 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface DoctorInfo {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  specialty: string;
+}
+
+export interface Diagnosis {
+  name: string;
+  confidence_percent: number;
+  reasoning: string;
+  recommended_specialty: string;
+  doctors: DoctorInfo[];
+}
+
+export interface StructuredData {
+  diagnoses: Diagnosis[];
+  next_steps: string[];
+  urgency: string;
+}
+
 export interface AiAnalysisResponse {
   status: boolean;
   data: {
     analysis_id: number;
     raw: string;
-    structured?: any;
+    structured?: StructuredData;
   }
 }
 

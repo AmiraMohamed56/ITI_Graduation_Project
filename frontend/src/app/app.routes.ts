@@ -62,7 +62,7 @@ export const routes: Routes = [
       { path: 'doctors/category/:id', component: DoctorsByCategoryComponent },
       { path: 'specialties', component: AllSpecialtiesComponent },
 
-{ path: 'ai', component: SymptomsCheckerComponent }, 
+      { path: 'ai', component: SymptomsCheckerComponent },
     ],
   },
   // Fallback: redirect unknown routes to home
