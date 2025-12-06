@@ -21,8 +21,8 @@ export class AppointmentService {
   }
 
   // Get appointments filtered by doctor ID and schedule date
-  getAppointments(doctorId: number, date: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/appointments?doctor_id=${doctorId}&schedule_date=${date}`);
+  getAppointments(doctorId: number, doctor_schedule_id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/appointments?doctor_id=${doctorId}&doctor_schedule_id=${doctor_schedule_id}`);
   }
 
   // Get all schedules for a doctor
@@ -31,8 +31,8 @@ export class AppointmentService {
   }
 
   // Get schedule for a specific day
-  getDoctorSchedule(doctorId: number, dayOfWeek: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}&day_of_week=${dayOfWeek}`);
+  getDoctorSchedule(doctorId: number, doctor_schedule_id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/doctor_schedules?doctor_id=${doctorId}&doctor_schedule_id=${doctor_schedule_id}`);
   }
 
   // Book a new appointment
