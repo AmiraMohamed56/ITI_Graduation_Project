@@ -13,6 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+    ],
 
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),

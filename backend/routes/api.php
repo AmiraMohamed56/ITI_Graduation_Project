@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\Reviews\ReviewController;
 use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
 use App\Http\Controllers\Api\Booking\BookingAppointmentController;
 use App\Http\Controllers\Api\Booking\BookingDoctorController;
-
+use App\Http\Controllers\Api\AI\SymptomsController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -68,6 +68,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('patient/logout', [PatientAuthController::class, 'logout']);
 });
 
+
+Route::post('/ai/symptoms', [SymptomsController::class, 'analyze']);
 // ========================= google login start ========================================
 use App\Http\Controllers\Auth\GoogleController;
 

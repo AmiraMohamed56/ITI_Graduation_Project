@@ -24,6 +24,7 @@ import { ResetPassword } from './auth/reset-password/reset-password';
 import { AllDoctors } from './LandinPage/all-doctors/all-doctors';
 import { DoctorsByCategoryComponent } from './LandinPage/doctors-by-categor/doctors-by-category.component';
 import { AllSpecialtiesComponent } from './specialities/all-specialties';
+import { SymptomsCheckerComponent } from './symptoms-checker/symptoms-checker.component';
 
 export const routes: Routes = [
   // Auth routes (login/register)
@@ -61,7 +62,7 @@ export const routes: Routes = [
       { path: 'doctors/category/:id', component: DoctorsByCategoryComponent },
       { path: 'specialties', component: AllSpecialtiesComponent },
 
-
+      { path: 'ai', component: SymptomsCheckerComponent },
     ],
   },
   // Fallback: redirect unknown routes to home
