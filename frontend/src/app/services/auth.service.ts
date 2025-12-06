@@ -34,10 +34,10 @@ export class AuthService {
       tap((res: any) => {
         if (res.token) {
           this.setToken(res.token);
-          this.setUser(res.user);
+          this.setUser(res.data);
         }
       }),
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() =>this.formatError(error)))
     );
   }
 
@@ -46,10 +46,10 @@ export class AuthService {
       tap((res: any) => {
         if (res.token) {
           this.setToken(res.token);
-          this.setUser(res.user);
+          this.setUser(res.data);
         }
       }),
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() => this.formatError(error)))
     );
   }
 
@@ -58,10 +58,7 @@ export class AuthService {
       Authorization: `Bearer ${this.getToken()}`,
     });
 
-    this.http.post(`${this.baseUrl}/logout`, {}, { headers }).subscribe({
-      next: () => { },
-      error: () => { },
-    });
+    this.http.post(`${this.baseUrl}/logout`, {}, { headers }).subscribe();
 
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -95,27 +92,37 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  private formatError(error: any): string {
+    if (error.error?.errors) {
+      return Object.values(error.error.errors).flat().join(', ');
+    }
+    if (error.error?.message) {
+      return error.error.message;
+    }
+    return 'Something went wrong. Please try again later.';
+  }
+
   sendVerificationCode(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/send-verification-code`, data).pipe(
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() => this.formatError(error)))
     );
   }
 
   verifyCode(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/verify-code`, data).pipe(
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() => this.formatError(error)))
     );
   }
 
   forgotPassword(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/forgot-password`, data).pipe(
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() => this.formatError(error)))
     );
   }
 
   resetPassword(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/reset-password`, data).pipe(
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() => this.formatError(error)))
     );
   }
 
