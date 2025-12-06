@@ -13,6 +13,22 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  // Handle Google login
+  googleLogin(token: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login/google/callback`, { token }).pipe(
+      tap((res: any) => {
+        if (res.token) {
+          this.setToken(res.token);
+          this.setUser(res.user);
+        }
+      }),
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+
+
+
   register(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, data).pipe(
       tap((res: any) => {

@@ -2,9 +2,9 @@
   <div
     *ngFor="let t of toastService.toasts$ | async"
     [ngClass]="{
-      'bg-emerald-700/40 border-green-400': t.type === 'success',
-      'bg-rose-700/40 border-red-400': t.type === 'error',
-      'bg-blue-700/40 border-blue-400': t.type === 'info'
+      'bg-green-600': t.type === 'success',
+      'bg-red-600': t.type === 'error',
+      'bg-blue-600': t.type === 'info'
     }"
     class="
       min-w-[260px]

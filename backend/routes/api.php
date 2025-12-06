@@ -70,3 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::post('/ai/symptoms', [SymptomsController::class, 'analyze']);
+// ========================= google login start ========================================
+use App\Http\Controllers\Auth\GoogleController;
+
+Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// ========================= google login end ========================================
