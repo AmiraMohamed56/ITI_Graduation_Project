@@ -25,7 +25,6 @@ import { AllDoctors } from './LandinPage/all-doctors/all-doctors';
 import { DoctorsByCategoryComponent } from './LandinPage/doctors-by-categor/doctors-by-category.component';
 import { AllSpecialtiesComponent } from './specialities/all-specialties';
 
-
 export const routes: Routes = [
   // Auth routes (login/register)
   {
