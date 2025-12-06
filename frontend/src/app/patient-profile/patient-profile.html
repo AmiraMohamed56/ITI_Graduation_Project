@@ -43,80 +43,199 @@
     </div>
 
     <!-- Profile Tab -->
-    <div *ngIf="activeTab === 'profile'" class="space-y-6">
+    <div *ngIf="activeTab === 'profile'" class="space-y-10">
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card -->
+        <div
+          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-blue-200/40 duration-300"
+        >
+          <p class="text-gray-500">Total Appointments</p>
+          <h3 class="text-3xl font-bold text-blue-600">{{ patient.appointments_count }}</h3>
+        </div>
+
+        <div
+          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-indigo-200/40 duration-300"
+        >
+          <p class="text-gray-500">Medical Records</p>
+          <h3 class="text-3xl font-bold text-indigo-600">{{ patient.medical_records_count }}</h3>
+        </div>
+
+        <div
+          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-purple-200/40 duration-300"
+        >
+          <p class="text-gray-500">Blood Type</p>
+          <h3 class="text-3xl font-bold text-purple-600">{{ patient.blood_type }}</h3>
+        </div>
+
+        <div
+          *ngIf="patient.age"
+          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-green-200/40 duration-300"
+        >
+          <p class="text-gray-500">Age</p>
+          <h3 class="text-3xl font-bold text-green-600">{{ patient.age }}</h3>
+        </div>
+      </div>
       <!-- Header Card -->
       <div
-        class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 flex flex-col md:flex-row items-center gap-6 transition-transform hover:-translate-y-1 duration-300"
+        class="relative bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-10 flex flex-col md:flex-row items-center gap-10 transition-all duration-500 hover:shadow-blue-300/40 hover:-translate-y-2"
       >
-        <div class="relative">
+        <!-- Avatar -->
+        <div class="relative group">
           <div
             *ngIf="patient.profile_pic; else initials"
-            class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-white overflow-hidden shadow-lg"
+            class="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-xl group-hover:scale-105 transition-transform duration-300"
           >
             <img [src]="patient.profile_pic" class="w-full h-full object-cover" />
           </div>
+
+          <!-- Initials Avatar -->
           <ng-template #initials>
             <div
-              class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-white bg-blue-400 flex items-center justify-center text-white text-4xl font-bold shadow-lg"
+              class="w-40 h-40 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center text-white text-5xl font-extrabold shadow-xl group-hover:scale-105 transition-transform duration-300"
             >
               {{ getInitials() }}
             </div>
           </ng-template>
+
+          <!-- Online Indicator -->
           <div
-            class="absolute bottom-2 right-2 w-5 h-5 bg-green-500 rounded-full border-2 border-white"
+            class="absolute bottom-3 right-3 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-md"
           ></div>
         </div>
+
+        <!-- Profile Info -->
         <div class="flex-1 text-center md:text-left space-y-2">
           <h1
-            class="text-3xl mb-4 md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
+            class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 tracking-wide"
           >
             {{ patient.name }}
           </h1>
-          <p class="text-gray-600">{{ patient.email }}</p>
-          <p class="text-gray-600">{{ patient.phone }}</p>
-          <p class="text-gray-600">Member since: {{ patient.member_since }}</p>
-          <p class="text-gray-600" *ngIf="patient.chronic_diseases">
-            Chronic Diseases: {{ patient.chronic_diseases }}
-          </p>
-          <p class="text-gray-600">
-            Status: <span class="capitalize">{{ patient.status }}</span>
-          </p>
+
+          <div class="mt-3 space-y-1 text-gray-700 text-lg">
+            <p class="flex items-center gap-2 justify-center md:justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.8"
+                stroke="#2563eb"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21.75 6.75v10.5A2.25 2.25 0 0119.5 19.5h-15A2.25 2.25 0 012.25 17.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.02 1.89l-7.5 4.875a2.25 2.25 0 01-2.46 0L3.27 8.883a2.25 2.25 0 01-1.02-1.89V6.75"
+                />
+              </svg>
+
+              {{ patient.email }}
+            </p>
+
+            <p class="flex items-center gap-2 justify-center md:justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.8"
+                stroke="#2563eb"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 4.5l4.5-.75a2.25 2.25 0 012.115 1.094l1.732 2.878a2.25 2.25 0 01-.383 2.71L8.25 12.75a12.058 12.058 0 005.005 5.006l2.318-1.964a2.25 2.25 0 012.71-.383l2.878 1.732A2.25 2.25 0 0120.25 21l-.75 4.5a2.25 2.25 0 01-2.25 2.25h-3A16.5 16.5 0 013 9.75v-3A2.25 2.25 0 014.5 4.5h3z"
+                />
+              </svg>
+
+              {{ patient.phone }}
+            </p>
+
+            <p class="flex items-center gap-2 justify-center md:justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.8"
+                stroke="#2563eb"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.75 3v2.25M17.25 3v2.25M3.75 9h16.5M4.5 7.5h15a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 012.25 18.75v-9A2.25 2.25 0 014.5 7.5z"
+                />
+              </svg>
+
+              Member since: {{ patient.member_since }}
+            </p>
+
+            <p
+              class="flex items-center gap-2 justify-center md:justify-start"
+              *ngIf="patient.chronic_diseases"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.8"
+                stroke="#dc2626"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 8.25v7.5M8.25 12h7.5M12 2.25a9.75 9.75 0 110 19.5 9.75 9.75 0 010-19.5z"
+                />
+              </svg>
+              chronic diseases:
+              {{ patient.chronic_diseases }}
+            </p>
+
+            <p class="flex items-center gap-2 justify-center md:justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 12l2 2 4-4m7 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+
+              <span>{{ patient.status }}</span> Status:
+              <span class="capitalize font-semibold text-indigo-600">{{ patient.status }}</span>
+            </p>
+          </div>
         </div>
+
+        <!-- Edit Button -->
         <button
           (click)="openEditModal()"
-          class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition"
+          class="absolute top-6 right-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold flex items-center gap-2"
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="white"
+            class="w-4 h-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M16.862 3.487a2.25 2.25 0 013.182 3.182L7.063 19.65l-4.32 1.138 1.138-4.32L16.862 3.487z"
+            />
+          </svg>
+
           Edit
         </button>
-      </div>
-
-      <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div
-          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
-        >
-          <p class="text-gray-500">Total Appointments</p>
-          <h3 class="text-2xl font-bold text-blue-600">{{ patient.appointments_count }}</h3>
-        </div>
-        <div
-          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
-        >
-          <p class="text-gray-500">Medical Records</p>
-          <h3 class="text-2xl font-bold text-indigo-600">{{ patient.medical_records_count }}</h3>
-        </div>
-        <div
-          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
-        >
-          <p class="text-gray-500">Blood Type</p>
-          <h3 class="text-2xl font-bold text-purple-600">{{ patient.blood_type }}</h3>
-        </div>
-        <div
-          class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-4 text-center transition-transform hover:-translate-y-1 duration-300"
-          *ngIf="patient.age"
-        >
-          <p class="text-gray-500">Age</p>
-          <h3 class="text-2xl font-bold text-green-600">{{ patient.age }}</h3>
-        </div>
       </div>
     </div>
 
@@ -287,11 +406,23 @@
           ✕
         </button>
         <h2 class="text-2xl font-bold">Edit Profile</h2>
-        <form (ngSubmit)="saveChanges()" class="space-y-4">
+        <form #editForm="ngForm" (ngSubmit)="saveChanges(editForm)" class="space-y-4">
           <!-- Name -->
           <div class="flex flex-col gap-2">
             <label class="font-semibold">Name</label>
-            <input [(ngModel)]="editUser.name" name="name" class="border rounded-lg p-2 w-full" />
+            <input
+              [(ngModel)]="editUser.name"
+              name="name"
+              required
+              minlength="3"
+              #nameCtrl="ngModel"
+              class="border rounded-lg p-2 w-full"
+            />
+
+            <!-- Errors -->
+            <p class="text-red-500 text-sm" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+              {{ getNameError(nameCtrl) }}
+            </p>
           </div>
 
           <!-- Email -->
@@ -301,8 +432,15 @@
               [(ngModel)]="editUser.email"
               name="email"
               type="email"
+              required
+              email
+              #emailCtrl="ngModel"
               class="border rounded-lg p-2 w-full"
             />
+
+            <p class="text-red-500 text-sm" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+              {{ getEmailError(emailCtrl) }}
+            </p>
           </div>
 
           <!-- Phone -->
@@ -311,16 +449,22 @@
             <input
               [(ngModel)]="editUser.phone"
               name="phone"
-              type="text"
+              required
+              pattern="^[0-9]{10,15}$"
+              #phoneCtrl="ngModel"
               class="border rounded-lg p-2 w-full"
             />
+
+            <p class="text-red-500 text-sm" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">
+              {{ getPhoneError(phoneCtrl) }}
+            </p>
           </div>
 
           <!-- Profile Image -->
           <div class="flex flex-col gap-2">
             <label class="font-semibold">Profile Image</label>
             <input type="file" (change)="onImageSelected($event)" class="border rounded-lg p-2" />
-            <div *ngIf="editUser.profile_pic; instanceof: File">
+            <div *ngIf="editUser.profile_pic; instanceof File">
               <div *ngIf="imagePreview">
                 <img [src]="imagePreview" class="w-32 h-32 object-cover rounded-lg mt-2" />
               </div>
@@ -333,9 +477,15 @@
             <input
               [(ngModel)]="editPatient.blood_type"
               name="blood_type"
-              type="text"
+              required
+              pattern="^(A|B|AB|O)[+-]$"
+              #bloodCtrl="ngModel"
               class="border rounded-lg p-2 w-full"
             />
+
+            <p class="text-red-500 text-sm" *ngIf="bloodCtrl.invalid && bloodCtrl.touched">
+              {{ getBloodError(bloodCtrl) }}
+            </p>
           </div>
 
           <!-- Chronic Diseases -->
@@ -344,9 +494,16 @@
             <textarea
               [(ngModel)]="editPatient.chronic_diseases"
               name="chronic_diseases"
+              required
+              minlength="5"
+              #chronicCtrl="ngModel"
               rows="3"
               class="border rounded-lg p-2 w-full"
             ></textarea>
+
+            <p class="text-red-500 text-sm" *ngIf="chronicCtrl.invalid && chronicCtrl.touched">
+              {{ getChronicError(chronicCtrl) }}
+            </p>
           </div>
 
           <button

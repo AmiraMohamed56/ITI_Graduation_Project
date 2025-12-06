@@ -1,0 +1,65 @@
+<!-- specialties.component.html (For Landing Page) -->
+<div class="specialties-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let i of [1,2,3,4,5,6,7,8]"
+         class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 animate-pulse">
+      <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4"></div>
+      <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-2"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto"></div>
+    </div>
+  </div>
+
+  <!-- Specialties Grid (Only 8) -->
+  <div *ngIf="!loading && specialties.length > 0"
+       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let specialty of specialties"
+         (click)="viewSpecialtyDoctors(specialty.id)"
+         class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6 cursor-pointer group">
+
+      <!-- Icon -->
+      <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <i [class]="'fas ' + getSpecialtyIcon(specialty.name) + ' text-white text-2xl'"></i>
+      </div>
+
+      <!-- Specialty Name -->
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white text-center mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        {{ specialty.name }}
+      </h3>
+
+      <!-- Doctors Count -->
+      <div class="text-center">
+        <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium">
+          <i class="fas fa-user-doctor text-xs"></i>
+          {{ specialty.doctors_count }}
+          {{ specialty.doctors_count === 1 ? 'Doctor' : 'Doctors' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && specialties.length === 0"
+       class="text-center py-16">
+    <div class="max-w-md mx-auto">
+      <div class="mb-6">
+        <i class="fas fa-hospital text-6xl text-gray-300 dark:text-gray-600"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+        No Specialties Available
+      </h3>
+      <p class="text-gray-500 dark:text-gray-400">
+        We're currently updating our medical specialties. Please check back later.
+      </p>
+    </div>
+  </div>
+
+  <!-- View All Button -->
+  <div *ngIf="!loading && specialties.length > 0" class="text-center mt-8">
+    <button (click)="viewAllSpecialties()"
+            class="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">
+      <span>View All Specialties</span>
+      <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+</div>

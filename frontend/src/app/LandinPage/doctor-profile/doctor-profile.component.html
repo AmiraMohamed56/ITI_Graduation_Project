@@ -1,41 +1,153 @@
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-10">
 
-  <div *ngIf="loading" class="text-center py-8">
-    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-b-4 mx-auto"></div>
-    <p class="text-gray-500 mt-2">Loading doctor details...</p>
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-12">
+    <div class="animate-spin h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+    <p class="text-gray-500 mt-4 text-lg">Loading doctor details...</p>
   </div>
 
-  <div *ngIf="error" class="text-red-600 text-center mb-4">{{ error }}</div>
+  <!-- Error -->
+  <div *ngIf="error" class="text-center text-red-600 font-semibold text-lg mb-6">
+    {{ error }}
+  </div>
 
-  <div *ngIf="doctor && !loading" class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 flex flex-col md:flex-row items-center md:items-start gap-8">
+  <!-- Doctor Card -->
+  <div *ngIf="doctor && !loading"
+       class="max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-10 flex flex-col md:flex-row gap-10 relative overflow-hidden">
 
-    <!-- Doctor Image or Initial -->
-    <div class="w-40 h-40 flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center"
-         [ngClass]="doctor.user_id ? '' : 'bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white text-5xl font-bold'">
-      <img *ngIf="doctor.user_id" src="https://via.placeholder.com/150" alt="Doctor Image" class="w-full h-full object-cover">
-      <span *ngIf="!doctor.user_id">{{ doctor.bio.charAt(0) }}</span>
+    <!-- Decorative Background -->
+    <div class="absolute top-0 right-0 w-40 h-40 bg-blue-200 opacity-30 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-40 h-40 bg-purple-200 opacity-30 rounded-full blur-3xl"></div>
+
+    <!-- Doctor Image -->
+    <div class="w-44 h-44 rounded-full overflow-hidden shadow-lg border-4 border-white mx-auto md:mx-0">
+
+      <img
+        *ngIf="doctor?.user?.profile_picture_url"
+        [src]="doctor?.user?.profile_picture_url || 'https://png.pngtree.com/background/20250815/original/pngtree-smiling-muslim-doctor-wearing-hijab-and-stethoscope-in-clinic-picture-image_17071453.jpg'"
+        alt="Doctor Image"
+      >
+
+      <div *ngIf="!doctor?.user?.profile_picture_url"
+           class="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 text-white text-5xl font-extrabold">
+        {{ doctor?.user?.name?.charAt(0) }}
+      </div>
+
     </div>
 
     <!-- Doctor Info -->
     <div class="flex-1">
-      <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ doctor.bio }}</h1>
-      <p class="text-gray-500 mb-4">{{ doctor.education }} | {{ doctor.years_experience }} years experience</p>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <p><strong>Gender:</strong> {{ doctor.gender }}</p>
-        <p><strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}</p>
-        <p><strong>Rating:</strong> {{ doctor.rating }} ⭐</p>
-        <p><strong>Online:</strong> {{ doctor.available_for_online ? 'Yes' : 'No' }}</p>
+      <!-- Name -->
+      <h1 class="text-4xl font-bold text-gray-800">
+        Dr. {{ doctor?.user?.name }}
+      </h1>
+
+      <p class="text-gray-500 mb-6 text-lg">
+        {{ doctor?.education }} • {{ doctor?.years_experience }} years experience
+      </p>
+
+      <!-- Info Badges -->
+      <div class="flex flex-wrap gap-3 mb-6">
+
+        <span class="px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded-full">
+          Gender: {{ doctor?.gender }}
+        </span>
+
+        <span class="px-4 py-2 bg-green-100 text-green-700 font-medium rounded-full">
+          Fee: ${{ doctor?.consultation_fee }}
+        </span>
+
+        <span class="px-4 py-2 bg-yellow-100 text-yellow-700 font-medium rounded-full flex items-center gap-1">
+          ⭐ {{ doctor?.rating_avg || doctor?.rating }}
+        </span>
+
+        <span
+          class="px-4 py-2 font-medium rounded-full"
+          [ngClass]="doctor?.available_for_online ? 'bg-purple-100 text-purple-700': 'bg-gray-200 text-gray-600'"
+        >
+          Online: {{ doctor?.available_for_online ? 'Available' : 'Not Available' }}
+        </span>
+
       </div>
 
-      <p class="text-gray-600 mb-6"><strong>Bio:</strong> {{ doctor.bio }}</p>
+      <!-- Specialty -->
+      <p class="text-blue-600 font-semibold text-lg mb-4">
+        Specialty: {{ doctor?.specialty?.name || 'Unknown' }}
+      </p>
 
+      <!-- Bio -->
+      <p class="text-gray-700 leading-relaxed mb-8">
+        {{ doctor?.bio }}
+      </p>
+
+      <!-- Schedules -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Schedules</h2>
+
+        <!-- No schedules -->
+        <div *ngIf="!doctor?.schedules?.length" class="text-gray-500 italic">
+          No schedules available yet.
+        </div>
+
+        <!-- Schedule list -->
+        <div *ngIf="doctor?.schedules?.length"
+             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          <div *ngFor="let schedule of doctor?.schedules"
+               class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl shadow hover:shadow-lg transition">
+
+            <h3 class="text-lg font-semibold text-blue-700 mb-2">
+              {{ schedule?.day }}
+            </h3>
+
+            <p class="text-gray-700">
+              <strong>From:</strong> {{ schedule?.start_time | date:'shortTime' }}
+            </p>
+
+            <p class="text-gray-700">
+              <strong>To:</strong> {{ schedule?.end_time | date:'shortTime' }}
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Patient Reviews</h2>
+
+        <!-- No Reviews -->
+        <p *ngIf="!doctor?.reviews?.length" class="text-gray-500 italic">
+          No patient reviews yet.
+        </p>
+
+        <!-- Reviews List -->
+        <div *ngIf="doctor?.reviews?.length" class="space-y-4">
+
+          <div *ngFor="let review of doctor?.reviews"
+               class="p-4 bg-gray-50 rounded-xl shadow">
+
+            <div class="flex items-center justify-between mb-2">
+              <!-- <span class="font-semibold text-gray-800">
+                {{ review?.patient?.user?.name }}
+              </span> -->
+
+              <span class="text-yellow-500">⭐ {{ review?.rating }}</span>
+            </div>
+
+            <p class="text-gray-700 italic">{{ review?.comment }}</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CTA -->
       <button (click)="bookAppointment()"
-              class="bg-blue-500 text-white py-2 px-6 rounded-xl hover:bg-blue-600 transition">
+              class="mt-8 bg-blue-600 text-white py-3 px-8 text-lg rounded-2xl shadow-md hover:bg-blue-700 active:scale-95 transition">
         Book Appointment
       </button>
+
     </div>
-
   </div>
-
 </div>

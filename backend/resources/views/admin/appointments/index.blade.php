@@ -2,10 +2,19 @@
 
 @section('title','Appointments')
 @section('breadcrumb')
-    <a href="{{ route('admin.appointments.index') }}">Appointments</a>
+    <a href="{{ route('admin.appointments.index') }}" class="hover:underline">Appointments</a>
 @endsection
 
 @section('content')
+
+@if(session('success'))
+    <x-admin.alert type="success" :message="session('success')" />
+@endif
+
+@if(session('error'))
+    <x-admin.alert type="error" :message="session('error')" />
+@endif
+
 <x-admin.card>
     <div class="flex justify-between items-center mb-10">
         <h2 class="text-lg font-semibold">All Appointments</h2>
@@ -46,6 +55,11 @@
                     <option value="completed" {{ request('status')=='completed' ? 'selected' : '' }}>Completed</option>
                 </select>
                 <x-admin.button>Filter</x-admin.button>
+                @if(request('status') || request('type') || request('q') || request('date_from') || request('date_to'))
+                <x-admin.button type="secondary">
+                    <a href="{{ route('admin.appointments.index') }}" >Clear</a>
+                </x-admin.button>
+            @endif
             </div>
         </form>
     </div>
@@ -77,10 +91,10 @@
                         <td class="px-4 py-3">{{ $appointment->schedule_time }}</td>
                         <td class="px-4 py-3">{{ ucfirst($appointment->type) }}</td>
                         <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded-full text-xs {{
-                                $appointment->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                ($appointment->status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                                ($appointment->status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')) }}">
+                            <span class="px-2 py-1 rounded-lg text-xs shadow {{
+                                $appointment->status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                                ($appointment->status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' :
+                                ($appointment->status === 'cancelled' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-800')) }}">
                                 {{ ucfirst($appointment->status) }}
                             </span>
                         </td>

@@ -69,10 +69,26 @@
 
                 <!-- Blood Type -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Blood Type</label>
-                    <input type="text" name="blood_type" value="{{ old('blood_type', $patient->blood_type) }}"
-                        class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-1 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Blood Type
+                    </label>
+
+                    <select name="blood_type"
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700
+               text-gray-900 dark:text-gray-100 focus:ring-1 focus:ring-blue-500">
+
+                        <option value="">Select Blood Type</option>
+
+                        @foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $type)
+                        <option value="{{ $type }}"
+                            {{ old('blood_type', $patient->blood_type) == $type ? 'selected' : '' }}>
+                            {{ $type }}
+                        </option>
+                        @endforeach
+
+                    </select>
                 </div>
+
 
                 <!-- Chronic Diseases -->
                 <div class="md:col-span-2">

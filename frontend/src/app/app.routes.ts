@@ -19,8 +19,14 @@ import { Services } from './features/services/services';
 import { LandingComponent } from './LandinPage/landing/landing.component';
 import { DoctorProfileComponent } from './LandinPage/doctor-profile/doctor-profile.component';
 import { BookingComponent } from './booking/booking.component';
+<<<<<<< HEAD
 import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
+=======
+import { AllDoctors } from './LandinPage/all-doctors/all-doctors';
+import { DoctorsByCategoryComponent } from './LandinPage/doctors-by-categor/doctors-by-category.component';
+import { AllSpecialtiesComponent } from './specialities/all-specialties';
+>>>>>>> 28b9d07af2dfa14f5b62e7d293687f05a75dd219
 
 export const routes: Routes = [
   // Auth routes (login/register)
@@ -54,6 +60,10 @@ export const routes: Routes = [
       { path: 'patient-profile', component: PatientProfile },
       { path: 'payment-form', component: PaymentComponent },
       { path: 'book-appointment', component: BookingComponent },
+      { path: 'doctors/all', component: AllDoctors },
+      { path: 'doctors/category/:id', component: DoctorsByCategoryComponent },
+      { path: 'specialties', component: AllSpecialtiesComponent },
+
 
     ],
   },

@@ -102,11 +102,15 @@
         </div>
 
         <div class="flex justify-end space-x-2">
-            {{-- <button type="button" onclick="window.history.back()" class="px-4 py-2 rounded border border-gray-300 bg-gray-100 hover:bg-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400">
+            <button type="button" onclick="window.history.back()" class="px-4 py-2 text-sm inline-flex items-center justify-center font-medium
+            rounded-xl transition-all duration-200 select-none
+            focus:outline-none focus:ring-2 focus:ring-offset-2
+            disabled:opacity-60 disabled:cursor-not-allowed bg-gray-200 text-gray-800 hover:bg-gray-300 active:bg-gray-400
+            focus:ring-gray-400 shadow-sm hover:shadow drop-shadow">
                 Cancel
-            </button> --}}
+            </button>
 
-            <x-admin.button type="secondary" onclick="window.history.back()">Cancel</x-admin.button>
+            {{-- <x-admin.button type="secondary" onclick="window.history.back()">Cancel</x-admin.button> --}}
             <x-admin.button>Update Appointment</x-admin.button>
         </div>
 

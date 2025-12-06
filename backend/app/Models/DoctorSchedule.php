@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use App\Traits\AdminLoggable;
 class DoctorSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, AdminLoggable;
 
     protected $fillable = [
         'doctor_id', 'day_of_week', 'start_time', 'end_time', 'appointment_duration', 'is_active'

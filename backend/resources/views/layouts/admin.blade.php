@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard')</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -53,10 +55,12 @@
                 <ul class="space-y-1">
                     <x-admin.nav-item icon="group" text="Patients" href="{{ route('admin.patients.index') }}" />
                     <x-admin.nav-item icon="person" text="Doctors" href="{{ route('admin.doctors.index') }}" />
-                    <x-admin.nav-item icon="category" text="Categories" href="#" />
+                    <x-admin.nav-item icon="category" text="Specialties" href="{{ route('admin.specialties.index') }}" />
                     <x-admin.nav-item icon="calendar_today" text="Appointments" href="{{ route('admin.appointments.index') }}" />
                     <x-admin.nav-item icon="how_to_reg" text="Visits" href="{{ route('admin.visits.index') }}" />
-                    <x-admin.nav-item icon="payment" text="Payments" href="#" />
+                    <x-admin.nav-item icon="payment" text="Payments" href="{{ route('admin.payments.index') }}" />
+                    <x-admin.nav-item icon="receipt_long" text="Logs" href="{{ route('admin.logs.index') }}" />
+
                     <x-admin.nav-item icon="settings" text="Profile" href="{{ route('admin.settings.edit') }}" />
                 </ul>
             </nav>
@@ -94,7 +98,9 @@
                         </div>
                     </div>
 
-                    {{-- <img src="{{ asset('storage/profile_pics/' . Auth::user()->profile_pic) }}" class="w-10 h-10 object-cover rounded-full" alt="Admin"> --}}
+                    <a href="{{ route('admin.settings.edit') }}">
+                        <img src="{{ asset('storage/profile_pics/' . Auth::user()->profile_pic) }}" class="w-10 h-10 object-cover rounded-full" alt="Admin">
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
@@ -111,6 +117,7 @@
         </div>
     </div>
 
+@yield('scripts')
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('sidebar-toggle');
