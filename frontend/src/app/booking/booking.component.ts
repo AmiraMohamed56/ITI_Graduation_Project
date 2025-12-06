@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../services/toast.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
 @Component({
   selector: 'app-booking',
   standalone: true,
@@ -18,7 +20,7 @@ export class BookingComponent implements OnInit {
   // availableDates: any[] = [];
   availableDates: {id: number, date: string}[] = [];
   availableTimes: { time: string; scheduleId: number, booked: boolean }[] = [];
-  patient_id = 1;
+  patient_id: number | null = null;
 
   selectedSpecialityId: number | null = null;
   selectedDoctorId: number | null = null;
@@ -28,19 +30,32 @@ export class BookingComponent implements OnInit {
   appointmentType: string = 'consultation';
   notes: string = '';
 
-  constructor(private appointmentService: AppointmentService, private toastService: ToastService, private router: Router) {}
+  constructor(
+    private appointmentService: AppointmentService,
+    private toastService: ToastService,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadSpecialities();
+    this.getLoggedInUser();
+  }
+
+  getLoggedInUser() {
+    const loggedInUser = this.authService.getUser();
+    if(loggedInUser && loggedInUser.id) {
+      this.patient_id = Number(loggedInUser.id);
+      console.log('user id : ', this.patient_id);
+    } else {
+      console.error('User is not logged in.');
+      this.toastService.show('User not logged in. Please login first', 'error');
+      this.router.navigate(['/auth/login']);
+    }
   }
 
   loadSpecialities() {
-    // fetch from api
-    // this.specialities = [
-    //   { id: 1, name: 'Cardiology' },
-    //   { id: 2, name: 'Dermatology' },
-    //   { id: 3, name: 'Neurology' },
-    // ];
+
     this.appointmentService.getSpecialities().subscribe((res: any) => {
       this.specialities = [];
       (res.data).forEach((s: any) => {
@@ -142,7 +157,7 @@ export class BookingComponent implements OnInit {
   }
 
 onTimeSelect(event: Event) {
-    
+
     const target = event.target as HTMLSelectElement;
     this.selectedTime = target.value;
 
