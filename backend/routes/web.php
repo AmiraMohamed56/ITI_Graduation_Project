@@ -141,8 +141,10 @@ Route::resource('schedules', ScheduleController::class);
 Route::resource('profile_setting', ProfileSettingController::class);
 
 // notification routes
-Route::resource('notifications', NotificationController::class);
+// Route::resource('notifications', NotificationController::class);
 
 // ---------------------------------------------------------------------------------------------------------------
+
+
 
 require __DIR__.'/auth.php';

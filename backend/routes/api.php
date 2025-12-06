@@ -67,3 +67,11 @@ Route::post('patient/reset-password', [PatientAuthController::class, 'resetPassw
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('patient/logout', [PatientAuthController::class, 'logout']);
 });
+
+// ========================= google login start ========================================
+use App\Http\Controllers\Auth\GoogleController;
+
+Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// ========================= google login end ========================================
