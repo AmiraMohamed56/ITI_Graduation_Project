@@ -20,6 +20,7 @@ export class Login {
   constructor(private router: Router, private auth: AuthService) { }
 
   onSubmit(){
+    this.errorMessage = '';
     if (!this.form.email || !this.form.password) {
       this.errorMessage = 'Please enter your email and password.';
       return;
