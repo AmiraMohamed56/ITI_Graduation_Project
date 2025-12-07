@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Doctor } from './doctor.model';
+import { environment } from '../../../environments/environment';
 
 export interface DoctorSearchParams {
   name?: string;
@@ -34,7 +35,8 @@ export interface PaginatedDoctorsResponse {
 })
 export class DoctorService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/doctors';
+   private apiUrl = `${environment.apiUrl}/doctors`;
+  private specialtiesUrl = `${environment.apiUrl}/specialties`;
 
   constructor(private http: HttpClient) {}
 
@@ -83,11 +85,12 @@ export class DoctorService {
   }
 
   // Get doctors by specialty
-  getDoctorsBySpecialty(specialtyId: number): Observable<Doctor[]> {
-    return this.http.get<any>(`${this.apiUrl}?specialty_id=${specialtyId}`).pipe(
+  getDoctorsBySpecialty(specialtyId: number,perPage: number = 100): Observable<Doctor[]> {
+    const params = new HttpParams().set('per_page', perPage.toString());
+    return this.http.get<any>(`${this.specialtiesUrl}/${specialtyId}/doctors`, { params }).pipe(
       map(res => res.data),
       catchError(err => {
-        console.error(err);
+        console.error('Error fetching doctors by specialty:',err);
         return throwError(() => err);
       })
     );

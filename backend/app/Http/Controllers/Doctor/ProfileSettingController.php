@@ -16,7 +16,11 @@ class ProfileSettingController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user()->load('doctor.specialty');
+        $doctor = $user->doctor;
+        $specialties = Specialty::all();
+
+        return view('Doctors_Dashboard.setting.form', compact('user', 'doctor', 'specialties'));
     }
 
     /**

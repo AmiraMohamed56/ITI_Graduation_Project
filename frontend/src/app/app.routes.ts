@@ -58,7 +58,9 @@ export const routes: Routes = [
       { path: 'patient-profile', component: PatientProfile },
       { path: 'payment-form', component: PaymentComponent },
       { path: 'book-appointment', component: BookingComponent },
-      { path: 'doctors/all', component: AllDoctors },
+      // { path: 'doctors/all', component: AllDoctors },
+       { path: 'doctors', component: AllDoctors }, // This will handle ?specialty_id=X query params
+      { path: 'doctors/all', redirectTo: 'doctors', pathMatch: 'full' }, // Redirect old route to new one
       { path: 'doctors/category/:id', component: DoctorsByCategoryComponent },
       { path: 'specialties', component: AllSpecialtiesComponent },
 

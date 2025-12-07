@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            //
+            $table->timestamp('reminder_24h_sent_at')->nullable()->after('notes');
+            $table->timestamp('reminder_12h_sent_at')->nullable()->after('reminder_24h_sent_at');
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            //
+            $table->dropColumn(['reminder_24h_sent_at', 'reminder_12h_sent_at']);
         });
     }
 };

@@ -1,5 +1,7 @@
 <?php
 
+// for doctors
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -8,12 +10,14 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-class AppointmentBooked extends Notification implements ShouldQueue
+class NewPatientAppointment extends Notification implements ShouldQueue
 {
     use Queueable;
     public $appointment;
 
-    //  Create a new notification instance.
+    /**
+     * Create a new notification instance.
+     */
     public function __construct($appointment)
     {
         $this->appointment = $appointment;
@@ -34,44 +38,38 @@ class AppointmentBooked extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->subject('Appointment Confirmation')
-            ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('Your appointment has been successfully booked.')
-            ->line('**Appointment Details:**')
-            ->line('Doctor: Dr. ' . $this->appointment->doctor->user->name)
-            ->line('Date: ' . $this->appointment->schedule_date->format('F d, Y'))
-            ->line('Time: ' . date('h:i A', strtotime($this->appointment->schedule_time)))
+         return (new MailMessage)
+            ->subject('New Appointment Scheduled')
+            ->greeting('Hello Dr. ' . $notifiable->name . '!')
+            ->line('A new appointment has been scheduled with you.')
+            ->line('**Patient:** ' . $this->appointment->patient->user->name)
+            ->line('**Date:** ' . $this->appointment->schedule_date->format('F d, Y'))
+            ->line('**Time:** ' . date('h:i A', strtotime($this->appointment->schedule_time)))
             ->action('View Appointment', url('/appointments/' . $this->appointment->id))
-            ->line('You will receive reminders 24 and 12 hours before your appointment.')
-            ->line('Thank you for using our clinic!');
+            ->line('Please review the appointment details.');
     }
-
 
     public function toDatabase($notifiable)
     {
         return [
             'appointment_id' => $this->appointment->id,
-            'doctor_name' => $this->appointment->doctor->user->name,
             'patient_name' => $this->appointment->patient->user->name,
             'schedule_date' => $this->appointment->schedule_date->format('Y-m-d'),
             'schedule_time' => $this->appointment->schedule_time,
-            'message' => 'New appointment booked with Dr. ' . $this->appointment->doctor->user->name,
-            'type' => 'appointment_booked',
+            'message' => 'New appointment from ' . $this->appointment->patient->user->name,
+            'type' => 'new_patient_appointment',
         ];
     }
-
 
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
             'appointment_id' => $this->appointment->id,
-            'doctor_name' => $this->appointment->doctor->user->name,
             'patient_name' => $this->appointment->patient->user->name,
             'schedule_date' => $this->appointment->schedule_date->format('Y-m-d'),
             'schedule_time' => $this->appointment->schedule_time,
-            'message' => 'New appointment booked with Dr. ' . $this->appointment->doctor->user->name,
-            'type' => 'appointment_booked',
+            'message' => 'New appointment from ' . $this->appointment->patient->user->name,
+            'type' => 'new_patient_appointment',
         ]);
     }
 

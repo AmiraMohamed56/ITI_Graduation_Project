@@ -15,23 +15,23 @@ export class DoctorsListComponent implements OnInit {
   @Input() doctors: Doctor[] = [];
   @Input() showSeeAll: boolean = true;
   @Input() maxDisplay: number = 8;
-  
+
   loading = false;
   error = '';
 
   constructor(private doctorService: DoctorService) {}
 
   ngOnInit(): void {
-    // Only load doctors if not provided via @Input
-    if (this.doctors.length === 0) {
-      this.loadDoctors();
-    }
+      // Only load doctors if not provided via @Input
+      if (this.doctors.length === 0) {
+          this.loadDoctors();
+        }
   }
 
   loadDoctors(): void {
     this.loading = true;
     this.error = '';
-    
+
     this.doctorService.getDoctors().subscribe({
       next: (data: Doctor[]) => {
         this.doctors = data;

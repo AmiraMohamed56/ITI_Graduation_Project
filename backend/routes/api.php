@@ -34,9 +34,9 @@ Route::options('{any}', function () {
 })->where('any', '.*');
 
 
-Route::get('/specialties', function () {
-    return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
-});
+// Route::get('/specialties', function () {
+//     return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
+// });
 
 Route::get('/doctors', [BookingDoctorController::class, 'index']);
 Route::get('/doctor_schedules', [BookingDoctorScheduleController::class, 'index']); // supports ?doctor_id=&day_of_week=
