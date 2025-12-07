@@ -1,29 +1,40 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgIf, NgFor],
   templateUrl: './navbar.html',
-  styleUrls: ['./navbar.css']
+  styleUrls: ['./navbar.css'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   showNotifications = false;
   showProfile = false;
   showMobileMenu = false;
 
-  constructor(private router: Router) {}
+  isLoggedIn = false;
+  user: any = null;
+
+  constructor(private auth: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    // Reactively track login state
+    this.auth.isLoggedIn().subscribe((status) => {
+      this.isLoggedIn = status;
+      this.user = status ? this.auth.getUser() : null;
+    });
+  }
 
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
-    this.showProfile = false;
+    if (this.showNotifications) this.showProfile = false;
   }
 
   toggleProfile(): void {
     this.showProfile = !this.showProfile;
-    this.showNotifications = false;
+    if (this.showProfile) this.showNotifications = false;
   }
 
   toggleMobileMenu(): void {
@@ -35,21 +46,35 @@ export class NavbarComponent {
   }
 
   logout(): void {
-    // Add your logout logic here
-    console.log('Logging out...');
+    this.auth.logout();
     this.showProfile = false;
-    this.router.navigate(['/login']);
   }
 
   // Close dropdowns when clicking outside
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    
-    // Check if click is outside notification dropdown
-    if (!target.closest('.relative')) {
-      this.showNotifications = false;
+
+    // Profile dropdown
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    if (
+      this.showProfile &&
+      profileDropdown &&
+      !profileDropdown.contains(target) &&
+      !target.closest('.profile-button')
+    ) {
       this.showProfile = false;
+    }
+
+    // Notifications dropdown
+    const notifDropdown = document.querySelector('.notifications-dropdown');
+    if (
+      this.showNotifications &&
+      notifDropdown &&
+      !notifDropdown.contains(target) &&
+      !target.closest('.notifications-button')
+    ) {
+      this.showNotifications = false;
     }
   }
 }

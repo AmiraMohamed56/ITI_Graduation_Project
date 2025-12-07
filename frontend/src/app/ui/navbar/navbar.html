@@ -1,185 +1,164 @@
-<!-- navbar.component.html -->
-<nav class="fixed top-0 left-0 w-full z-50 glass-effect shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
+<nav class="fixed top-0 left-0 w-full z-50 glass-effect shadow-lg bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
 
-            <!-- LEFT — Brand Logo -->
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <i class="fas fa-heartbeat text-white text-2xl"></i>
+      <!-- LEFT: Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+          <i class="fas fa-heartbeat text-white text-2xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold gradient-text">CareNova</h1>
+          <p class="text-xs text-gray-500">Health Care</p>
+        </div>
+      </div>
+
+      <!-- CENTER: Desktop Links -->
+      <div class="hidden lg:flex items-center space-x-8">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
+          Home
+        </a>
+        <a routerLink="/about-us" routerLinkActive="active"
+          class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
+          About
+        </a>
+        <a routerLink="/services" routerLinkActive="active"
+          class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
+          Services
+        </a>
+        <a routerLink="/contact" routerLinkActive="active"
+          class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
+          Contact
+        </a>
+      </div>
+
+      <!-- RIGHT: Actions -->
+      <div class="flex items-center space-x-4">
+        <!-- Notifications -->
+        <div class="relative">
+          <button (click)="toggleNotifications()"
+            class="relative p-3 rounded-full hover:bg-blue-50 transition-all duration-300 group notifications-button">
+            <i class="fas fa-bell text-gray-600 group-hover:text-blue-600 text-xl transition-colors"></i>
+            <span
+              class="notification-badge absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full font-bold">
+              3
+            </span>
+          </button>
+
+          <div *ngIf="showNotifications" class="dropdown-menu absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden notifications-dropdown">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex justify-between items-center">
+              <h3 class="font-bold text-lg">Notifications</h3>
+              <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">3 New</span>
+            </div>
+            <div class="max-h-96 overflow-y-auto">
+              <!-- Example notifications -->
+              <div class="p-4 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-calendar text-blue-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold text-gray-900">Appointment Reminder</p>
+                    <p class="text-xs text-gray-600 mt-1">Your appointment is tomorrow at 2:00 PM</p>
+                    <span class="text-xs text-gray-400 mt-2 block">2 hours ago</span>
+                  </div>
                 </div>
+              </div>
+              <!-- Add more notifications as needed -->
+            </div>
+            <div class="p-3 bg-gray-50 text-center border-t border-gray-100">
+              <a routerLink="/notifications" class="text-sm text-blue-600 font-semibold hover:text-blue-700">View All</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile / Login -->
+        <div class="relative">
+          <ng-container *ngIf="isLoggedIn; else loggedOutLinks">
+            <button (click)="toggleProfile()"
+              class="flex items-center gap-3 hover:bg-blue-50 rounded-full pr-4 transition-all duration-300 profile-button">
+              <img [src]="user?.avatar || 'https://i.pravatar.cc/40'" class="w-11 h-11 rounded-full border-2 border-blue-200 shadow-md"
+                alt="User Avatar" />
+              <div class="hidden md:block text-left">
+                <p class="text-sm font-semibold text-gray-900">{{ user?.name }}</p>
+                <p class="text-xs text-gray-500">{{ user?.role || 'Patient' }}</p>
+              </div>
+              <i class="fas fa-chevron-down text-gray-400 text-sm hidden md:block"></i>
+            </button>
+
+            <div *ngIf="showProfile" class="dropdown-menu absolute right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden profile-dropdown">
+              <div class="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center gap-3">
+                <img [src]="user?.avatar || 'https://i.pravatar.cc/50'" class="w-14 h-14 rounded-full border-2 border-white" alt="User" />
                 <div>
-                    <h1 class="text-2xl font-bold gradient-text">CareNova</h1>
-                    <p class="text-xs text-gray-500">Health Care</p>
+                  <p class="font-bold">{{ user?.name }}</p>
+                  <p class="text-sm text-blue-100">{{ user?.email }}</p>
                 </div>
+              </div>
+              <div class="p-2">
+                <a routerLink="/patient-profile" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
+                  <i class="fas fa-user text-gray-600 w-5"></i> My Profile
+                </a>
+                <a routerLink="/settings" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
+                  <i class="fas fa-cog text-gray-600 w-5"></i> Settings
+                </a>
+                <hr class="my-2">
+                <a (click)="logout()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 rounded-xl transition-colors text-red-600 cursor-pointer">
+                  <i class="fas fa-sign-out-alt w-5"></i> Logout
+                </a>
+              </div>
             </div>
+          </ng-container>
 
-            <!-- CENTER — Desktop Navigation Links -->
-            <div class="hidden lg:flex items-center space-x-8">
-                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
-                    Home
-                </a>
-                <a routerLink="/about-us" routerLinkActive="active" class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
-                    About
-                </a>
-                <a routerLink="/services" routerLinkActive="active" class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
-                    Services
-                </a>
-                <a routerLink="/contact" routerLinkActive="active" class="nav-link text-gray-700 hover:text-blue-600 font-semibold py-2 transition-colors">
-                    Contact
-                </a>
-            </div>
-
-            <!-- RIGHT — Actions -->
-            <div class="flex items-center space-x-4">
-                <!-- Notifications -->
-                <div class="relative">
-                    <button (click)="toggleNotifications()" class="relative p-3 rounded-full hover:bg-blue-50 transition-all duration-300 group">
-                        <i class="fas fa-bell text-gray-600 group-hover:text-blue-600 text-xl transition-colors"></i>
-                        <span class="notification-badge absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full font-bold">
-                            3
-                        </span>
-                    </button>
-
-                    <!-- Notifications Dropdown -->
-                    <div *ngIf="showNotifications" [@slideDown] class="dropdown-menu absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-                        <!-- Header -->
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-bold text-lg">Notifications</h3>
-                                <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">3 New</span>
-                            </div>
-                        </div>
-
-                        <!-- Notifications List -->
-                        <div class="max-h-96 overflow-y-auto">
-                            <div class="p-4 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-calendar text-blue-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-semibold text-gray-900">Appointment Reminder</p>
-                                        <p class="text-xs text-gray-600 mt-1">Your appointment is tomorrow at 2:00 PM</p>
-                                        <span class="text-xs text-gray-400 mt-2 block">2 hours ago</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="p-4 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-check-circle text-green-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-semibold text-gray-900">Booking Confirmed</p>
-                                        <p class="text-xs text-gray-600 mt-1">Your appointment has been confirmed</p>
-                                        <span class="text-xs text-gray-400 mt-2 block">5 hours ago</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="p-4 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-file-medical text-purple-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-semibold text-gray-900">Test Results Available</p>
-                                        <p class="text-xs text-gray-600 mt-1">Your dental x-ray results are ready</p>
-                                        <span class="text-xs text-gray-400 mt-2 block">1 day ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="p-3 bg-gray-50 text-center border-t border-gray-100">
-                            <a routerLink="/notifications" class="text-sm text-blue-600 font-semibold hover:text-blue-700">View All Notifications</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- User Profile -->
-                <div class="relative">
-                    <button (click)="toggleProfile()" class="flex items-center gap-3 hover:bg-blue-50 rounded-full pr-4 transition-all duration-300">
-                        <img src="https://i.pravatar.cc/40" class="w-11 h-11 rounded-full border-2 border-blue-200 shadow-md" alt="User Avatar" />
-                        <div class="hidden md:block text-left">
-                            <p class="text-sm font-semibold text-gray-900">John Doe</p>
-                            <p class="text-xs text-gray-500">Patient</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-sm hidden md:block"></i>
-                    </button>
-
-                    <!-- Profile Dropdown -->
-                    <div *ngIf="showProfile" [@slideDown] class="dropdown-menu absolute right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-                        <div class="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                            <div class="flex items-center gap-3">
-                                <img src="https://i.pravatar.cc/50" class="w-14 h-14 rounded-full border-2 border-white" alt="User" />
-                                <div>
-                                    <p class="font-bold">John Doe</p>
-                                    <p class="text-sm text-blue-100">john@example.com</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-2">
-                            <a routerLink="/patient-profile" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
-                                <i class="fas fa-user text-gray-600 w-5"></i>
-                                <span class="text-gray-700 font-medium">My Profile</span>
-                            </a>
-                            <!-- <a routerLink="/appointments" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
-                                <i class="fas fa-calendar-alt text-gray-600 w-5"></i>
-                                <span class="text-gray-700 font-medium">My Appointments</span>
-                            </a>
-                            <a routerLink="/medical-records" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
-                                <i class="fas fa-file-medical text-gray-600 w-5"></i>
-                                <span class="text-gray-700 font-medium">Medical Records</span>
-                            </a> -->
-                            <a routerLink="/settings" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
-                                <i class="fas fa-cog text-gray-600 w-5"></i>
-                                <span class="text-gray-700 font-medium">Settings</span>
-                            </a>
-                            <hr class="my-2">
-                            <a (click)="logout()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 rounded-xl transition-colors text-red-600 cursor-pointer">
-                                <i class="fas fa-sign-out-alt w-5"></i>
-                                <span class="font-medium">Logout</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button (click)="toggleMobileMenu()" class="lg:hidden p-3 rounded-full hover:bg-blue-50 transition-all duration-300">
-                    <i class="fas fa-bars text-gray-600 text-xl"></i>
-                </button>
-            </div>
+          <ng-template #loggedOutLinks>
+            <a routerLink="/auth/login" class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2">Login</a>
+            <a routerLink="/auth/register" class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2">Register</a>
+          </ng-template>
         </div>
-    </div>
 
-    <!-- Mobile Menu -->
-    <div *ngIf="showMobileMenu" [@slideDown] class="lg:hidden bg-white border-t border-gray-100 shadow-lg">
-        <div class="px-4 py-6 space-y-3">
-            <a routerLink="/" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
-                <i class="fas fa-home text-blue-600 w-5"></i>
-                Home
-            </a>
-            <a routerLink="/about-us" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
-                <i class="fas fa-info-circle text-blue-600 w-5"></i>
-                About
-            </a>
-            <a routerLink="/services" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
-                <i class="fas fa-concierge-bell text-blue-600 w-5"></i>
-                Services
-            </a>
-            <a routerLink="/contact" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
-                <i class="fas fa-envelope text-blue-600 w-5"></i>
-                Contact
-            </a>
-            
-            <hr class="my-4">
-        </div>
+        <!-- Mobile Menu Button -->
+        <button (click)="toggleMobileMenu()" class="lg:hidden p-3 rounded-full hover:bg-blue-50 transition-all duration-300">
+          <i class="fas fa-bars text-gray-600 text-xl"></i>
+        </button>
+      </div>
     </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div *ngIf="showMobileMenu" class="lg:hidden bg-white border-t border-gray-100 shadow-lg">
+    <div class="px-4 py-6 space-y-3">
+      <a routerLink="/" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
+        <i class="fas fa-home text-blue-600 w-5"></i> Home
+      </a>
+      <a routerLink="/about-us" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
+        <i class="fas fa-info-circle text-blue-600 w-5"></i> About
+      </a>
+      <a routerLink="/services" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
+        <i class="fas fa-concierge-bell text-blue-600 w-5"></i> Services
+      </a>
+      <a routerLink="/contact" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl transition-colors font-semibold">
+        <i class="fas fa-envelope text-blue-600 w-5"></i> Contact
+      </a>
+
+      <ng-container *ngIf="isLoggedIn; else mobileLoginLinks">
+        <a routerLink="/patient-profile" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-semibold">
+          <i class="fas fa-user text-blue-600 w-5"></i> Profile
+        </a>
+        <a (click)="logout(); closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl font-semibold">
+          <i class="fas fa-sign-out-alt w-5"></i> Logout
+        </a>
+      </ng-container>
+
+      <ng-template #mobileLoginLinks>
+        <a routerLink="/auth/login" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-semibold">
+          Login
+        </a>
+        <a routerLink="/auth/register" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-semibold">
+          Register
+        </a>
+      </ng-template>
+    </div>
+  </div>
 </nav>
 
 <!-- Spacer for fixed navbar -->
