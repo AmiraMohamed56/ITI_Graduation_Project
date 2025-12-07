@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Invoice\InvoiceController;
 
-
+use App\Http\Controllers\Admin\DashboardController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -46,10 +46,9 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard.index');
-    })->name('dashboard');
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
+    
     Route::get('settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('settings', [AdminSettingsController::class, 'update'])->name('settings.update');
 
