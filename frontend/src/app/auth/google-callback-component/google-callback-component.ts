@@ -3,12 +3,8 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  standalone: true,
-  template: `<p>Signing you in...</p>`
-})
-
-@Component({
   selector: 'app-google-callback-component',
+  standalone: true,
   imports: [],
   templateUrl: './google-callback-component.html',
   styleUrl: './google-callback-component.css',
