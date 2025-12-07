@@ -12,7 +12,7 @@ import { PatientService } from '../services/patientProfile.service';
 })
 export class PatientProfile implements OnInit {
 
-patientId: number = Number(localStorage.getItem('user_id'));
+  patientId : number = 0;
 
   patient: any = null;
   loading = false;
@@ -26,12 +26,20 @@ patientId: number = Number(localStorage.getItem('user_id'));
   constructor(private patientService: PatientService) {}
 
   ngOnInit(): void {
-    if (!this.patientId) {
-      console.error("User not logged in!");
-      return;
-    }
-    this.getPatientData();
+  const userData = localStorage.getItem("user");
+
+  if (userData) {
+    const parsed = JSON.parse(userData);
+    this.patientId = parsed.id;  
   }
+
+  if (!this.patientId) {
+    console.error("User not logged in!");
+    return;
+  }
+
+  this.getPatientData();
+}
 
   /** Load Patient Data */
   getPatientData() {
