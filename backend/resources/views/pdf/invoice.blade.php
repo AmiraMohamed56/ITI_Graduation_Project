@@ -147,7 +147,7 @@
     <div class="section-title">Patient & Doctor Info</div>
     <div class="details">
         <div><strong>Patient: </strong>{{ $appointment->patient->user->name }}</div>
-        <div><strong>Doctor: </strong>{{ $appointment->doctor->user->name }} ({{ $appointment->doctor->specialty }})</div>
+        <div><strong>Doctor: </strong>{{ $appointment->doctor->user->name }}</div>
     </div>
 </div>
 

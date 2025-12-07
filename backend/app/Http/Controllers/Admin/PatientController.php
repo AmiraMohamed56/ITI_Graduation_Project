@@ -171,6 +171,6 @@ class PatientController extends Controller
         $patient = Patient::onlyTrashed()->findOrFail($id);
         $patient->restore();
 
-        return redirect()->route('admin.patients.index')->with('success', 'Patient restored successfully.');
+        return redirect()->route('admin.patients.trashed')->with('success', 'Patient restored successfully.');
     }
 }

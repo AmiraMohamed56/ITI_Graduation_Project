@@ -63,15 +63,15 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(f
     Route::resource('doctors', DoctorController::class)->names('doctors');
     Route::post('doctors/{id}/restore', [DoctorController::class, 'restore'])->name('doctors.restore');
 
+    Route::post('patients/{id}/restore', [PatientController::class, 'restore'])->name('patients.restore');
     Route::get('patients/trashed', [PatientController::class, 'trashed'])->name('patients.trashed');
     Route::resource('patients', PatientController::class)->names('patients');
-    Route::post('patients/{id}/restore', [PatientController::class, 'restore'])->name('patients.restore');
 
     Route::resource('visits', VisitController::class)->names('visits');
 
     Route::get('logs', [AdminLogController::class, 'index'])->name('logs.index');
 
-    // Route::resource('/invoices', InvoiceController::class)->names('invoice');
+    Route::resource('/invoices', InvoiceController::class)->names('invoice');
 });
 
 Route::middleware(['auth', 'isDoctor'])->prefix('doctor')->group(function () {
