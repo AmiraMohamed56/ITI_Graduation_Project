@@ -67,6 +67,16 @@ export const routes: Routes = [
       { path: 'ai', component: SymptomsCheckerComponent },
     ],
   },
+
+  // import { GoogleCallbackComponent } from './auth/google-callback-component/google-callback-component';
+
+  {
+  path: 'auth/callback',
+  loadComponent: () =>
+    import('./auth/google-callback-component/google-callback-component')
+      .then(m => m.GoogleCallbackComponent)
+},
+
   // Fallback: redirect unknown routes to home
   { path: '**', redirectTo: '' },
 ];
