@@ -27,21 +27,19 @@
                     <i class="fas fa-clock w-5"></i>
                     <span class="menu-text ml-3">Appointments</span>
                 </a>
-            </div>
-            <div class="mb-6">
-                <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
+                <a href="{{ route('schedules.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
                     <i class="fas fa-calendar-check w-5"></i>
                     <span class="menu-text ml-3">Schedules</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
+                <a href="{{ route('medical_records.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
                     <i class="fas fa-procedures w-5"></i>
                     <span class="menu-text ml-3">Patients</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
+                <a href="" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
                     <i class="fas fa-bell w-5"></i>
                     <span class="menu-text ml-3">Notifications</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
+                <a href="{{ route('profile_setting.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
                     <i class="fas fa-cog w-5"></i>
                     <span class="menu-text ml-3">Settings</span>
                 </a>

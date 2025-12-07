@@ -1,7 +1,5 @@
 <nav class="bg-white border-b border-gray-200 px-6 py-3 sticky top-0 z-40">
-    <div class="flex items-right">
-
-
+    <div class="flex justify-end items-center">
         <!-- Right Side Icons -->
         <div class="flex items-center space-x-4 ml-6">
             <!-- Notifications -->
@@ -16,10 +14,10 @@
             </button>
 
             <!-- User Profile -->
-            <div class="flex items-center space-x-2">
-                <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'Admin' }}&background=4F46E5&color=fff" alt="Profile" class="w-9 h-9 rounded-full border-2 border-gray-200">
-            </div>
+            <a href="{{ route('profile_setting.index') }}" class="flex items-center space-x-2">
+                <img src="{{ Auth::user()->profile_picture_url }}"
+                alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full border-2 border-gray-200">
+            </a>
         </div>
-
     </div>
 </nav>
