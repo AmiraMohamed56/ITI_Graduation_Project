@@ -33,7 +33,23 @@ class GoogleController extends Controller
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
-                'password' => Hash::make('Password@1234'), // Generate a random password // Generate a random password
+                'role' => 'patient',
+                'password' => Hash::make(Str::random(16)), // Generate a random password // Generate a random password
+            ]);
+
+            // create patient profile
+            $user->patient()->create([
+                'user_id' => $user->id,
+                'blood_type' => null,
+                'chronic_diseases' => null,
+            ]);
+        }
+
+        if(!$user->patient) {
+            $user->patient()->create([
+                'user_id' => $user->id,
+                'blood_type' => null,
+                'chronic_diseases' => null,
             ]);
         }
 
