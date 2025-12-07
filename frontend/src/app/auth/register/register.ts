@@ -1,40 +1,45 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class Register {
 
-  form: any;
+  form = {name: '', email: '', password: '', password_confirmation: ''};
+  errorMessage = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirm: ['', [Validators.required]],
+  constructor(private router: Router, private auth: AuthService) { }
+
+  onSubmit(){
+    this.errorMessage = '';
+    if (!this.form.name || !this.form.email || !this.form.password || !this.form.password_confirmation) {
+      this.errorMessage = 'All fields are required.';
+      return;
+    }
+
+    if (this.form.password !== this.form.password_confirmation) {
+      this.errorMessage = 'Passwords do not match.';
+      return;
+    }
+
+    this.auth.register(this.form).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.errorMessage = this.auth.getErrorMessage(err);
+      }
     });
-  }
-
-  register() {
-    if (this.form.invalid){
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    if (this.form.value.password !== this.form.value.confirm) {
-      this.form.controls['confirm'].setErrors({ mismatch: true });
-      return;
-    }
-    this.router.navigate(['/home']);
-
   }
   
 }

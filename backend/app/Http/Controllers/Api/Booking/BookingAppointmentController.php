@@ -23,8 +23,8 @@ class BookingAppointmentController extends Controller
         if ($request->filled('doctor_id')) {
             $q->where('doctor_id', $request->doctor_id);
         }
-        if ($request->filled('schedule_date')) {
-            $q->where('schedule_date', $request->schedule_date);
+        if ($request->filled('doctor_schedule_id')) {
+            $q->where('doctor_schedule_id', $request->doctor_schedule_id);
         }
 
         $appointments = $q->get();

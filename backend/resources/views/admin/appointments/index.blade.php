@@ -6,6 +6,15 @@
 @endsection
 
 @section('content')
+
+@if(session('success'))
+    <x-admin.alert type="success" :message="session('success')" />
+@endif
+
+@if(session('error'))
+    <x-admin.alert type="error" :message="session('error')" />
+@endif
+
 <x-admin.card>
     <div class="flex justify-between items-center mb-10">
         <h2 class="text-lg font-semibold">All Appointments</h2>
@@ -46,6 +55,11 @@
                     <option value="completed" {{ request('status')=='completed' ? 'selected' : '' }}>Completed</option>
                 </select>
                 <x-admin.button>Filter</x-admin.button>
+                @if(request('status') || request('type') || request('q') || request('date_from') || request('date_to'))
+                <x-admin.button type="secondary">
+                    <a href="{{ route('admin.appointments.index') }}" >Clear</a>
+                </x-admin.button>
+            @endif
             </div>
         </form>
     </div>

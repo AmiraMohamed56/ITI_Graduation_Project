@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminLogController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\AdminPaymentController;
+use App\Http\Controllers\Admin\AdminSpecialtyController;
 use App\Http\Controllers\Admin\DoctorController;
 
 
@@ -71,6 +72,9 @@ Route::delete('/admin/appointments/{appointment}', [AdminAppointmentController::
 
 // payments
 Route::resource('/admin/payments', AdminPaymentController::class)->names('admin.payments');
+
+// specialties
+Route::resource('/admin/specialties', AdminSpecialtyController::class)->names('admin.specialties');
 
 // Invoices
 Route::resource('/invoices', InvoiceController::class)->names('invoice');
@@ -140,5 +144,7 @@ Route::resource('profile_setting', ProfileSettingController::class);
 // Route::resource('notifications', NotificationController::class);
 
 // ---------------------------------------------------------------------------------------------------------------
+
+
 
 require __DIR__.'/auth.php';

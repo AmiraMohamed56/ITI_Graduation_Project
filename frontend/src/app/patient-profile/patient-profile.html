@@ -240,156 +240,146 @@
     </div>
 
     <!-- Medical History Tab -->
-    <div *ngIf="activeTab === 'history'" class="space-y-4">
-      <div
-        *ngFor="let record of pagedRecords; let i = index"
-        class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
-        [style.animationDelay]="i * 100 + 'ms'"
-      >
-        <h3 class="text-lg font-bold text-blue-600 mb-2">Medical Record #{{ record.id }}</h3>
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Symptoms:</span>
-          <span class="text-gray-500">{{ record.symptoms }}</span>
-        </p>
+<div *ngIf="activeTab === 'history'" class="space-y-4">
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Diagnosis:</span>
-          <span class="text-gray-500">{{ record.diagnosis }}</span>
-        </p>
+  <!-- No Data Message -->
+  <p *ngIf="pagedRecords.length === 0" class="text-center text-gray-500">
+    No medical history records found.
+  </p>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Medication:</span>
-          <span class="text-gray-500">{{ record.medication }}</span>
-        </p>
+  <!-- Records List -->
+  <div
+    *ngFor="let record of pagedRecords; let i = index"
+    class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
+    [style.animationDelay]="i * 100 + 'ms'"
+  >
+    <h3 class="text-lg font-bold text-blue-600 mb-2">
+      Medical Record #{{ record.id }}
+    </h3>
 
-        <p class="text-gray-400 text-sm mt-2">
-          <span class="font-semibold text-gray-700 mr-1">Date:</span>
-          <span>{{ record.created_at | date : 'mediumDate' }}</span>
-        </p>
-      </div>
+    <p class="flex">
+      <span class="font-semibold text-gray-700 mr-1">Symptoms:</span>
+      <span class="text-gray-500">{{ record.symptoms }}</span>
+    </p>
 
-      <!-- Pagination Controls -->
-      <div class="flex justify-center mt-4 space-x-2">
-        <button
-          (click)="goToPage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-        >
-          Prev
-        </button>
+    <p class="flex">
+      <span class="font-semibold text-gray-700 mr-1">Diagnosis:</span>
+      <span class="text-gray-500">{{ record.diagnosis }}</span>
+    </p>
 
-        <button
-          *ngFor="let page of [].constructor(totalPages); let idx = index"
-          (click)="goToPage(idx + 1)"
-          [ngClass]="
-            currentPage === idx + 1
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          "
-          class="px-3 py-1 rounded-lg"
-        >
-          {{ idx + 1 }}
-        </button>
+    <p class="flex">
+      <span class="font-semibold text-gray-700 mr-1">Medication:</span>
+      <span class="text-gray-500">{{ record.medication }}</span>
+    </p>
 
-        <button
-          (click)="goToPage(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-          class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-    </div>
+    <p class="text-gray-400 text-sm mt-2">
+      <span class="font-semibold text-gray-700 mr-1">Date:</span>
+      <span>{{ record.created_at | date : 'mediumDate' }}</span>
+    </p>
+  </div>
 
-    <!-- Appointments Tab -->
-    <div *ngIf="activeTab === 'appointments'" class="space-y-4">
-      <div
-        *ngFor="let app of pagedAppointments; let i = index"
-        class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
-        [style.animationDelay]="i * 100 + 'ms'"
-      >
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
-          <span class="text-gray-500">{{ app.doctor_name }}</span>
-        </p>
+  <!-- Pagination Controls -->
+  <div *ngIf="pagedRecords.length > 0" class="flex justify-center mt-4 space-x-2">
+    <button
+      (click)="goToPage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+      class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+    >
+      Prev
+    </button>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
-          <span class="text-gray-500">{{ app.specialty.name }}</span>
-        </p>
+    <button
+      *ngFor="let page of [].constructor(totalPages); let idx = index"
+      (click)="goToPage(idx + 1)"
+      [ngClass]="
+        currentPage === idx + 1
+          ? 'bg-blue-600 text-white'
+          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      "
+      class="px-3 py-1 rounded-lg"
+    >
+      {{ idx + 1 }}
+    </button>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Status:</span>
-          <span class="text-gray-500">{{ app.status }}</span>
-        </p>
+    <button
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+      class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+    >
+      Next
+    </button>
+  </div>
+</div>
 
-        <p class="text-gray-400 text-sm mt-2">
-          <span class="font-semibold text-gray-700 mr-1">Date:</span>
-          <span>{{ app.date || 'TBD' }}</span>
-        </p>
-      </div>
 
-      <!-- Pagination Controls -->
-      <div *ngIf="activeTab === 'appointments'" class="space-y-4">
-        <div
-          *ngFor="let app of pagedAppointments; let i = index"
-          class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
-          [style.animationDelay]="i * 100 + 'ms'"
-        >
-          <p class="flex">
-            <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
-            <span class="text-gray-500">{{ app.doctor_name }}</span>
-          </p>
+<!-- Appointments Tab -->
+<div *ngIf="activeTab === 'appointments'" class="space-y-4">
 
-          <p class="flex">
-            <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
-            <span class="text-gray-500">{{ app.specialty.name }}</span>
-          </p>
+  <!-- No Appointments Message -->
+  <div *ngIf="pagedAppointments.length === 0"
+       class="text-center py-10 text-gray-500 font-semibold text-lg opacity-0 animate-fade-in">
+    No appointments found.
+  </div>
 
-          <p class="flex">
-            <span class="font-semibold text-gray-700 mr-1">Status:</span>
-            <span class="text-gray-500">{{ app.status }}</span>
-          </p>
+  <!-- Appointments List -->
+  <div
+    *ngFor="let app of pagedAppointments; let i = index"
+    class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
+    [style.animationDelay]="i * 100 + 'ms'">
 
-          <p class="text-gray-400 text-sm mt-2">
-            <span class="font-semibold text-gray-700 mr-1">Date:</span>
-            <span>{{ app.date || 'TBD' }}</span>
-          </p>
-        </div>
+    <p class="flex">
+      <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
+      <span class="text-gray-500">{{ app.doctor_name }}</span>
+    </p>
 
-        <!-- Pagination Controls -->
-        <div class="flex justify-center mt-4 space-x-2">
-          <button
-            (click)="goToAppPage(currentAppPage - 1)"
-            [disabled]="currentAppPage === 1"
-            class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-          >
-            Prev
-          </button>
+    <p class="flex">
+      <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
+      <span class="text-gray-500">{{ app.specialty.name }}</span>
+    </p>
 
-          <button
-            *ngFor="let page of [].constructor(totalAppPages); let idx = index"
-            (click)="goToAppPage(idx + 1)"
-            [ngClass]="
-              currentAppPage === idx + 1
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            "
-            class="px-3 py-1 rounded-lg"
-          >
-            {{ idx + 1 }}
-          </button>
+    <p class="flex">
+      <span class="font-semibold text-gray-700 mr-1">Status:</span>
+      <span class="text-gray-500">{{ app.status }}</span>
+    </p>
 
-          <button
-            (click)="goToAppPage(currentAppPage + 1)"
-            [disabled]="currentAppPage === totalAppPages"
-            class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </div>
+    <p class="text-gray-400 text-sm mt-2">
+      <span class="font-semibold text-gray-700 mr-1">Date:</span>
+      <span>{{ app.date || 'TBD' }}</span>
+    </p>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="pagedAppointments.length > 0" class="flex justify-center mt-4 space-x-2">
+    <button
+      (click)="goToAppPage(currentAppPage - 1)"
+      [disabled]="currentAppPage === 1"
+      class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50">
+      Prev
+    </button>
+
+    <button
+      *ngFor="let page of [].constructor(totalAppPages); let idx = index"
+      (click)="goToAppPage(idx + 1)"
+      [ngClass]="
+        currentAppPage === idx + 1
+          ? 'bg-blue-600 text-white'
+          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      "
+      class="px-3 py-1 rounded-lg">
+      {{ idx + 1 }}
+    </button>
+
+    <button
+      (click)="goToAppPage(currentAppPage + 1)"
+      [disabled]="currentAppPage === totalAppPages"
+      class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50">
+      Next
+    </button>
+  </div>
+
+</div>
+
+
     <!-- Edit Modal -->
     <div
       *ngIf="showModal"
@@ -464,7 +454,7 @@
           <div class="flex flex-col gap-2">
             <label class="font-semibold">Profile Image</label>
             <input type="file" (change)="onImageSelected($event)" class="border rounded-lg p-2" />
-            <div *ngIf="editUser.profile_pic; instanceof File">
+            <div *ngIf="editUser.profile_pic; instanceof: File">
               <div *ngIf="imagePreview">
                 <img [src]="imagePreview" class="w-32 h-32 object-cover rounded-lg mt-2" />
               </div>
@@ -474,14 +464,28 @@
           <!-- Blood Type -->
           <div class="flex flex-col gap-2">
             <label class="font-semibold">Blood Type</label>
-            <input
+
+            <select
               [(ngModel)]="editPatient.blood_type"
               name="blood_type"
               required
-              pattern="^(A|B|AB|O)[+-]$"
               #bloodCtrl="ngModel"
               class="border rounded-lg p-2 w-full"
-            />
+            >
+              <option value="" disabled selected>Select Blood Type</option>
+
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
 
             <p class="text-red-500 text-sm" *ngIf="bloodCtrl.invalid && bloodCtrl.touched">
               {{ getBloodError(bloodCtrl) }}
