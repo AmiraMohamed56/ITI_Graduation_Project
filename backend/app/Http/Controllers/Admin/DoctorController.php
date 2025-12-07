@@ -23,6 +23,19 @@ class DoctorController extends Controller
         $query = Doctor::with(['user', 'specialty'])
             ->select('doctors.*')
             ->join('users', 'doctors.user_id', '=', 'users.id');
+
+        if($request->filled('name')){
+            $query->where('users.name', 'LIKE', '%'.$request->name . '%');
+        }
+
+        if($request->filled('specialty')){
+            $query->where('doctors.specialty_id', 'LIKE', '%' . $request->specialty .'%');
+        }
+
+        if($request->filled('email')){
+            $query->where('users.email', 'LIKE', '%' . $request->email .'%');
+        }
+        
         switch ($sort) {
             case 'name':
                 $query->orderBy('users.name', 'asc');
@@ -34,9 +47,10 @@ class DoctorController extends Controller
             default:
                 $query->orderBy('doctors.created_at', 'desc');
         }
-        $doctors = $query->paginate(5)->withQueryString();
+        $doctors = $query->paginate(10)->withQueryString();
+        $specialties = Specialty::all();
 
-        return view('admin.doctors.index', compact('doctors'));
+        return view('admin.doctors.index', compact('doctors', 'specialties'));
     }
 
     /**

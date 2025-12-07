@@ -8,100 +8,32 @@ use App\Http\Controllers\Doctor\DoctorDashboardController;
 use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\Doctor\ScheduleController;
 use Illuminate\Support\Facades\Route;
-
-
 use App\Http\Controllers\Admin\AdminLogController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\AdminSpecialtyController;
 use App\Http\Controllers\Admin\DoctorController;
-
-
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
-
-// Route::get('/', function () {
-//     return view('Doctors_Dashboard.medical_records.index');
-// });
-use App\Http\Controllers\Api\Patient\PatientApiController ;
 use App\Http\Controllers\Invoice\InvoiceController;
 
-Route::get('/', function () {
-    return view('Doctors_Dashboard.schedule.show');
-});
-Route::middleware('auth')->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-    Route::get('appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
-    Route::get('appointments/{id}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
-    Route::put('appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
-    Route::get('/docdashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
-});
 
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-
-    // doctore profile setting routes
-    Route::get('/profile-settings', [ProfileSettingController::class, 'edit'])->name('profile.settings.edit');
-    Route::put('/profile-settings', [ProfileSettingController::class, 'update'])->name('profile.settings.update');
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-// =========================================== admin start =====================================================
-
-// settings
-Route::get('admin/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
-Route::patch('admin/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
-// ===========================================  admin end  =====================================================
 
 
-// appointments
-Route::get('/admin/appointments', [AdminAppointmentController::class, 'index'])->name('admin.appointments.index');
-Route::get('/admin/appointments/create', [AdminAppointmentController::class, 'create'])->name('admin.appointments.create');
-Route::get('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'show'])->name('admin.appointments.show');
-Route::get('/admin/appointments/edit/{appointment}', [AdminAppointmentController::class, 'edit'])->name('admin.appointments.edit');
-Route::patch('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'update'])->name('admin.appointments.update');
-Route::post('/admin/appointments', [AdminAppointmentController::class, 'store'])->name('admin.appointments.store');
-Route::delete('/admin/appointments/{appointment}', [AdminAppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
-
-// payments
-Route::resource('/admin/payments', AdminPaymentController::class)->names('admin.payments');
-
-// specialties
-Route::resource('/admin/specialties', AdminSpecialtyController::class)->names('admin.specialties');
-
-// Invoices
-Route::resource('/invoices', InvoiceController::class)->names('invoice');
-
-// patients
-Route::get('/patients', [PatientController::class, 'index'])->name('admin.patients.index');
-Route::get('/patients/create', [PatientController::class, 'create'])->name('admin.patients.create');
-Route::get('/patients/trashed', [PatientController::class, 'trashed'])->name('admin.patients.trashed');
-Route::post('/patients', [PatientController::class, 'store'])->name('admin.patients.store');
-Route::get('/patients/{patient}', [PatientController::class, 'show'])->name('admin.patients.show');
-Route::get('/patients/{patient}/edit', [PatientController::class, 'edit'])->name('admin.patients.edit');
-Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('admin.patients.update');
-Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('admin.patients.destroy');
-
-// Trashed / Soft Delete
-Route::post('/patients/{id}/restore', [PatientController::class, 'restore'])->name('admin.patients.restore');
-Route::get('/logs', [AdminLogController::class, 'index'])->name('admin.logs.index');
-
-
-
-
-// ===========================================  admin end  =====================================================
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
@@ -111,40 +43,56 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Doctor Routes in Admin Dashboard
-Route::get('/doctors', [DoctorController::class, 'index'])->name('admin.doctors.index');
-Route::get('/doctors/create', [DoctorController::class, 'create'])->name('admin.doctors.create');
-Route::get('/doctors/trashed', [DoctorController::class, 'trashed'])->name('admin.doctors.trashed');
-Route::post('/doctors', [DoctorController::class, 'store'])->name('admin.doctors.store');
-Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('admin.doctors.show');
-Route::get('/doctors/{doctor}/edit', [DoctorController::class, 'edit'])->name('admin.doctors.edit');
-Route::put('/doctors/{doctor}', [DoctorController::class, 'update'])->name('admin.doctors.update');
-Route::delete('/doctors/{doctor}', [DoctorController::class, 'destroy'])->name('admin.doctors.destroy');
-Route::post('/doctors/{id}/restore', [DoctorController::class, 'restore'])->name('admin.doctors.restore');
-
-// Visits Route in Admin Dashboard
-Route::get('/visits', [VisitController::class, 'index'])->name('admin.visits.index');
 
 
+Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard.index');
+    })->name('dashboard');
 
-// doctor dashboard routes
-// --------------------------------------
-// medical records routes
-Route::resource('medical_records', MedicalRecordController::class);
-Route::get('/medical-files/{file}', [MedicalRecordController::class, 'downloadFile'])
-    ->name('medical_files.download');
+    Route::get('settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('settings', [AdminSettingsController::class, 'update'])->name('settings.update');
 
-// schedule routes
-Route::resource('schedules', ScheduleController::class);
+    Route::resource('appointments', AdminAppointmentController::class)->names('appointments');
 
-// profile routes
-Route::resource('profile_setting', ProfileSettingController::class);
+    Route::resource('payments', AdminPaymentController::class)->names('payments');
 
-// notification routes
-// Route::resource('notifications', NotificationController::class);
+    Route::resource('specialties', AdminSpecialtyController::class)->names('specialties');
 
-// ---------------------------------------------------------------------------------------------------------------
+    Route::get('doctors/trashed', [DoctorController::class, 'trashed'])->name('doctors.trashed');
+    Route::resource('doctors', DoctorController::class)->names('doctors');
+    Route::post('doctors/{id}/restore', [DoctorController::class, 'restore'])->name('doctors.restore');
+
+    Route::get('patients/trashed', [PatientController::class, 'trashed'])->name('patients.trashed');
+    Route::resource('patients', PatientController::class)->names('patients');
+    Route::post('patients/{id}/restore', [PatientController::class, 'restore'])->name('patients.restore');
+
+    Route::resource('visits', VisitController::class)->names('visits');
+
+    Route::get('logs', [AdminLogController::class, 'index'])->name('logs.index');
+
+    // Route::resource('/invoices', InvoiceController::class)->names('invoice');
+});
+
+Route::middleware(['auth', 'isDoctor'])->prefix('doctor')->group(function () {
+    Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
+
+    Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
+    Route::get('appointments/{id}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    Route::put('appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
+
+    Route::resource('medical_records', MedicalRecordController::class);
+    Route::get('medical-files/{file}', [MedicalRecordController::class, 'downloadFile'])
+        ->name('medical_files.download');
+
+    Route::resource('schedules', ScheduleController::class);
+
+    Route::resource('profile_setting', ProfileSettingController::class);
+});
 
 
 
-require __DIR__.'/auth.php';
+
+
+require __DIR__ . '/auth.php';
