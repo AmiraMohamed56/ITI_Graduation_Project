@@ -13,7 +13,11 @@ use App\Traits\AdminLoggable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, AdminLoggable ,HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens;
+    use AdminLoggable ;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +25,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'role', 'profile_pic', 'status', 'email_verified_at', 'google_id'
+        'name', 'email', 'phone', 'password', 'role', 'profile_pic', 'status', 'email_verified_at', 'google_id',
     ];
 
     /**
@@ -79,9 +83,9 @@ class User extends Authenticatable
     }
 
 
-     /**
-     * Get the full profile picture URL
-     */
+    /**
+    * Get the full profile picture URL
+    */
     public function getProfilePictureUrlAttribute(): string
     {
         if ($this->profile_pic) {

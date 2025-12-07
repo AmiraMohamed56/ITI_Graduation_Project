@@ -14,11 +14,6 @@ return [
     |
     */
 
-    'google' => [
-        'client_id' => env('GOOGLE_CLIENT_ID'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URL'),
-    ],
 
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
@@ -39,6 +34,12 @@ return [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
+    ],
+
+        'google' => [
+        'client_id' => '45277697582-ivg5vloq6dn4gcp0b73jr7l0uvq5s3nd.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'http://127.0.0.1:8000/login/google/callback',
     ],
 
 ];
