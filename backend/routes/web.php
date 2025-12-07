@@ -91,6 +91,13 @@ Route::middleware(['auth', 'isDoctor'])->prefix('doctor')->group(function () {
 });
 
 
+// ========================= google login start ========================================
+use App\Http\Controllers\Auth\GoogleController;
+
+Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// ========================= google login end ========================================
 
 
 
