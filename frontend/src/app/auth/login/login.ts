@@ -21,7 +21,7 @@ export class Login{
   constructor(private router: Router, private auth: AuthService) { }
 
   loginWithGoogle() {
-    window.location.href = 'http://127.0.0.1:8000/login/google/callback';
+    window.location.href = 'http://127.0.0.1:8000/login/google';
   }
 
   onSubmit(){
