@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->web([
         //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         // ]);
+        
+        $middleware->alias([
+            'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+            'isDoctor' => \App\Http\Middleware\IsDoctor::class,
+        ]);
 
         // API middleware
         $middleware->api([

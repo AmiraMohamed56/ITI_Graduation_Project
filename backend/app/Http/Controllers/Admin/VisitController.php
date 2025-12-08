@@ -24,7 +24,7 @@ class VisitController extends Controller
                 $request->orderBy('appointments.created_at', 'desc');
         }
 
-        $visits = $request->paginate(5)->withQueryString();
+        $visits = $request->paginate(10)->withQueryString();
 
         return view('admin.visits.index', compact('visits'));
     }

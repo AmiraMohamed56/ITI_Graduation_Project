@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 
 export class AppointmentService {
 
-  private apiUrl = 'http://backend.test/api';
+  private apiUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 

@@ -32,7 +32,7 @@
 
         <!-- Filter Form -->
         <div class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-            <form method="GET" action="{{ route('admin.logs.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form method="GET" action="{{ route('admin.logs.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- User Search -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search User</label>
@@ -57,7 +57,7 @@
                     </select>
                 </div>
 
-                <!-- Model Filter -->
+                <!-- Model Filter
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Model</label>
                     <select name="model" class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
@@ -68,7 +68,7 @@
                         </option>
                         @endforeach
                     </select>
-                </div>
+                </div> -->
 
                 <!-- Filter Button -->
                 <div class="flex items-end">
@@ -87,7 +87,6 @@
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">User</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Action</th>
-                        <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Model</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Model ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">IP Address</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Date</th>
@@ -147,9 +146,6 @@
                             </span>
                         </td>
 
-                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                            <span class="font-medium">{{ $log->model }}</span>
-                        </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                             #{{ $log->model_id }}
