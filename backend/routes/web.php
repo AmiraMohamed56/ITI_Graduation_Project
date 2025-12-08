@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\AdminSpecialtyController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\notificationsController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Invoice\InvoiceController;
@@ -23,6 +24,19 @@ use App\Http\Controllers\Admin\DashboardController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+use App\Http\Controllers\Api\Patient\PatientApiController ;
+use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
+use App\Http\Controllers\Invoice\InvoiceController;
+
+// Route::get('/', function () {
+//     return view('Doctors_Dashboard.schedule.show');
+// });
+Route::middleware('auth')->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
+    Route::get('appointments/{id}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    Route::put('appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::get('/docdashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -100,6 +114,41 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 // ========================= google login end ========================================
 
+// ============================================
+// routes/web.php - Add these routes
+// ============================================
+
+// Doctor Notification Routes
+Route::middleware(['auth'])->prefix('doctor')->name('doctor.')->group(function () {
+    Route::get('/notifications', [DoctorNotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::get('/notifications/{id}', [DoctorNotificationController::class, 'show'])
+        ->name('notifications.show');
+    Route::post('/notifications/{id}/mark-as-read', [DoctorNotificationController::class, 'update'])
+        ->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [DoctorNotificationController::class, 'markAllAsRead'])
+        ->name('notifications.mark-all-as-read');
+    Route::delete('/notifications/{id}', [DoctorNotificationController::class, 'destroy'])
+        ->name('notifications.destroy');
+    Route::delete('/notifications', [DoctorNotificationController::class, 'deleteAll'])
+        ->name('notifications.delete-all');
+});
+
+// Admin Notification Routes
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/notifications', [notificationsController::class, 'index'])
+        ->name('notifications.index');
+    Route::get('/notifications/{id}', [notificationsController::class, 'show'])
+        ->name('notifications.show');
+    Route::post('/notifications/{id}/mark-as-read', [notificationsController::class, 'update'])
+        ->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [notificationsController::class, 'markAllAsRead'])
+        ->name('notifications.mark-all-as-read');
+    Route::delete('/notifications/{id}', [notificationsController::class, 'destroy'])
+        ->name('notifications.destroy');
+    Route::delete('/notifications', action: [notificationsController::class, 'deleteAll'])
+        ->name('notifications.delete-all');
+});
 
 
 require __DIR__ . '/auth.php';

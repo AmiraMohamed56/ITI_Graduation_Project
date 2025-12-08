@@ -83,7 +83,10 @@ class AppointmentCancelled extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'appointment_id' => $this->appointment->id,
+            'title' => 'Appointment Cancelled',
+            'message' => "Your appointment with Dr. {$this->appointment->doctor->user->name} has been cancelled",
+            'type' => 'appointment',
         ];
     }
 }
