@@ -67,6 +67,7 @@ export class BookingComponent implements OnInit {
   onSpecialityChange() {
     this.selectedSpecialityId = Number(this.selectedSpecialityId);
     this.loadDoctors();
+    console.log(this.selectedSpecialityId);
   }
 
   loadDoctors() {

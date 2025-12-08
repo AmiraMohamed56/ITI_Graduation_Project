@@ -53,6 +53,7 @@
 
             <nav class="mt-6">
                 <ul class="space-y-1">
+                    <x-admin.nav-item icon="dashboard" text="Dashboard" href="{{ route('admin.dashboard') }}" />
                     <x-admin.nav-item icon="group" text="Patients" href="{{ route('admin.patients.index') }}" />
                     <x-admin.nav-item icon="person" text="Doctors" href="{{ route('admin.doctors.index') }}" />
                     <x-admin.nav-item icon="category" text="Specialties" href="{{ route('admin.specialties.index') }}" />
@@ -117,7 +118,7 @@
         </div>
     </div>
 
-@yield('scripts')
+    @yield('scripts')
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('sidebar-toggle');
@@ -180,6 +181,8 @@
     </script>
 
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 
 </html>

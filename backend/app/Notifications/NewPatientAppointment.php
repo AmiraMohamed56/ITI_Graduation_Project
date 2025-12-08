@@ -43,8 +43,10 @@ class NewPatientAppointment extends Notification implements ShouldQueue
             ->greeting('Hello Dr. ' . $notifiable->name . '!')
             ->line('A new appointment has been scheduled with you.')
             ->line('**Patient:** ' . $this->appointment->patient->user->name)
+            ->line("Doctor: Dr. {$this->appointment->doctor->user->name}")
             ->line('**Date:** ' . $this->appointment->schedule_date->format('F d, Y'))
             ->line('**Time:** ' . date('h:i A', strtotime($this->appointment->schedule_time)))
+            ->line("Type: " . ucfirst($this->appointment->type))
             ->action('View Appointment', url('/appointments/' . $this->appointment->id))
             ->line('Please review the appointment details.');
     }
@@ -81,7 +83,11 @@ class NewPatientAppointment extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'appointment_id' => $this->appointment->id,
+            'title' => 'New Appointment Booked',
+            'message' => "New appointment with {$this->appointment->patient->user->name} on " .
+                        \Carbon\Carbon::parse($this->appointment->schedule_date)->format('M d, Y'),
+            'type' => 'appointment',
         ];
     }
 }

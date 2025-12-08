@@ -12,7 +12,7 @@ import { PatientService } from '../services/patientProfile.service';
 })
 export class PatientProfile implements OnInit {
 
-  patientId = 31; // مؤقت لحين عمل Login
+  patientId : number = 0;
 
   patient: any = null;
   loading = false;
@@ -20,38 +20,63 @@ export class PatientProfile implements OnInit {
   showModal = false;
   editUser: any = {};
   editPatient: any = {};
-activeTab: 'profile' | 'history' | 'appointments' = 'profile';
+
+  activeTab: 'profile' | 'history' | 'appointments' = 'profile';
+
   constructor(private patientService: PatientService) {}
 
   ngOnInit(): void {
-    this.getPatientData();
-  }
-loadPatient() {
-    this.loading = true;
-    this.patientService.getPatientById(this.patientId).subscribe({
-      next: (res: any) => {
-        this.patient = res.data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error loading patient', err);
-        this.loading = false;
-      }
-    });
+  const userData = localStorage.getItem("user");
+
+  if (userData) {
+    const parsed = JSON.parse(userData);
+    this.patientId = parsed.id;  
   }
 
-  getInitials(): string {
-    if (!this.patient?.name) return '';
-    return this.patient.name.split(' ').map((n: any) => n[0]).join('');
+  if (!this.patientId) {
+    console.error("User not logged in!");
+    return;
   }
+
+  this.getPatientData();
+}
+
   /** Load Patient Data */
   getPatientData() {
     this.loading = true;
     this.patientService.getPatientById(this.patientId).subscribe({
       next: (res: any) => {
         this.patient = res.data;
-        this.editUser = { ...this.patient };
-        this.editPatient = { ...this.patient };
+
+        // دمج البيانات للمواعيد القادمة مع التفاصيل الكاملة
+        if (this.patient.appointments && this.patient.upcoming_appointments) {
+          this.patient.upcoming_appointments = this.patient.upcoming_appointments.map((upcoming: any) => {
+            const fullAppointment = this.patient.appointments.find((app: any) => app.id === upcoming.id);
+            return {
+              ...upcoming,
+              type: fullAppointment?.type,
+              price: fullAppointment?.price,
+              notes: fullAppointment?.notes,
+              doctor: fullAppointment?.doctor,
+              schedule: fullAppointment?.schedule,
+              record: fullAppointment?.record
+            };
+          });
+        }
+
+        // Copy basic fields to edit forms
+        this.editUser = {
+          name: this.patient.name,
+          email: this.patient.email,
+          phone: this.patient.phone,
+          profile_pic: null,
+        };
+
+        this.editPatient = {
+          blood_type: this.patient.blood_type,
+          chronic_diseases: this.patient.chronic_diseases,
+        };
+
         this.loading = false;
       },
       error: (err) => {
@@ -61,30 +86,37 @@ loadPatient() {
     });
   }
 
-  /** Select new Profile Image */
-imagePreview: string | null = null;
-
-onImageSelected(event: any) {
-  const file = event.target.files[0];
-
-  if (file) {
-    this.editUser.profile_pic = file;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  /** Initials for Avatar */
+  getInitials(): string {
+    if (!this.patient?.name) return '';
+    return this.patient.name.split(' ').map((n: any) => n[0]).join('');
   }
-}
 
+  /** Image Preview */
+  imagePreview: string | null = null;
 
-  /** Update All (User + Patient Info) */
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      this.editUser.profile_pic = file;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  /** Save all changes */
   saveChanges(editForm: any) {
     if (editForm.invalid) {
-    Object.values(editForm.controls).forEach((ctrl: any) => ctrl.markAsTouched());
-    return;
-  }
+      Object.values(editForm.controls).forEach((ctrl: any) => ctrl.markAsTouched());
+      return;
+    }
+
+    // User update
     const formData = new FormData();
     if (this.editUser.name) formData.append("name", this.editUser.name);
     if (this.editUser.email) formData.append("email", this.editUser.email);
@@ -92,112 +124,111 @@ onImageSelected(event: any) {
     if (this.editUser.profile_pic instanceof File)
       formData.append("profile_pic", this.editUser.profile_pic);
 
-    // Update User Info
     this.patientService.updateUser(this.patientId, formData).subscribe({
       next: () => {
-
-        // Update Patient Info
+        // Patient update
         const patientInfo = {
           blood_type: this.editPatient.blood_type,
           chronic_diseases: this.editPatient.chronic_diseases,
         };
 
-        this.patientService.updatePatientInfo(this.patientId, patientInfo)
-          .subscribe({
-            next: () => {
-              this.closeModal();
-              this.getPatientData();
-            }
-          });
+        this.patientService.updatePatientInfo(this.patientId, patientInfo).subscribe({
+          next: () => {
+            this.closeModal();
+            this.getPatientData();
+          }
+        });
       }
     });
   }
-getNameError(ctrl: any) {
-  if (ctrl.errors?.['required']) return "Name is required";
-  if (ctrl.errors?.['minlength']) return "Name must be at least 3 characters";
-  return "";
-}
 
-getEmailError(ctrl: any) {
-  if (ctrl.errors?.['required']) return "Email is required";
-  if (ctrl.errors?.['email']) return "Invalid email format";
-  return "";
-}
+  /** Validators */
+  getNameError(ctrl: any) {
+    if (ctrl.errors?.['required']) return "Name is required";
+    if (ctrl.errors?.['minlength']) return "Name must be at least 3 characters";
+    return "";
+  }
 
-getPhoneError(ctrl: any) {
-  if (ctrl.errors?.['required']) return "Phone number is required";
-  if (ctrl.errors?.['pattern']) return "Phone must be 10-15 digits";
-  return "";
-}
+  getEmailError(ctrl: any) {
+    if (ctrl.errors?.['required']) return "Email is required";
+    if (ctrl.errors?.['email']) return "Invalid email format";
+    return "";
+  }
 
-getBloodError(ctrl: any) {
-  if (ctrl.errors?.['required']) return "Blood type is required";
-  if (ctrl.errors?.['pattern']) return "Format must be A+, O-, AB+, etc.";
-  return "";
-}
+  getPhoneError(ctrl: any) {
+    if (ctrl.errors?.['required']) return "Phone number is required";
+    if (ctrl.errors?.['pattern']) return "Phone must be 10-15 digits";
+    return "";
+  }
 
-getChronicError(ctrl: any) {
-  if (ctrl.errors?.['required']) return "Chronic diseases information required";
-  if (ctrl.errors?.['minlength']) return "Minimum 5 characters";
-  return "";
-}
+  getBloodError(ctrl: any) {
+    if (ctrl.errors?.['required']) return "Blood type is required";
+    if (ctrl.errors?.['pattern']) return "Format must be A+, O-, AB+, etc.";
+    return "";
+  }
 
-  /** Remove Profile Picture */
+  getChronicError(ctrl: any) {
+    if (ctrl.errors?.['required']) return "Chronic diseases required";
+    if (ctrl.errors?.['minlength']) return "Minimum 5 characters";
+    return "";
+  }
+
+  /** Remove profile image */
   removeProfilePic() {
     this.patientService.removeProfilePic(this.patientId).subscribe({
       next: () => this.getPatientData()
     });
   }
 
-  /** Open / Close Modal */
+  /** Modal controls */
   openEditModal() {
     this.editUser = { ...this.patient };
     this.editPatient = { ...this.patient };
     this.showModal = true;
   }
-filePreview(file: File): string {
-    const reader = new FileReader();
-    let preview = '';
-    reader.onload = (e: any) => {
-      preview = e.target.result;
-    };
-    reader.readAsDataURL(file);
-    return preview;
-  }
+
   closeModal() {
     this.showModal = false;
   }
-currentPage = 1;
-pageSize = 4;
-get totalPages(): number {
-  return Math.ceil(this.patient?.medical_history?.length / this.pageSize) || 1;
-}
 
-get pagedRecords() {
-  if (!this.patient?.medical_history) return [];
-  const start = (this.currentPage - 1) * this.pageSize;
-  return this.patient.medical_history.slice(start, start + this.pageSize);
-}
+  /** MEDICAL HISTORY PAGINATION */
+  currentPage = 1;
+  pageSize = 4;
 
-goToPage(page: number) {
-  if (page >= 1 && page <= this.totalPages) this.currentPage = page;
-}
-// Pagination Variables
-currentAppPage = 1;
-appPageSize = 3; // عدد الكروت لكل صفحة
+  get totalPages(): number {
+    return Math.ceil(this.patient?.medical_history?.length / this.pageSize) || 1;
+  }
 
-get totalAppPages(): number {
-  return Math.ceil(this.patient?.upcoming_appointments?.length / this.appPageSize) || 1;
-}
+  get pagedRecords() {
+    if (!this.patient?.medical_history) return [];
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.patient.medical_history.slice(start, start + this.pageSize);
+  }
 
-get pagedAppointments() {
-  if (!this.patient?.upcoming_appointments) return [];
-  const start = (this.currentAppPage - 1) * this.appPageSize;
-  return this.patient.upcoming_appointments.slice(start, start + this.appPageSize);
-}
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) this.currentPage = page;
+  }
 
-goToAppPage(page: number) {
-  if (page >= 1 && page <= this.totalAppPages) this.currentAppPage = page;
-}
+  /** UPCOMING APPOINTMENTS PAGINATION */
+  currentAppPage = 1;
+  appPageSize = 3;
 
+  get totalAppPages(): number {
+    return Math.ceil(this.patient?.upcoming_appointments?.length / this.appPageSize) || 1;
+  }
+
+  get pagedAppointments() {
+    if (!this.patient?.upcoming_appointments) return [];
+    const start = (this.currentAppPage - 1) * this.appPageSize;
+    return this.patient.upcoming_appointments.slice(start, start + this.appPageSize);
+  }
+
+  goToAppPage(page: number) {
+    if (page >= 1 && page <= this.totalAppPages) this.currentAppPage = page;
+  }
+
+  findFullAppointment(upcomingApp: any): any {
+    if (!this.patient?.appointments) return null;
+    return this.patient.appointments.find((app: any) => app.id === upcomingApp.id);
+  }
 }

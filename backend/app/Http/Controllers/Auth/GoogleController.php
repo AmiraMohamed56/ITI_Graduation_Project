@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Patient\GoogleLoginResource;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,22 +33,46 @@ class GoogleController extends Controller
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
-                'password' => Hash::make(str_random(16)), // Generate a random password // Generate a random password
+                'role' => 'patient',
+                'password' => Hash::make(Str::random(16)), // Generate a random password // Generate a random password
+            ]);
+
+            // create patient profile
+            $user->patient()->create([
+                'user_id' => $user->id,
+                'blood_type' => null,
+                'chronic_diseases' => null,
             ]);
         }
+
+        if(!$user->patient) {
+            $user->patient()->create([
+                'user_id' => $user->id,
+                'blood_type' => null,
+                'chronic_diseases' => null,
+            ]);
+        }
+
+        Auth::login($user);
 
         // Generate JWT for the authenticated user
         $token = $user->createToken('Google Login Token')->plainTextToken;
 
         // Return token and user data as JSON response
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-        ]);
-        // Log the user in
-        // Auth::login($user, true);
+        // return new GoogleLoginResource([
+        //     'token' => $token,
+        //     'user' => $user,
+        // ]);
 
-        // Redirect to the intended page after successful login
-        // return redirect()->route('dashboard'); // Adjust according to your app
+        return redirect()->away(
+            "http://localhost:4200/auth/callback" .
+            "?token=$token" .
+            "&id=" . $user->id .
+            "&name=" . urlencode($user->name) .
+            "&email=" . urlencode($user->email) .
+            "&google_id=" . urlencode($user->google_id)
+        );
+
+
     }
 }

@@ -17,7 +17,7 @@ class AppointmentReminder extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct($appointment, $hoursUntil = 24)
+    public function __construct($appointment, $hoursUntil)
     {
         $this->appointment = $appointment;
         $this->hoursUntil = $hoursUntil;
@@ -87,7 +87,11 @@ class AppointmentReminder extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'appointment_id' => $this->appointment->id,
+            'title' => "Appointment Reminder - {$this->hoursUntil}h",
+            'message' => "Your appointment with Dr. {$this->appointment->doctor->user->name} is in {$this->hoursUntil} hours",
+            'type' => 'reminder',
+            'hours_until' => $this->hoursUntil,
         ];
     }
 }
