@@ -12,17 +12,31 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ResetPassword {
 
-  form = { email: '', token: '', password: '', password_confirmation: '' };
+  form = {
+    email: '',
+    token: '',
+    password: '',
+    password_confirmation: ''
+  };
   errorMessage = '';
+  successMessage = '';
+  isLoading = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
     this.route.queryParams.subscribe(params => {
-      this.form.email = params['email'] || '';
       this.form.token = params['token'] || '';
+      this.form.email = params['email'] || '';
+
+      if(!this.form.token || !this.form.email){
+        this.errorMessage = 'Invalid reset link. Please request a new password reset.';
+      }
     });
   }
 
   onSubmit() {
+    this.errorMessage = '';
+    this.successMessage = '';
+
     if (!this.form.password || !this.form.password_confirmation) {
       this.errorMessage = 'All fields are required.';
       return;
@@ -32,9 +46,17 @@ export class ResetPassword {
       return;
     }
 
+    if(this.form.password.length < 8){
+      this.errorMessage = 'Password must be at least 8 characters long.';
+      return;
+    }
+
+    this.isLoading = true;
+
     this.auth.resetPassword(this.form).subscribe({
-      next: () => {
-        this.router.navigate(['/auth/login']);
+      next: (res) => {
+        this.successMessage = res.message || 'Password reset successfully!';
+        setTimeout(() => this.router.navigate(['/auth/login']), 2000);
       },
       error: (err) => {
         this.errorMessage = this.auth.getErrorMessage(err);

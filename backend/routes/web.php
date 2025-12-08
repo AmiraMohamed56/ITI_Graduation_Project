@@ -18,26 +18,23 @@ use App\Http\Controllers\Admin\notificationsController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Invoice\InvoiceController;
-
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
+use App\Http\Controllers\Auth\GoogleController;
+// use App\Http\Controllers\Invoice\InvoiceController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-use App\Http\Controllers\Api\Patient\PatientApiController ;
-use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
-use App\Http\Controllers\Invoice\InvoiceController;
 
-// Route::get('/', function () {
-//     return view('Doctors_Dashboard.schedule.show');
-// });
+
 Route::middleware('auth')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
     Route::get('appointments/{id}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
     Route::put('appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
     Route::get('/docdashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
-
+});
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -107,7 +104,7 @@ Route::middleware(['auth', 'isDoctor'])->prefix('doctor')->group(function () {
 
 
 // ========================= google login start ========================================
-use App\Http\Controllers\Auth\GoogleController;
+
 
 Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
