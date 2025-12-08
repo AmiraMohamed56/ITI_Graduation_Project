@@ -162,36 +162,6 @@ class PatientAuthController extends Controller
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        // $user = User::where('email', $request->email)
-        //     ->where('role', 'patient')
-        //     ->first();
-
-        // if (!$user) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'User not found',
-        //     ], 404);
-        // }
-
-        // $tokenData = DB::table('password_reset_tokens')
-        //     ->where('email', $request->email)
-        //     ->first();
-
-        // if (!$tokenData) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Invalid reset token',
-        //     ], 404);
-        // }
-
-        // if (!hash_equals($tokenData->token, hash('sha256', $request->token))) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Invalid token',
-        //     ], 400);
-        // }
-
-
         $status = Password::reset(
             $request->only('email', 'token', 'password', 'password_confirmation'),
 
