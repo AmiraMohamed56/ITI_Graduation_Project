@@ -39,7 +39,16 @@ private api = 'http://localhost:8000/api/ai/symptoms';
 
   constructor(private http: HttpClient) {}
 
-  analyzeSymptoms(payload: {symptoms: string, age?: number, gender?: string}): Observable<AiAnalysisResponse> {
-    return this.http.post<AiAnalysisResponse>(this.api, payload);
-  }
+analyzeSymptoms(payload: { symptoms: string, age?: number, gender?: string, file?: File }): Observable<AiAnalysisResponse> {
+  const formData = new FormData();
+
+  formData.append('symptoms', payload.symptoms);
+
+  if (payload.age !== undefined) formData.append('age', payload.age.toString());
+  if (payload.gender) formData.append('gender', payload.gender);
+  if (payload.file) formData.append('file', payload.file);
+
+  return this.http.post<AiAnalysisResponse>(this.api, formData);
+}
+
 }
