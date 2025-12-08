@@ -42,6 +42,7 @@ class AppointmentBooked extends Notification implements ShouldQueue
             ->line('Doctor: Dr. ' . $this->appointment->doctor->user->name)
             ->line('Date: ' . $this->appointment->schedule_date->format('F d, Y'))
             ->line('Time: ' . date('h:i A', strtotime($this->appointment->schedule_time)))
+            ->line("Status: " . ucfirst($this->appointment->status))
             ->action('View Appointment', url('/appointments/' . $this->appointment->id))
             ->line('You will receive reminders 24 and 12 hours before your appointment.')
             ->line('Thank you for using our clinic!');
@@ -82,8 +83,12 @@ class AppointmentBooked extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
+          return [
+            'appointment_id' => $this->appointment->id,
+            'title' => 'Appointment Booked Successfully',
+            'message' => "Your appointment with Dr. {$this->appointment->doctor->user->name} has been confirmed for " .
+                        \Carbon\Carbon::parse($this->appointment->schedule_date)->format('M d, Y'),
+            'type' => 'appointment',
         ];
     }
 }

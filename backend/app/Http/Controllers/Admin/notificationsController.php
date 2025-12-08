@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Doctor;
+namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-class NotificationController extends Controller
+
+class notificationsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -27,52 +26,23 @@ class NotificationController extends Controller
         $notifications = $query->latest()->paginate(15);
         $unreadCount = $user->unreadNotifications()->count();
 
-        return view('Doctors_Dashboard.notifications.list', compact('notifications', 'unreadCount'));
+        return view('admin.notifications.index', compact('notifications', 'unreadCount'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+     public function show($id)
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
 
-        // Mark as read when viewed
         if (!$notification->read_at) {
             $notification->markAsRead();
         }
 
-        return view('Doctors_Dashboard.notifications.show', compact('notification'));
+        return view('admin.notifications.show', compact('notification'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-   public function update(Request $request, string $id)
+     public function update($id)
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
         $notification->markAsRead();
@@ -80,10 +50,8 @@ class NotificationController extends Controller
         return redirect()->back()->with('success', 'Notification marked as read');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+
+    public function destroy($id)
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
         $notification->delete();
@@ -92,9 +60,6 @@ class NotificationController extends Controller
     }
 
 
-    /**
-     * Mark all notifications as read
-     */
     public function markAllAsRead()
     {
         Auth::user()->unreadNotifications->markAsRead();
@@ -102,14 +67,10 @@ class NotificationController extends Controller
         return redirect()->back()->with('success', 'All notifications marked as read');
     }
 
-
-    /**
-     * Delete all notifications
-     */
     public function deleteAll()
     {
         Auth::user()->notifications()->delete();
-
         return redirect()->back()->with('success', 'All notifications deleted successfully');
     }
+
 }
