@@ -31,8 +31,8 @@ class AdminLogController extends Controller
         return view('admin.logs.index', [
             'logs' => $logs,
             'requestData' => $request->all(),
-            'models' => ['User', 'Patient', 'Doctor', 'Appointment', 'Notification'], // كل الموديلات
-            'actions' => ['login', 'logout', 'create', 'update', 'delete', 'send_notification'] // كل الـ actions
+            'models' => ['User', 'Patient', 'Doctor', 'Appointment', 'Notification'],
+            'actions' => ['login', 'logout', 'Created', 'Updated', 'Deleted', 'send_notification']
         ]);
     }
 }
