@@ -46,8 +46,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('settings', [AdminSettingsController::class, 'update'])->name('settings.update');
