@@ -16,7 +16,7 @@ class StoreAppointmentRequest extends FormRequest
             'patient_id' => 'required|integer|exists:users,id',
             'doctor_id' => 'required|integer|exists:doctors,id',
             'doctor_schedule_id' => 'nullable|integer|exists:doctor_schedules,id',
-            'schedule_date' => 'required|string', // you're using day names; if you change to date use date rule
+            'schedule_date' => 'required|string', //  day names; if change to date use date rule
             'schedule_time' => 'required|date_format:H:i',
             'type' => 'required|in:consultation,follow_up,telemedicine',
             'notes' => 'nullable|string',

@@ -20,6 +20,10 @@ export class Register {
 
   constructor(private router: Router, private auth: AuthService) { }
 
+  loginWithGoogle() {
+    window.location.href = 'http://127.0.0.1:8000/login/google';
+  }
+
   onSubmit(){
     this.errorMessage = '';
     if (!this.form.name || !this.form.email || !this.form.password || !this.form.password_confirmation) {
@@ -41,5 +45,5 @@ export class Register {
       }
     });
   }
-  
+
 }

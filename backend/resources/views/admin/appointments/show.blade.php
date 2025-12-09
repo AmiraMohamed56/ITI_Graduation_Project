@@ -106,14 +106,54 @@
 </div>
 
 <div class="mt-6 flex justify-between">
-    <form action="{{ route('admin.appointments.destroy', $appointment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
+    {{-- <form action="{{ route('admin.appointments.destroy', $appointment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
         @csrf
         @method('DELETE')
         <x-admin.button type="danger">Delete Appointment</x-admin.button>
-    </form>
+    </form> --}}
+    {{-- trigger delete modal --}}
+    <x-admin.button type="danger" id="delete-button">Delete appointment</x-admin.button>
+
+    <!-- Confirmation Modal (Initially Hidden) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 shadow rounded p-6 w-96">
+            <h2 class="text-xl mb-4">Are you sure you want to delete this payment?</h2>
+            <div class="flex justify-end gap-4">
+                <!-- Cancel Button -->
+                <x-admin.button id="cancel-button" type="secondary" size="sm">Cancel</x-admin.button>
+
+                {{-- delete form --}}
+                <form id="delete-form" action="{{ route('admin.appointments.destroy', $appointment->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <x-admin.button type="danger" size="sm">Cofirm</x-admin.button>
+                </form>
+            </div>
+        </div>
+    </div>
     <div></div>
 </div>
 
+@endsection
 
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteButton = document.getElementById("delete-button");
+        const cancelButton = document.getElementById("cancel-button");
+        const modal = document.getElementById("modal");
+        const deleteForm = document.getElementById("delete-form");
 
+        // Show Modal
+        deleteButton.addEventListener("click", function() {
+            modal.classList.remove("hidden");
+        });
+
+        // Hide Modal (Cancel)
+        cancelButton.addEventListener("click", function() {
+            modal.classList.add("hidden");
+        });
+
+    });
+</script>
 @endsection
