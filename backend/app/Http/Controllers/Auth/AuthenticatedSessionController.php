@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('doctor.dashboard');
         }
 
-        \Auth::logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
