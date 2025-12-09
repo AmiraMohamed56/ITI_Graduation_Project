@@ -15,7 +15,6 @@
             $name = $patient->user->name ?? 'No Name';
             $firstLetter = strtoupper(substr($name, 0, 1));
 
-            // ألوان ثابتة حسب الحرف
             $colors = [
             'A' => 'bg-red-500', 'B' => 'bg-blue-500', 'C' => 'bg-green-500',
             'D' => 'bg-purple-500', 'E' => 'bg-pink-500', 'F' => 'bg-indigo-500',
@@ -30,7 +29,6 @@
 
             $bgColor = $colors[$firstLetter] ?? 'bg-gray-500';
 
-            // مسار الصورة الصحيح
             $profilePic = $patient->user->profile_pic ? basename($patient->user->profile_pic) : null;
             $imagePath = $profilePic ? asset('storage/profile_pics/' . $profilePic) : null;
             @endphp
@@ -38,14 +36,12 @@
             <div class="text-center mb-6">
 
                 @if ($imagePath)
-                <!-- صورة من قاعدة البيانات -->
                 <div class="mx-auto w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden shadow border border-gray-200 dark:border-gray-700">
                     <img src="{{ $imagePath }}"
                         alt="{{ $name }}"
                         class="w-full h-full object-cover">
                 </div>
                 @else
-                <!-- Avatar بديل -->
                 <div class="mx-auto w-28 h-28 md:w-32 md:h-32 rounded-full shadow flex items-center justify-center text-white text-4xl font-bold {{ $bgColor }}">
                     {{ $firstLetter }}
                 </div>

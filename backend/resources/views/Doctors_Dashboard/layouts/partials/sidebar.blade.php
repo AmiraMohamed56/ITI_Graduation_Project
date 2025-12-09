@@ -3,15 +3,15 @@
     <div class="flex flex-col h-full">
 
         <!-- Logo Section -->
-        <div class="flex items-center justify-between p-4 border-b border-gray-800">
+        <div class="flex items-center justify-between p-4 border-b border-gray-800 dark:border-gray-700">
             <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-teal-500 rounded flex items-center justify-center">
+                <div class="w-8 h-8 bg-teal-500 dark:bg-teal-600 rounded flex items-center justify-center">
                     <i class="fas fa-heartbeat text-white"></i>
                 </div>
-                <span id="logo-text" class="text-lg font-bold"></span>
+                <span id="logo-text" class="text-lg font-bold dark:text-white">MediCare</span>
             </div>
-            <button id="toggle-btn" class="w-8 h-8 bg-gray-800 rounded flex items-center justify-center hover:bg-gray-700">
-                <i class="fas fa-bars text-sm"></i>
+            <button id="toggle-btn" class="w-8 h-8 bg-gray-800 dark:bg-gray-700 rounded flex items-center justify-center hover:bg-gray-700 dark:hover:bg-gray-600">
+                <i class="fas fa-bars text-sm dark:text-gray-300"></i>
             </button>
         </div>
 
@@ -71,6 +71,10 @@
                 </a>
             </div>
 
+
+
         </nav>
     </div>
 </aside>
+
+
