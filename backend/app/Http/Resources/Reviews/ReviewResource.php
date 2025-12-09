@@ -22,8 +22,15 @@ class ReviewResource extends JsonResource
 
             'patient' => [
                 'id' => $this->patient->id,
-                'name' => $this->patient->user->name,
+                'user' => [
+                    'id' => $this->patient->user->id,
+                    'name' => $this->patient->user->name,
+                    'email' => $this->patient->user->email,
+                    'profile_picture_url' => $this->patient->user->profile_pic
+                        ? asset('storage/' . $this->patient->user->profile_pic)
+                        : null,
             ],
+        ],
 
             'doctor_id' => $this->doctor_id,
         ];

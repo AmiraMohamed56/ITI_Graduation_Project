@@ -14,7 +14,6 @@ use App\Models\MedicalFile;
 use App\Models\Payment;
 use App\Models\Review;
 use App\Models\Invoice;
-use App\Models\Notification;
 use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
@@ -85,16 +84,6 @@ class DatabaseSeeder extends Seeder
 
         // 9. CREATE REVIEWS (patients review doctors)
         Review::factory(50)->create();
-
-        // 10. CREATE NOTIFICATIONS (users)
-        $users = User::all();
-        $users->each(function($user) use ($faker) {
-            Notification::factory(rand(1,3))->create([
-                'user_id' => $user->id,
-                'title' => 'System Update',
-                'message' => $faker->sentence(),
-            ]);
-        });
 
         echo "\n✔ Database seeded successfully with realistic English data.\n";
         $this->call([

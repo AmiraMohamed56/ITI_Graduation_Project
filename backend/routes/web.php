@@ -21,8 +21,7 @@ use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
 use App\Http\Controllers\Auth\GoogleController;
-
-
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -139,7 +138,16 @@ Route::middleware(['auth', 'isDoctor'])->prefix('doctor')->group(function () {
 
     // doctor profile setting
     Route::resource('profile_setting', ProfileSettingController::class);
+
+
+    // doctor review
+    Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::post('reviews/{id}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');
+    Route::post('reviews/{id}/reject', [ReviewController::class, 'reject'])->name('reviews.reject');
+    Route::delete('reviews/{id}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
+
+
 // notifications routes
 // Doctor Notification Routes
 Route::middleware(['auth'])->prefix('doctor')->name('doctor.')->group(function () {

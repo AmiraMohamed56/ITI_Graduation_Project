@@ -214,12 +214,12 @@ class AdminAppointmentController extends Controller
      */
     private function sendAppointmentNotifications(Appointment $appointment)
     {
-        // 1. Notify Patient (Email + Real-time + Database)
+        // 1. Notify Patient
         $appointment->patient->user->notify(
             new AppointmentBooked($appointment)
         );
 
-        // 2. Notify Doctor (Email + Real-time + Database)
+        // 2. Notify Doctor
         $appointment->doctor->user->notify(
             new NewPatientAppointment($appointment)
         );
