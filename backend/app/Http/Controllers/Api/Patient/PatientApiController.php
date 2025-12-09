@@ -36,7 +36,15 @@ class PatientApiController extends Controller
      */
     public function show($id)
     {
-        $patient = Patient::with(['user', 'appointments.doctor.user', 'medicalRecords'])->findOrFail($id);
+        $patient = Patient::with([
+            'user',
+            'appointments.doctor.user',
+            'appointments.payment',
+            'appointments.invoice',
+            'appointments.medicalRecord',
+            'appointments.doctorSchedule',
+            'medicalRecords'
+        ])->findOrFail($id);
 
         return response()->json([
             'status' => true,

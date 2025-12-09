@@ -11,7 +11,8 @@ use App\Http\Controllers\Api\Reviews\ReviewController;
 use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
 use App\Http\Controllers\Api\Booking\BookingAppointmentController;
 use App\Http\Controllers\Api\Booking\BookingDoctorController;
-
+use App\Http\Controllers\Api\AI\SymptomsController;
+use App\Http\Controllers\Api\NotificationsController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -34,9 +35,9 @@ Route::options('{any}', function () {
 })->where('any', '.*');
 
 
-Route::get('/specialties', function () {
-    return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
-});
+// Route::get('/specialties', function () {
+//     return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
+// });
 
 Route::get('/doctors', [BookingDoctorController::class, 'index']);
 Route::get('/doctor_schedules', [BookingDoctorScheduleController::class, 'index']); // supports ?doctor_id=&day_of_week=
@@ -66,4 +67,26 @@ Route::post('patient/forgot-password', [PatientAuthController::class, 'forgotPas
 Route::post('patient/reset-password', [PatientAuthController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('patient/logout', [PatientAuthController::class, 'logout']);
+});
+
+
+Route::post('/ai/symptoms', [SymptomsController::class, 'analyze']);
+// ========================= google login start ========================================
+use App\Http\Controllers\Auth\GoogleController;
+
+Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// ========================= google login end ========================================
+
+
+
+// Patient Notification API Routes
+Route::middleware('auth:sanctum')->prefix('patient')->group(function () {
+    Route::get('/notifications', [NotificationsController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationsController::class, 'unreadCount']);
+    Route::post('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
+    Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
+    Route::delete('/notifications/all', [NotificationsController::class, 'destroyAll']);
 });

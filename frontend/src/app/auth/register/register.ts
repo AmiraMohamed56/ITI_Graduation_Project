@@ -21,6 +21,7 @@ export class Register {
   constructor(private router: Router, private auth: AuthService) { }
 
   onSubmit(){
+    this.errorMessage = '';
     if (!this.form.name || !this.form.email || !this.form.password || !this.form.password_confirmation) {
       this.errorMessage = 'All fields are required.';
       return;

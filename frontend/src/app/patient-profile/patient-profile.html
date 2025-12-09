@@ -1,519 +1,629 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 md:p-8">
-  <!-- Skeleton Loader -->
-  <div *ngIf="loading" class="space-y-6 animate-pulse">
-    <div class="h-40 bg-gray-200 rounded-3xl"></div>
-    <div class="flex flex-col md:flex-row gap-6">
-      <div class="flex-1 space-y-4">
-        <div class="h-10 bg-gray-200 rounded-lg w-3/4"></div>
-        <div class="h-6 bg-gray-200 rounded-lg w-1/2"></div>
-        <div class="h-6 bg-gray-200 rounded-lg w-1/4"></div>
-      </div>
-      <div class="flex-1 space-y-4">
-        <div class="h-10 bg-gray-200 rounded-lg w-full"></div>
-        <div class="h-6 bg-gray-200 rounded-lg w-5/6"></div>
-      </div>
+  <!-- Skeleton Loader - Improved -->
+  <div *ngIf="loading" class="space-y-8 max-w-7xl mx-auto">
+    <div class="h-48 bg-gradient-to-r from-gray-200 to-gray-300 rounded-3xl animate-pulse"></div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="h-32 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl animate-pulse"></div>
+      <div class="h-32 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl animate-pulse"></div>
+      <div class="h-32 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl animate-pulse"></div>
+      <div class="h-32 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl animate-pulse"></div>
     </div>
   </div>
 
   <!-- Content -->
-  <div *ngIf="!loading" class="max-w-7xl mx-auto space-y-6">
-    <!-- Tabs -->
-    <div class="flex border-b-2 border-gray-200 mb-4 overflow-x-auto">
-      <button
-        (click)="activeTab = 'profile'"
-        [ngClass]="activeTab === 'profile' ? 'border-blue-500 text-blue-600' : 'text-gray-500'"
-        class="pb-2 px-4 font-semibold transition-colors whitespace-nowrap"
-      >
-        Profile
-      </button>
-      <button
-        (click)="activeTab = 'history'"
-        [ngClass]="activeTab === 'history' ? 'border-blue-500 text-blue-600' : 'text-gray-500'"
-        class="pb-2 px-4 font-semibold transition-colors whitespace-nowrap"
-      >
-        Medical History
-      </button>
-      <button
-        (click)="activeTab = 'appointments'"
-        [ngClass]="activeTab === 'appointments' ? 'border-blue-500 text-blue-600' : 'text-gray-500'"
-        class="pb-2 px-4 font-semibold transition-colors whitespace-nowrap"
-      >
-        Appointments
-      </button>
+  <div *ngIf="!loading" class="max-w-7xl mx-auto">
+    <!-- Tabs - Improved -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-2 mb-8">
+      <div class="flex flex-wrap gap-2">
+        <button
+          (click)="activeTab = 'profile'"
+          [ngClass]="activeTab === 'profile'
+            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+            : 'text-gray-600 hover:bg-gray-100'"
+          class="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 whitespace-nowrap"
+        >
+          <i class="fas fa-user-circle text-lg"></i>
+          Profile
+        </button>
+        <button
+          (click)="activeTab = 'history'"
+          [ngClass]="activeTab === 'history'
+            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+            : 'text-gray-600 hover:bg-gray-100'"
+          class="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 whitespace-nowrap"
+        >
+          <i class="fas fa-history text-lg"></i>
+          Medical History
+        </button>
+        <button
+          (click)="activeTab = 'appointments'"
+          [ngClass]="activeTab === 'appointments'
+            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+            : 'text-gray-600 hover:bg-gray-100'"
+          class="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 whitespace-nowrap"
+        >
+          <i class="fas fa-calendar-check text-lg"></i>
+          Appointments
+        </button>
+      </div>
     </div>
 
     <!-- Profile Tab -->
-    <div *ngIf="activeTab === 'profile'" class="space-y-10">
-      <!-- Stats Section -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Card -->
-        <div
-          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-blue-200/40 duration-300"
-        >
-          <p class="text-gray-500">Total Appointments</p>
-          <h3 class="text-3xl font-bold text-blue-600">{{ patient.appointments_count }}</h3>
-        </div>
-
-        <div
-          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-indigo-200/40 duration-300"
-        >
-          <p class="text-gray-500">Medical Records</p>
-          <h3 class="text-3xl font-bold text-indigo-600">{{ patient.medical_records_count }}</h3>
-        </div>
-
-        <div
-          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-purple-200/40 duration-300"
-        >
-          <p class="text-gray-500">Blood Type</p>
-          <h3 class="text-3xl font-bold text-purple-600">{{ patient.blood_type }}</h3>
-        </div>
-
-        <div
-          *ngIf="patient.age"
-          class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] p-6 text-center hover:-translate-y-2 hover:shadow-green-200/40 duration-300"
-        >
-          <p class="text-gray-500">Age</p>
-          <h3 class="text-3xl font-bold text-green-600">{{ patient.age }}</h3>
-        </div>
-      </div>
-      <!-- Header Card -->
-      <div
-        class="relative bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-10 flex flex-col md:flex-row items-center gap-10 transition-all duration-500 hover:shadow-blue-300/40 hover:-translate-y-2"
-      >
-        <!-- Avatar -->
-        <div class="relative group">
-          <div
-            *ngIf="patient.profile_pic; else initials"
-            class="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-xl group-hover:scale-105 transition-transform duration-300"
-          >
-            <img [src]="patient.profile_pic" class="w-full h-full object-cover" />
-          </div>
-
-          <!-- Initials Avatar -->
-          <ng-template #initials>
-            <div
-              class="w-40 h-40 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center text-white text-5xl font-extrabold shadow-xl group-hover:scale-105 transition-transform duration-300"
-            >
-              {{ getInitials() }}
-            </div>
-          </ng-template>
-
-          <!-- Online Indicator -->
-          <div
-            class="absolute bottom-3 right-3 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-md"
-          ></div>
-        </div>
-
-        <!-- Profile Info -->
-        <div class="flex-1 text-center md:text-left space-y-2">
-          <h1
-            class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 tracking-wide"
-          >
+    <div *ngIf="activeTab === 'profile'" class="space-y-8">
+      <!-- Header with IDs -->
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             {{ patient.name }}
           </h1>
 
-          <div class="mt-3 space-y-1 text-gray-700 text-lg">
-            <p class="flex items-center gap-2 justify-center md:justify-start">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.8"
-                stroke="#2563eb"
-                class="w-5 h-5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M21.75 6.75v10.5A2.25 2.25 0 0119.5 19.5h-15A2.25 2.25 0 012.25 17.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.02 1.89l-7.5 4.875a2.25 2.25 0 01-2.46 0L3.27 8.883a2.25 2.25 0 01-1.02-1.89V6.75"
-                />
-              </svg>
+        </div>
+      </div>
 
-              {{ patient.email }}
-            </p>
-
-            <p class="flex items-center gap-2 justify-center md:justify-start">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.8"
-                stroke="#2563eb"
-                class="w-5 h-5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M2.25 4.5l4.5-.75a2.25 2.25 0 012.115 1.094l1.732 2.878a2.25 2.25 0 01-.383 2.71L8.25 12.75a12.058 12.058 0 005.005 5.006l2.318-1.964a2.25 2.25 0 012.71-.383l2.878 1.732A2.25 2.25 0 0120.25 21l-.75 4.5a2.25 2.25 0 01-2.25 2.25h-3A16.5 16.5 0 013 9.75v-3A2.25 2.25 0 014.5 4.5h3z"
-                />
-              </svg>
-
-              {{ patient.phone }}
-            </p>
-
-            <p class="flex items-center gap-2 justify-center md:justify-start">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.8"
-                stroke="#2563eb"
-                class="w-5 h-5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3.75 9h16.5M4.5 7.5h15a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 012.25 18.75v-9A2.25 2.25 0 014.5 7.5z"
-                />
-              </svg>
-
-              Member since: {{ patient.member_since }}
-            </p>
-
-            <p
-              class="flex items-center gap-2 justify-center md:justify-start"
-              *ngIf="patient.chronic_diseases"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.8"
-                stroke="#dc2626"
-                class="w-5 h-5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 8.25v7.5M8.25 12h7.5M12 2.25a9.75 9.75 0 110 19.5 9.75 9.75 0 010-19.5z"
-                />
-              </svg>
-              chronic diseases:
-              {{ patient.chronic_diseases }}
-            </p>
-
-            <p class="flex items-center gap-2 justify-center md:justify-start">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="w-5 h-5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12l2 2 4-4m7 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-
-              <span>{{ patient.status }}</span> Status:
-              <span class="capitalize font-semibold text-indigo-600">{{ patient.status }}</span>
-            </p>
+      <!-- Stats Section - Improved -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card bg-gradient-to-br from-blue-50 to-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-calendar-alt text-blue-600 text-xl"></i>
+            </div>
+            <i class="fas fa-arrow-right text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
           </div>
+          <p class="text-sm text-gray-500 mb-1">Total Appointments</p>
+          <h3 class="text-3xl font-bold text-blue-600">{{ patient.appointments_count }}</h3>
         </div>
 
-        <!-- Edit Button -->
-        <button
-          (click)="openEditModal()"
-          class="absolute top-6 right-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold flex items-center gap-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="white"
-            class="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M16.862 3.487a2.25 2.25 0 013.182 3.182L7.063 19.65l-4.32 1.138 1.138-4.32L16.862 3.487z"
-            />
-          </svg>
+        <div class="glass-card bg-gradient-to-br from-indigo-50 to-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-file-medical text-indigo-600 text-xl"></i>
+            </div>
+            <i class="fas fa-arrow-right text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Medical Records</p>
+          <h3 class="text-3xl font-bold text-indigo-600">{{ patient.medical_records_count }}</h3>
+        </div>
 
-          Edit
-        </button>
+        <div class="glass-card bg-gradient-to-br from-purple-50 to-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-tint text-purple-600 text-xl"></i>
+            </div>
+            <i class="fas fa-arrow-right text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Blood Type</p>
+          <h3 class="text-3xl font-bold text-purple-600">{{ patient.blood_type || 'Not Specified' }}</h3>
+        </div>
+
+        <div *ngIf="patient.age" class="glass-card bg-gradient-to-br from-green-50 to-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <i class="fas fa-birthday-cake text-green-600 text-xl"></i>
+            </div>
+            <i class="fas fa-arrow-right text-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+          </div>
+          <p class="text-sm text-gray-500 mb-1">Age</p>
+          <h3 class="text-3xl font-bold text-green-600">{{ patient.age }}</h3>
+        </div>
+      </div>
+
+      <!-- Main Profile Card - Improved -->
+      <div class="relative glass-card bg-gradient-to-br from-white to-blue-50 rounded-3xl shadow-xl p-8">
+        <div class="flex flex-col lg:flex-row items-center gap-10">
+          <!-- Avatar Section -->
+          <div class="relative group">
+            <div class="relative">
+              <div *ngIf="patient.profile_pic; else initials"
+                   class="w-40 h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden border-4 border-white shadow-2xl group-hover:scale-105 transition-transform duration-300">
+                <img [src]="patient.profile_pic" class="w-full h-full object-cover" alt="Profile" />
+              </div>
+
+              <ng-template #initials>
+                <div class="w-40 h-40 lg:w-48 lg:h-48 rounded-full bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center text-white text-5xl font-extrabold shadow-2xl group-hover:scale-105 transition-transform duration-300">
+                  {{ getInitials() }}
+                </div>
+              </ng-template>
+
+              <!-- Online Indicator -->
+              <div class="absolute bottom-4 right-4 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
+            </div>
+
+            <!-- Decorative Effect -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+
+          <!-- Profile Info -->
+          <div class="flex-1 space-y-6">
+            <!-- Name and Edit Button -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-3xl font-bold text-gray-800">{{ patient.name }}</h2>
+                <p class="text-gray-600 mt-1">Member since {{ patient.member_since }}</p>
+              </div>
+
+              <button (click)="openEditModal()"
+                      class="group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-edit"></i>
+                Edit Profile
+                <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+              </button>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Email -->
+              <div class="flex items-center gap-3 p-4 bg-white/50 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
+                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Email</p>
+                  <p class="font-medium text-gray-800">{{ patient.email }}</p>
+                </div>
+              </div>
+
+              <!-- Phone -->
+              <div class="flex items-center gap-3 p-4 bg-white/50 rounded-xl border border-gray-200 hover:border-green-300 transition-colors">
+                <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Phone</p>
+                  <p class="font-medium text-gray-800">{{ patient.phone }}</p>
+                </div>
+              </div>
+
+              <!-- Member Since -->
+              <div class="flex items-center gap-3 p-4 bg-white/50 rounded-xl border border-gray-200 hover:border-purple-300 transition-colors">
+                <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Member Since</p>
+                  <p class="font-medium text-gray-800">{{ patient.member_since }}</p>
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div class="flex items-center gap-3 p-4 bg-white/50 rounded-xl border border-gray-200 hover:border-indigo-300 transition-colors">
+                <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Status</p>
+                  <p class="font-medium text-gray-800 capitalize">{{ patient.status }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chronic Diseases (if exists) -->
+            <div *ngIf="patient.chronic_diseases"
+                 class="p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-100">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-red-700 mb-1">Chronic Diseases</p>
+                  <p class="text-red-800">{{ patient.chronic_diseases }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Medical History Tab -->
-    <div *ngIf="activeTab === 'history'" class="space-y-4">
-      <div
-        *ngFor="let record of pagedRecords; let i = index"
-        class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
-        [style.animationDelay]="i * 100 + 'ms'"
-      >
-        <h3 class="text-lg font-bold text-blue-600 mb-2">Medical Record #{{ record.id }}</h3>
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Symptoms:</span>
-          <span class="text-gray-500">{{ record.symptoms }}</span>
-        </p>
+    <div *ngIf="activeTab === 'history'" class="space-y-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <i class="fas fa-history text-blue-500"></i>
+            Medical History
+          </h2>
+          <p class="text-gray-600">Total records: {{ patient.medical_history?.length || 0 }}</p>
+        </div>
+      </div>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Diagnosis:</span>
-          <span class="text-gray-500">{{ record.diagnosis }}</span>
-        </p>
+      <!-- No Data Message -->
+      <div *ngIf="!patient.medical_history || patient.medical_history.length === 0"
+           class="text-center py-16 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-file-medical-alt text-gray-400 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Medical Records</h3>
+        <p class="text-gray-500 max-w-md mx-auto">No medical history records have been created for this patient yet.</p>
+      </div>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Medication:</span>
-          <span class="text-gray-500">{{ record.medication }}</span>
-        </p>
+      <!-- Records Grid -->
+      <div *ngIf="patient.medical_history && patient.medical_history.length > 0"
+           class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div *ngFor="let record of pagedRecords; let i = index"
+             class="glass-card bg-gradient-to-br from-white to-blue-50 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 opacity-0 animate-fade-in"
+             [style.animationDelay]="i * 100 + 'ms'">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center">
+                <i class="fas fa-file-medical text-blue-600 text-lg"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800">Record #{{ record.id }}</h3>
+                <p class="text-sm text-gray-500">{{ record.created_at }}</p>
+              </div>
+            </div>
+            <span class="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+              {{ record.diagnosis ? 'Diagnosed' : 'Pending' }}
+            </span>
+          </div>
 
-        <p class="text-gray-400 text-sm mt-2">
-          <span class="font-semibold text-gray-700 mr-1">Date:</span>
-          <span>{{ record.created_at | date : 'mediumDate' }}</span>
-        </p>
+          <div class="space-y-3">
+            <div>
+              <p class="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">
+                <i class="fas fa-stethoscope"></i>
+                Symptoms
+              </p>
+              <p class="text-gray-700 bg-blue-50 p-3 rounded-lg">{{ record.symptoms || 'No symptoms recorded' }}</p>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">
+                <i class="fas fa-diagnoses"></i>
+                Diagnosis
+              </p>
+              <p class="text-gray-700 bg-indigo-50 p-3 rounded-lg">{{ record.diagnosis || 'No diagnosis yet' }}</p>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">
+                <i class="fas fa-pills"></i>
+                Medication
+              </p>
+              <p class="text-gray-700 bg-green-50 p-3 rounded-lg">{{ record.medication || 'No medication prescribed' }}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Pagination Controls -->
-      <div class="flex justify-center mt-4 space-x-2">
-        <button
-          (click)="goToPage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-        >
-          Prev
-        </button>
+      <div *ngIf="patient.medical_history && patient.medical_history.length > 0"
+           class="glass-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-gray-600">
+          Page {{ currentPage }} of {{ totalPages }}
+        </div>
 
-        <button
-          *ngFor="let page of [].constructor(totalPages); let idx = index"
-          (click)="goToPage(idx + 1)"
-          [ngClass]="
-            currentPage === idx + 1
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          "
-          class="px-3 py-1 rounded-lg"
-        >
-          {{ idx + 1 }}
-        </button>
+        <div class="flex items-center gap-2">
+          <button (click)="goToPage(currentPage - 1)"
+                  [disabled]="currentPage === 1"
+                  class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            <i class="fas fa-chevron-left"></i>
+            Previous
+          </button>
 
-        <button
-          (click)="goToPage(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-          class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-        >
-          Next
-        </button>
+          <div class="flex items-center gap-1">
+            <button *ngFor="let page of [].constructor(totalPages); let idx = index"
+                    (click)="goToPage(idx + 1)"
+                    [ngClass]="currentPage === idx + 1
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    class="w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-all">
+              {{ idx + 1 }}
+            </button>
+          </div>
+
+          <button (click)="goToPage(currentPage + 1)"
+                  [disabled]="currentPage === totalPages"
+                  class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            Next
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Appointments Tab -->
-    <div *ngIf="activeTab === 'appointments'" class="space-y-4">
-      <div
-        *ngFor="let app of pagedAppointments; let i = index"
-        class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
-        [style.animationDelay]="i * 100 + 'ms'"
-      >
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
-          <span class="text-gray-500">{{ app.doctor_name }}</span>
-        </p>
+    <div *ngIf="activeTab === 'appointments'" class="space-y-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <i class="fas fa-calendar-check text-blue-500"></i>
+            Appointments
+          </h2>
+          <p class="text-gray-600">Total appointments: {{ patient.appointments_count }}</p>
+        </div>
+      </div>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
-          <span class="text-gray-500">{{ app.specialty.name }}</span>
-        </p>
+      <!-- Appointment Type Tabs -->
+      <div class="flex gap-2 border-b border-gray-200 pb-2">
+        <button class="px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-medium">
+          Upcoming ({{ patient.upcoming_appointments?.length || 0 }})
+        </button>
+      </div>
 
-        <p class="flex">
-          <span class="font-semibold text-gray-700 mr-1">Status:</span>
-          <span class="text-gray-500">{{ app.status }}</span>
-        </p>
+      <!-- No Appointments Message -->
+      <div *ngIf="pagedAppointments.length === 0"
+           class="text-center py-16 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg opacity-0 animate-fade-in">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-calendar-times text-gray-400 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Appointments</h3>
+        <p class="text-gray-500 max-w-md mx-auto">No appointments have been scheduled for this patient yet.</p>
+      </div>
 
-        <p class="text-gray-400 text-sm mt-2">
-          <span class="font-semibold text-gray-700 mr-1">Date:</span>
-          <span>{{ app.date || 'TBD' }}</span>
-        </p>
+      <!-- Appointments List -->
+      <div *ngIf="pagedAppointments.length > 0" class="space-y-4">
+        <div *ngFor="let app of pagedAppointments; let i = index"
+             class="glass-card bg-gradient-to-br from-white to-blue-50 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 opacity-0 animate-fade-in"
+             [style.animationDelay]="i * 100 + 'ms'">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <!-- Appointment Info -->
+            <div class="flex-1">
+              <div class="flex items-start gap-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-user-md text-blue-600 text-xl"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-bold text-gray-800 text-lg mb-1">{{ app.doctor_name }}</h3>
+                  <div class="flex flex-wrap items-center gap-3 mb-2">
+                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                      <i class="fas fa-stethoscope"></i>
+                      {{ app.specialty?.name || 'General' }}
+                    </span>
+                    <span [ngClass]="{
+                      'bg-green-100 text-green-800': app.status === 'confirmed',
+                      'bg-yellow-100 text-yellow-800': app.status === 'pending',
+                      'bg-red-100 text-red-800': app.status === 'cancelled',
+                      'bg-blue-100 text-blue-800': app.status === 'completed'
+                    }"
+                          class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium capitalize">
+                      <i class="fas fa-circle text-[10px]"></i>
+                      {{ app.status }}
+                    </span>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                    <span class="flex items-center gap-2">
+                      <i class="far fa-calendar"></i>
+                      {{ (app.date | date : 'mediumDate') || 'TBD' }}
+                    </span>
+                    <span class="flex items-center gap-2">
+                      <i class="far fa-clock"></i>
+                      {{ (app.time | date : 'shortTime') || 'TBD' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional Appointment Details -->
+              <div class="mt-3 text-sm">
+                <div class="flex items-center justify-between text-gray-600">
+                  <span>Appointment Type: {{ app.type || 'consultation' | titlecase }}</span>
+                  <span *ngIf="app.price" class="font-semibold text-blue-600">${{ app.price || '0.00' }}</span>
+                </div>
+                <div *ngIf="app.notes" class="mt-2 p-2 bg-gray-50 rounded-lg">
+                  <p class="text-gray-600 text-xs">Notes: {{ app.notes }}</p>
+                </div>
+                  <!-- Schedule Information -->
+                <div *ngIf="app.schedule" class="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                  <span *ngIf="app.schedule.start_time">
+                    <i class="far fa-clock mr-1"></i>
+                    Start: {{ app.schedule.start_time | date : 'shortTime' }}
+                  </span>
+                  <span *ngIf="app.schedule.end_time">
+                    <i class="far fa-clock mr-1"></i>
+                    End: {{ app.schedule.end_time | date : 'shortTime' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
       </div>
 
       <!-- Pagination Controls -->
-      <div *ngIf="activeTab === 'appointments'" class="space-y-4">
-        <div
-          *ngFor="let app of pagedAppointments; let i = index"
-          class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-lg p-6 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in"
-          [style.animationDelay]="i * 100 + 'ms'"
-        >
-          <p class="flex">
-            <span class="font-semibold text-gray-700 mr-1">Doctor:</span>
-            <span class="text-gray-500">{{ app.doctor_name }}</span>
-          </p>
-
-          <p class="flex">
-            <span class="font-semibold text-gray-700 mr-1">Specialty:</span>
-            <span class="text-gray-500">{{ app.specialty.name }}</span>
-          </p>
-
-          <p class="flex">
-            <span class="font-semibold text-gray-700 mr-1">Status:</span>
-            <span class="text-gray-500">{{ app.status }}</span>
-          </p>
-
-          <p class="text-gray-400 text-sm mt-2">
-            <span class="font-semibold text-gray-700 mr-1">Date:</span>
-            <span>{{ app.date || 'TBD' }}</span>
-          </p>
+      <div *ngIf="pagedAppointments.length > 0"
+           class="glass-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-gray-600">
+          Page {{ currentAppPage }} of {{ totalAppPages }}
         </div>
 
-        <!-- Pagination Controls -->
-        <div class="flex justify-center mt-4 space-x-2">
-          <button
-            (click)="goToAppPage(currentAppPage - 1)"
-            [disabled]="currentAppPage === 1"
-            class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-          >
-            Prev
+        <div class="flex items-center gap-2">
+          <button (click)="goToAppPage(currentAppPage - 1)"
+                  [disabled]="currentAppPage === 1"
+                  class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            <i class="fas fa-chevron-left"></i>
+            Previous
           </button>
 
-          <button
-            *ngFor="let page of [].constructor(totalAppPages); let idx = index"
-            (click)="goToAppPage(idx + 1)"
-            [ngClass]="
-              currentAppPage === idx + 1
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            "
-            class="px-3 py-1 rounded-lg"
-          >
-            {{ idx + 1 }}
-          </button>
+          <div class="flex items-center gap-1">
+            <button *ngFor="let page of [].constructor(totalAppPages); let idx = index"
+                    (click)="goToAppPage(idx + 1)"
+                    [ngClass]="currentAppPage === idx + 1
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    class="w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-all">
+              {{ idx + 1 }}
+            </button>
+          </div>
 
-          <button
-            (click)="goToAppPage(currentAppPage + 1)"
-            [disabled]="currentAppPage === totalAppPages"
-            class="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-          >
+          <button (click)="goToAppPage(currentAppPage + 1)"
+                  [disabled]="currentAppPage === totalAppPages"
+                  class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
             Next
+            <i class="fas fa-chevron-right"></i>
           </button>
         </div>
       </div>
     </div>
-    <!-- Edit Modal -->
-    <div
-      *ngIf="showModal"
-      class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 transition-opacity duration-300"
-    >
-      <div
-        class="bg-white rounded-3xl shadow-xl w-full max-w-xl p-6 space-y-4 relative transform transition-all duration-300 scale-95 opacity-0"
-        [ngClass]="{ 'scale-100 opacity-100': showModal }"
-      >
-        <button
-          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-          (click)="closeModal()"
-        >
-          ✕
-        </button>
-        <h2 class="text-2xl font-bold">Edit Profile</h2>
-        <form #editForm="ngForm" (ngSubmit)="saveChanges(editForm)" class="space-y-4">
-          <!-- Name -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold">Name</label>
-            <input
-              [(ngModel)]="editUser.name"
-              name="name"
-              required
-              minlength="3"
-              #nameCtrl="ngModel"
-              class="border rounded-lg p-2 w-full"
-            />
 
-            <!-- Errors -->
-            <p class="text-red-500 text-sm" *ngIf="nameCtrl.invalid && nameCtrl.touched">
-              {{ getNameError(nameCtrl) }}
-            </p>
-          </div>
+    <!-- Edit Modal - Improved -->
+    <div *ngIf="showModal"
+         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 transition-opacity duration-300"
+         [ngClass]="{ 'opacity-100': showModal, 'opacity-0 pointer-events-none': !showModal }">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300"
+           [ngClass]="{ 'scale-100 opacity-100': showModal, 'scale-95 opacity-0': !showModal }">
 
-          <!-- Email -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold">Email</label>
-            <input
-              [(ngModel)]="editUser.email"
-              name="email"
-              type="email"
-              required
-              email
-              #emailCtrl="ngModel"
-              class="border rounded-lg p-2 w-full"
-            />
-
-            <p class="text-red-500 text-sm" *ngIf="emailCtrl.invalid && emailCtrl.touched">
-              {{ getEmailError(emailCtrl) }}
-            </p>
-          </div>
-
-          <!-- Phone -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold">Phone</label>
-            <input
-              [(ngModel)]="editUser.phone"
-              name="phone"
-              required
-              pattern="^[0-9]{10,15}$"
-              #phoneCtrl="ngModel"
-              class="border rounded-lg p-2 w-full"
-            />
-
-            <p class="text-red-500 text-sm" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">
-              {{ getPhoneError(phoneCtrl) }}
-            </p>
-          </div>
-
-          <!-- Profile Image -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold">Profile Image</label>
-            <input type="file" (change)="onImageSelected($event)" class="border rounded-lg p-2" />
-            <div *ngIf="editUser.profile_pic; instanceof File">
-              <div *ngIf="imagePreview">
-                <img [src]="imagePreview" class="w-32 h-32 object-cover rounded-lg mt-2" />
-              </div>
+        <!-- Modal Header -->
+        <div class="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-3xl flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+              <i class="fas fa-user-edit text-white text-xl"></i>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800">Edit Profile</h2>
+              <p class="text-gray-600">Update your personal and medical information</p>
             </div>
           </div>
-
-          <!-- Blood Type -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold">Blood Type</label>
-            <input
-              [(ngModel)]="editPatient.blood_type"
-              name="blood_type"
-              required
-              pattern="^(A|B|AB|O)[+-]$"
-              #bloodCtrl="ngModel"
-              class="border rounded-lg p-2 w-full"
-            />
-
-            <p class="text-red-500 text-sm" *ngIf="bloodCtrl.invalid && bloodCtrl.touched">
-              {{ getBloodError(bloodCtrl) }}
-            </p>
-          </div>
-
-          <!-- Chronic Diseases -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold">Chronic Diseases</label>
-            <textarea
-              [(ngModel)]="editPatient.chronic_diseases"
-              name="chronic_diseases"
-              required
-              minlength="5"
-              #chronicCtrl="ngModel"
-              rows="3"
-              class="border rounded-lg p-2 w-full"
-            ></textarea>
-
-            <p class="text-red-500 text-sm" *ngIf="chronicCtrl.invalid && chronicCtrl.touched">
-              {{ getChronicError(chronicCtrl) }}
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Save
+          <button (click)="closeModal()"
+                  class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+            <i class="fas fa-times text-gray-500 text-lg"></i>
           </button>
-        </form>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6">
+          <form #editForm="ngForm" (ngSubmit)="saveChanges(editForm)" class="space-y-6">
+            <!-- Personal Information -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-user text-blue-500"></i>
+                Personal Information
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Name -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <input [(ngModel)]="editUser.name" name="name" required minlength="3" #nameCtrl="ngModel"
+                         class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+                  <div *ngIf="nameCtrl.invalid && nameCtrl.touched" class="mt-2 text-sm text-red-600">
+                    <span *ngIf="nameCtrl.errors?.['required']">Name is required</span>
+                    <span *ngIf="nameCtrl.errors?.['minlength']">Name must be at least 3 characters</span>
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                  <input [(ngModel)]="editUser.email" name="email" type="email" required email #emailCtrl="ngModel"
+                         class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+                  <div *ngIf="emailCtrl.invalid && emailCtrl.touched" class="mt-2 text-sm text-red-600">
+                    <span *ngIf="emailCtrl.errors?.['required']">Email is required</span>
+                    <span *ngIf="emailCtrl.errors?.['email']">Invalid email format</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Phone -->
+              <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <input [(ngModel)]="editUser.phone" name="phone" required pattern="^[0-9]{10,15}$" #phoneCtrl="ngModel"
+                       class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+                <div *ngIf="phoneCtrl.invalid && phoneCtrl.touched" class="mt-2 text-sm text-red-600">
+                  <span *ngIf="phoneCtrl.errors?.['required']">Phone number is required</span>
+                  <span *ngIf="phoneCtrl.errors?.['pattern']">Phone must be 10-15 digits</span>
+                </div>
+              </div>
+
+              <!-- Profile Image -->
+              <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
+                <div class="flex items-center gap-4">
+                  <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-300">
+                    <img [src]="imagePreview || editUser.profile_pic || 'https://ui-avatars.com/api/?name=' + editUser.name"
+                         class="w-full h-full object-cover" alt="Profile Preview" />
+                  </div>
+                  <div class="flex-1">
+                    <input type="file" (change)="onImageSelected($event)"
+                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Medical Information -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-heartbeat text-red-500"></i>
+                Medical Information
+              </h3>
+
+              <!-- Blood Type -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Blood Type</label>
+                <select [(ngModel)]="editPatient.blood_type" name="blood_type" required #bloodCtrl="ngModel"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                  <option value="" disabled selected>Select Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+                <div *ngIf="bloodCtrl.invalid && bloodCtrl.touched" class="mt-2 text-sm text-red-600">
+                  <span>Blood type is required</span>
+                </div>
+              </div>
+
+              <!-- Chronic Diseases -->
+              <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Chronic Diseases</label>
+                <textarea [(ngModel)]="editPatient.chronic_diseases" name="chronic_diseases" required minlength="5" #chronicCtrl="ngModel"
+                          rows="3"
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          placeholder="List any chronic diseases or conditions..."></textarea>
+                <div *ngIf="chronicCtrl.invalid && chronicCtrl.touched" class="mt-2 text-sm text-red-600">
+                  <span *ngIf="chronicCtrl.errors?.['required']">Chronic diseases information required</span>
+                  <span *ngIf="chronicCtrl.errors?.['minlength']">Minimum 5 characters</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="sticky bottom-0 bg-white pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button type="button" (click)="closeModal()"
+                      class="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium">
+                Cancel
+              </button>
+              <button type="submit"
+                      [disabled]="editForm.invalid"
+                      class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

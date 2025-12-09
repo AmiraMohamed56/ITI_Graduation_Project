@@ -13,15 +13,16 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+
   register(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, data).pipe(
       tap((res: any) => {
         if (res.token) {
           this.setToken(res.token);
-          this.setUser(res.user);
+          this.setUser(res.data);
         }
       }),
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() =>error))
     );
   }
 
@@ -30,10 +31,10 @@ export class AuthService {
       tap((res: any) => {
         if (res.token) {
           this.setToken(res.token);
-          this.setUser(res.user);
+          this.setUser(res.data);
         }
       }),
-      catchError((error) => throwError(() => error))
+      catchError((error) => throwError(() =>error))
     );
   }
 
@@ -42,10 +43,7 @@ export class AuthService {
       Authorization: `Bearer ${this.getToken()}`,
     });
 
-    this.http.post(`${this.baseUrl}/logout`, {}, { headers }).subscribe({
-      next: () => { },
-      error: () => { },
-    });
+    this.http.post(`${this.baseUrl}/logout`, {}, { headers }).subscribe();
 
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -78,6 +76,16 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+
+  // private formatError(error: any): string {
+  //   if (error.error?.errors) {
+  //     return Object.values(error.error.errors).flat().join(', ');
+  //   }
+  //   if (error.error?.message) {
+  //     return error.error.message;
+  //   }
+  //   return 'Something went wrong. Please try again later.';
+  // }
 
   sendVerificationCode(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/send-verification-code`, data).pipe(

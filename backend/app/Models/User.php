@@ -3,17 +3,24 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use App\Traits\AdminLoggable;
+use Illuminate\Notifications\DatabaseNotification;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, AdminLoggable ,HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens;
+    use AdminLoggable ;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +28,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'role', 'profile_pic', 'status', 'email_verified_at'
+        'name', 'email', 'phone', 'password', 'role', 'profile_pic', 'status', 'email_verified_at', 'google_id',
     ];
 
     /**
@@ -58,10 +65,6 @@ class User extends Authenticatable
         return $this->hasOne(Patient::class);
     }
 
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
-    }
 
     public function payments()
     {
@@ -79,9 +82,9 @@ class User extends Authenticatable
     }
 
 
-     /**
-     * Get the full profile picture URL
-     */
+    /**
+    * Get the full profile picture URL
+    */
     public function getProfilePictureUrlAttribute(): string
     {
         if ($this->profile_pic) {
@@ -89,6 +92,17 @@ class User extends Authenticatable
         }
 
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=4F46E5&color=fff&size=200';
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(DatabaseNotification::class, 'notifiable');
+
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
 }

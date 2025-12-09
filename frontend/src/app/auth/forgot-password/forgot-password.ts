@@ -14,10 +14,14 @@ export class ForgotPassword {
 
   form = { email: '' };
   errorMessage = '';
+  successMessage = '';
 
-  constructor(private router: Router, private auth: AuthService) { }
+  constructor(private auth: AuthService) { }
 
   onSubmit() {
+    this.errorMessage = '';
+    this.successMessage = '';
+
     if (!this.form.email) {
       this.errorMessage = 'Please enter your email.';
       return;
@@ -25,7 +29,8 @@ export class ForgotPassword {
 
     this.auth.forgotPassword(this.form).subscribe({
       next: (res) => {
-        alert(res.message);
+        this.successMessage ='Password reset link has been sent to your email. Please check your inbox.';
+        this.form.email = '';
       },
       error: (err) => {
         this.errorMessage = this.auth.getErrorMessage(err);

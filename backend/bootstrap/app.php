@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Console\Scheduling\Schedule;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->web([
         //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         // ]);
+        
+        $middleware->alias([
+            'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+            'isDoctor' => \App\Http\Middleware\IsDoctor::class,
+        ]);
 
         // API middleware
         $middleware->api([
@@ -27,4 +33,12 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        // Define scheduled tasks here
+        $schedule->command('appointments:send-reminders')
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
+    })
+    ->create();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule , ActivatedRoute ,Router  } from '@angular/router';
 import { DoctorService, DoctorSearchParams } from '../doctors/doctor.service';
 import { Doctor } from '../doctors/doctor.model';
 import { debounceTime, Subject } from 'rxjs';
@@ -15,22 +15,22 @@ import { debounceTime, Subject } from 'rxjs';
 })
 export class AllDoctors implements OnInit {
   doctors: Doctor[] = [];
-  
+
   loading = false;
   error = '';
-  
+
   // Search filters
   searchName = '';
   searchSpecialty = '';
   searchGender = '';
   searchOnlineStatus = '';
-  
+
   // Pagination from API
   currentPage = 1;
   itemsPerPage = 12;
   totalPages = 0;
   totalDoctors = 0;
-  
+
   // Available filter options
   specialties: string[] = [];
   genders = ['Male', 'Female', 'Other'];
@@ -40,9 +40,16 @@ export class AllDoctors implements OnInit {
     { label: 'Not Available Online', value: 'false' }
   ];
 
+  // Specialty filtering
+  specialtyId: number | null = null;
+  specialtyName: string = '';
+
   private searchSubject = new Subject<string>();
 
-  constructor(private doctorService: DoctorService) {}
+  constructor(private doctorService: DoctorService,
+              private route: ActivatedRoute,
+              private router: Router
+  ) {}
 
   ngOnInit(): void {
     // Setup debounced search
@@ -52,8 +59,23 @@ export class AllDoctors implements OnInit {
       this.applyFilters();
     });
 
+    // Always load specialties for the dropdown filter
     this.loadSpecialties();
-    this.loadDoctors();
+
+
+// Listen for query parameters
+      this.route.queryParams.subscribe(params => {
+      this.specialtyId = params['specialty_id'] ? +params['specialty_id'] : null;
+
+      if (this.specialtyId) {
+        // If we have a specialty_id, load doctors for that specialty
+        this.loadDoctorsBySpecialty();
+      } else {
+        // Otherwise load all doctors with pagination
+        this.loadSpecialties();
+        this.loadDoctors();
+      }
+    });
   }
 
   loadSpecialties(): void {
@@ -68,10 +90,41 @@ export class AllDoctors implements OnInit {
     });
   }
 
+   loadDoctorsBySpecialty(): void {
+    if (!this.specialtyId) return;
+
+    this.loading = true;
+    this.error = '';
+
+    this.doctorService.getDoctorsBySpecialty(this.specialtyId, 100).subscribe({
+      next: (data: Doctor[]) => {
+        this.doctors = data;
+        this.totalDoctors = data.length;
+
+        // Get specialty name from first doctor
+        if (data.length > 0 && data[0].specialty) {
+          this.specialtyName = data[0].specialty.name;
+          this.searchSpecialty = data[0].specialty.name;
+        }
+
+        // Calculate pagination for client-side filtering
+        this.totalPages = Math.ceil(this.doctors.length / this.itemsPerPage);
+        this.currentPage = 1;
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading doctors by specialty:', err);
+        this.error = 'Failed to load doctors for this specialty. Please try again.';
+        this.loading = false;
+      }
+    });
+  }
+
   loadDoctors(): void {
     this.loading = true;
     this.error = '';
-    
+
     const params: DoctorSearchParams = {
       page: this.currentPage,
       per_page: this.itemsPerPage
@@ -93,12 +146,12 @@ export class AllDoctors implements OnInit {
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;
         this.itemsPerPage = response.meta.per_page;
-        
+
         console.log('Doctors loaded:', this.doctors.length);
         console.log('Total doctors:', this.totalDoctors);
         console.log('Total pages:', this.totalPages);
         console.log('Current page:', this.currentPage);
-        
+
         this.loading = false;
       },
       error: (err) => {
@@ -115,15 +168,36 @@ export class AllDoctors implements OnInit {
   }
 
   applyFilters(): void {
-    this.currentPage = 1; // Reset to first page when filters change
+    this.currentPage = 1;
+
+    // If user selected a specialty from dropdown, clear the URL specialty_id and use API filtering
+    if (this.searchSpecialty) {
+      this.specialtyId = null;
+      this.specialtyName = '';
+      // Clear the query parameter from URL
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {},
+        queryParamsHandling: 'merge'
+      });
+    }
+
+    // Always use paginated API when applying filters
     this.loadDoctors();
   }
 
-  onPageChange(page: number): void {
+
+   onPageChange(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.loadDoctors();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (this.specialtyId) {
+        // For specialty view, just change page (already have all data)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        this.loadDoctors();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   }
 
@@ -133,6 +207,8 @@ export class AllDoctors implements OnInit {
     this.searchGender = '';
     this.searchOnlineStatus = '';
     this.currentPage = 1;
+    this.specialtyId = null;
+    this.specialtyName = '';
     this.loadDoctors();
   }
 
@@ -155,10 +231,20 @@ export class AllDoctors implements OnInit {
     return Math.min(to, this.totalDoctors);
   }
 
+  // Get paginated doctors for display (when viewing by specialty)
+  get paginatedDoctors(): Doctor[] {
+    if (this.specialtyId) {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.doctors.slice(startIndex, endIndex);
+    }
+    return this.doctors;
+  }
+
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxVisible = 5;
-    
+
     if (this.totalPages <= maxVisible) {
       for (let i = 1; i <= this.totalPages; i++) {
         pages.push(i);
@@ -182,7 +268,7 @@ export class AllDoctors implements OnInit {
         pages.push(this.totalPages);
       }
     }
-    
+
     return pages;
   }
 }
