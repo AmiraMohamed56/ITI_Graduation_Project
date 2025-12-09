@@ -34,17 +34,17 @@ class BookingAppointmentController extends Controller
 
     public function store(StoreAppointmentRequest $request)
     {
-        // Prevent double-booking
-        $exists = Appointment::where('doctor_id', $request->doctor_id)
-            ->where('schedule_date', $request->schedule_date)
-            ->where('schedule_time', $request->schedule_time)
-            ->exists();
+        // // Prevent double-booking
+        // $exists = Appointment::where('doctor_id', $request->doctor_id)
+        //     ->where('doctor_schedule_id', $request->doctor_schedule_id)
+        //     ->where('schedule_time', ($request->schedule_time)->format('H:i'))
+        //     ->exists();
 
-        if ($exists) {
-            return response()->json([
-                'message' => 'Time slot already booked'
-            ], 409);
-        }
+        // if ($exists) {
+        //     return response()->json([
+        //         'message' => 'Time slot already booked'
+        //     ], 409);
+        // }
 
         $appt = Appointment::create(array_merge($request->validated(), [
             'status' => 'pending'

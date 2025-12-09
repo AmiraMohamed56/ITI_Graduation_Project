@@ -45,7 +45,9 @@ export class DoctorProfileComponent implements OnInit {
   }
 
   bookAppointment() {
-    this.router.navigate(['/book-appointment']);
+    this.router.navigate([`/book-appointment/`], {
+      queryParams: { doctorId: this.doctor?.id }
+    });
 
   }
 }

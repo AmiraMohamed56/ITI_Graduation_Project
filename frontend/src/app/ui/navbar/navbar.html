@@ -81,7 +81,7 @@
               <img [src]="user?.avatar || 'https://i.pravatar.cc/40'" class="w-11 h-11 rounded-full border-2 border-blue-200 shadow-md"
                 alt="User Avatar" />
               <div class="hidden md:block text-left">
-                <p class="text-sm font-semibold text-gray-900">{{ user?.name }}</p>
+                <p class="text-sm font-semibold text-gray-900">{{ user?.user?.name }}</p>
                 <p class="text-xs text-gray-500">{{ user?.role || 'Patient' }}</p>
               </div>
               <i class="fas fa-chevron-down text-gray-400 text-sm hidden md:block"></i>
@@ -91,8 +91,8 @@
               <div class="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center gap-3">
                 <img [src]="user?.avatar || 'https://i.pravatar.cc/50'" class="w-14 h-14 rounded-full border-2 border-white" alt="User" />
                 <div>
-                  <p class="font-bold">{{ user?.name }}</p>
-                  <p class="text-sm text-blue-100">{{ user?.email }}</p>
+                  <p class="font-bold">{{ user?.user?.name }}</p>
+                  <p class="text-sm text-blue-100">{{ user?.user?.email }}</p>
                 </div>
               </div>
               <div class="p-2">
