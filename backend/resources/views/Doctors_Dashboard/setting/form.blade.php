@@ -49,7 +49,7 @@
     <!-- Profile Form -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50">
         <div class="p-6">
-            <form action="{{ route('profile_setting.update',$user->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('profile_setting.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
