@@ -53,6 +53,15 @@
         </button>
       </form>
 
+      <!-- Google Login Button -->
+      <button
+      (click)="loginWithGoogle()"
+      class="mt-3 hover:cursor-pointer w-full bg-rose-600 hover:bg-rose-700 text-white p-3 rounded-lg font-semibold transition"
+      >
+      <i class="fab fa-google mr-2"></i>
+      Register with Google
+      </button>
+
       <p class="text-center mt-6 text-sm">
         Already have an account? <a class="text-blue-600 font-semibold hover:underline cursor-pointer" routerLink="/auth/login">Login</a>
       </p>

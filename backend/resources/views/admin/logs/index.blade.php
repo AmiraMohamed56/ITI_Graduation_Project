@@ -103,13 +103,14 @@
                                 @if($log->user)
                                 @php
                                 $image = $log->user->profile_pic ?? null;
-                                $name = $log->user->name;
-                                $initial = strtoupper(substr($name,0,1));
+                                $name = $log->user->name ?? 'User';
+                                $initial = strtoupper(substr($name, 0, 1));
+                                $imagePath = $image ? asset('storage/profile_pics/' . $image) : null;
                                 @endphp
 
-                                @if ($image)
-                                <img src="{{ asset('uploads/profile/' . $image) }}"
-                                    class="w-8 h-8 rounded-full object-cover">
+                                @if ($imagePath && file_exists(storage_path('app/public/profile_pics/' . $image)))
+                                <img src="{{ $imagePath }}"
+                                    class="w-8 h-8 rounded-full object-cover" alt="{{ $name }}">
                                 @else
                                 <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">
                                     {{ $initial }}
@@ -117,7 +118,7 @@
                                 @endif
 
                                 <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    {{ $log->user->name }}
+                                    {{ $name }}
                                 </span>
                                 @else
                                 <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white text-sm font-bold">
@@ -129,6 +130,7 @@
                                 @endif
                             </div>
                         </td>
+
 
                         <td class="px-6 py-4">
                             @php

@@ -121,7 +121,7 @@
                         Cancel
                     </button>
 
-                    <form x-ref="restoreForm" :action="`/doctors/${actionId}/restore`" method="POST">
+                    <form x-ref="restoreForm" :action="`{{ url('/admin/doctors') }}/${actionId}/restore`" method="POST">
                         @csrf
                         <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
                             Yes, Restore

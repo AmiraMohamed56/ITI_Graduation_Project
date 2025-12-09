@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Specialty;
 use Illuminate\Http\Request;
 
 class VisitController extends Controller
@@ -11,21 +12,34 @@ class VisitController extends Controller
     public function index(Request $request)
     {
         $sort = $request->get('sort', 'newest');
-        $request = Appointment::with(['doctor.user', 'doctor.specialty', 'patient.user'])
+        $query = Appointment::with(['doctor.user', 'doctor.specialty', 'patient.user'])
             ->where('status', 'completed')
             ->select('appointments.*');
 
-        switch ($sort) {
-            case 'oldest':
-                $request->orderBy('appointments.created_at', 'asc');
-                break;
-                case 'newest':
-            default:
-                $request->orderBy('appointments.created_at', 'desc');
+        if ($request->filled('patient_name')) {
+            $query->whereHas('patient.user', function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->patient_name . '%');
+            });
         }
 
-        $visits = $request->paginate(10)->withQueryString();
+        if ($request->filled('doctor_name')) {
+            $query->whereHas('doctor.user', function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->doctor_name . '%');
+            });
+        }
 
-        return view('admin.visits.index', compact('visits'));
+        switch ($sort) {
+            case 'oldest':
+                $query->orderBy('appointments.created_at', 'asc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('appointments.created_at', 'desc');
+        }
+
+        $visits = $query->paginate(10)->withQueryString();
+        $specialties = Specialty::all();
+
+        return view('admin.visits.index', compact('visits', 'specialties'));
     }
 }

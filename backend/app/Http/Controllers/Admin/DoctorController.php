@@ -29,7 +29,7 @@ class DoctorController extends Controller
         }
 
         if($request->filled('specialty')){
-            $query->where('doctors.specialty_id', 'LIKE', '%' . $request->specialty .'%');
+            $query->where('doctors.specialty_id', $request->specialty);
         }
 
         if($request->filled('email')){

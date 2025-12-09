@@ -18,7 +18,14 @@ class SymptomsController extends Controller
             'symptoms' => 'required|string|min:3|max:2000',
             'age' => 'nullable|integer',
             'gender' => 'nullable|in:male,female,other',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,webp|max:5120'
         ]);
+        // Upload Files
+        $uploadedFiles = [];
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('symptom_uploads', 'public');
+            $uploadedFiles[] = $path;
+        }
 
         $symptoms = $request->input('symptoms');
         $age = $request->input('age');
@@ -89,7 +96,7 @@ Example:
                 $specialty = Specialty::where('name', $diag['recommended_specialty'])->first();
                 if ($specialty) {
                     $diag['doctors'] = Doctor::where('specialty_id', $specialty->id)
-                        ->with('user:id,name,email,phone') // جلب بيانات المستخدم المرتبط
+                        ->with('user:id,name,email,phone') 
                         ->get()
                         ->map(function ($doctor) {
                             return [

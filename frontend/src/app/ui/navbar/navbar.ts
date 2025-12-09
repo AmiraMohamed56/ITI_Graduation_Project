@@ -20,11 +20,20 @@ export class NavbarComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Reactively track login state
-    this.auth.isLoggedIn().subscribe((status) => {
-      this.isLoggedIn = status;
-      this.user = status ? this.auth.getUser() : null;
+    this.loadUserState();
+
+    this.router.events.subscribe(() => {
+      this.showNotifications = false;
+      this.showProfile = false;
+      this.showMobileMenu = false;
     });
+
+  }
+
+  loadUserState() {
+    const savedUser = localStorage.getItem('user');
+    this.isLoggedIn = !!savedUser;
+    this.user = savedUser ? JSON.parse(savedUser) : null;
   }
 
   toggleNotifications(): void {

@@ -144,6 +144,9 @@ export class DoctorProfileComponent implements OnInit {
       }
     });
   }
+    this.router.navigate([`/book-appointment/`], {
+      queryParams: { doctorId: this.doctor?.id }
+    });
 
   setRating(rating: number) {
     this.reviewForm.rating = rating;

@@ -24,6 +24,47 @@
                 </div>
             </div>
 
+            {{-- Filters --}}
+            <div class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <form method="GET" action="{{ route('admin.visits.index') }}"
+                    class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
+                    <!-- Patient Name Filter -->
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Patient Name</label>
+                        <input type="text" name="patient_name" placeholder="Search by patient..."
+                            value="{{ request('patient_name') }}"
+                            class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" />
+                    </div>
+
+                    <!-- Doctor Name Filter -->
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Doctor Name</label>
+                        <input type="text" name="doctor_name" placeholder="Search by doctor..."
+                            value="{{ request('doctor_name') }}"
+                            class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" />
+                    </div>
+
+                    <div class="md:col-span-1"></div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex md:col-span-1 justify-end gap-2">
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                            <i class="fas fa-filter text-xs"></i>
+                            Filter
+                        </button>
+
+                        <a href="{{ route('admin.visits.index') }}"
+                            class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2">
+                            <i class="fas fa-times text-xs"></i>
+                            Clear
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
             {{-- Table --}}
             <div
                 class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
