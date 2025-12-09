@@ -16,34 +16,44 @@ export class SymptomsCheckerComponent {
   loading = false;
   result: StructuredData | null = null;
   error: string | null = null;
+  selectedFile?: File;
+
 
   constructor(private router: Router,private ai: AiService) {}
-
-  submit() {
-    this.error = null;
-    if (!this.symptomsText || this.symptomsText.trim().length < 3) {
-      this.error = 'Please describe your symptoms briefly (at least 3 characters).';
-      return;
-    }
-
-    this.loading = true;
-    this.result = null;
-
-    this.ai.analyzeSymptoms({ symptoms: this.symptomsText, age: this.age, gender: this.gender }).subscribe({
-      next: res => {
-        this.loading = false;
-        if (res.status && res.data?.structured) {
-          this.result = res.data.structured;
-        } else {
-          this.error = 'No structured result from AI.';
-        }
-      },
-      error: err => {
-        this.loading = false;
-        this.error = err?.error?.message || 'Request failed. Try again later.';
-      }
-    });
+onFileSelected(event: any) {
+  this.selectedFile = event.target.files[0];
+}
+submit() {
+  this.error = null;
+  if (!this.symptomsText || this.symptomsText.trim().length < 3) {
+    this.error = 'Please describe your symptoms briefly (at least 3 characters).';
+    return;
   }
+
+  this.loading = true;
+  this.result = null;
+
+  this.ai.analyzeSymptoms({
+    symptoms: this.symptomsText,
+    age: this.age,
+    gender: this.gender,
+    file: this.selectedFile
+  }).subscribe({
+    next: res => {
+      this.loading = false;
+      if (res.status && res.data?.structured) {
+        this.result = res.data.structured;
+      } else {
+        this.error = 'No structured result from AI.';
+      }
+    },
+    error: err => {
+      this.loading = false;
+      this.error = err?.error?.message || 'Request failed. Try again later.';
+    }
+  });
+}
+
 
   urgencyClass(urgency: string) {
     if (!urgency) return 'bg-gray-100 text-gray-700';

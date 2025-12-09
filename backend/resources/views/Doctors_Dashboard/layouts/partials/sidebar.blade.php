@@ -35,6 +35,10 @@
                     <i class="fas fa-procedures w-5"></i>
                     <span class="menu-text ml-3">Patients</span>
                 </a>
+                <a href="{{ route('medical_records.index') }}" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-star"></i>
+                    <span class="menu-text ml-3">Reviews</span>
+                </a>
                 <a href="" class="flex items-center px-4 py-3 hover:bg-gray-800 text-gray-300 hover:text-white">
                     <i class="fas fa-bell w-5"></i>
                     <span class="menu-text ml-3">Notifications</span>

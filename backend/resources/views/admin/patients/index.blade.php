@@ -140,13 +140,15 @@
                         <td class="px-6 py-4 flex items-center gap-3">
                             @php
                             $image = $patient->user->profile_pic ?? null;
-                            $name = $patient->user->name;
-                            $initial = strtoupper(substr($name,0,1));
+                            $name = $patient->user->name ?? 'User';
+                            $initial = strtoupper(substr($name, 0, 1));
+
+                            $imageFile = $image ? basename($image) : null;
+                            $imagePath = $imageFile ? asset('storage/profile_pics/' . $imageFile) : null;
                             @endphp
 
-                            @if ($image)
-                            <img src="{{ asset('uploads/profile/' . $image) }}"
-                                class="w-10 h-10 rounded-full object-cover">
+                            @if ($imagePath)
+                            <img src="{{ $imagePath }}" class="w-10 h-10 rounded-full object-cover" alt="{{ $name }}">
                             @else
                             <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
                                 {{ $initial }}
@@ -154,9 +156,11 @@
                             @endif
 
                             <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {{ $patient->user->name }}
+                                {{ $name }}
                             </span>
+
                         </td>
+
 
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">{{ $patient->user->email }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">{{ $patient->user->phone }}</td>

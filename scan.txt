@@ -1,0 +1,29 @@
+Patient Name: Ahmed Ibrahim
+Patient ID: 2025-112
+Age: 28
+Gender: Male
+Date: 2025-12-08
+
+CBC – Complete Blood Count
+Parameter	Result	Normal Range
+Hemoglobin	13.8 g/dL	13.0 – 17.0
+RBC Count	5.0 ×10⁶/µL	4.5 – 6.0
+WBC Count	7.2 ×10³/µL	4.0 – 11.0
+Platelets	250 ×10³/µL	150 – 450
+Notes / Observations
+
+Blood count appears within normal range.
+
+No signs of infection or anemia.
+
+Recommend follow-up test only if symptoms persist.
+
+Attached Medical Images
+
+(CT Scan Chest – If available)
+
+Doctor
+
+Dr. Mohamed Hassan
+Internal Medicine Consultant
+License: 55298

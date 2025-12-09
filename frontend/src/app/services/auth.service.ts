@@ -22,7 +22,7 @@ export class AuthService {
           this.setUser(res.data);
         }
       }),
-      catchError((error) => throwError(() =>this.formatError(error)))
+      catchError((error) => throwError(() =>error))
     );
   }
 
@@ -34,7 +34,7 @@ export class AuthService {
           this.setUser(res.data);
         }
       }),
-      catchError((error) => throwError(() => this.formatError(error)))
+      catchError((error) => throwError(() =>error))
     );
   }
 
@@ -77,37 +77,37 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  private formatError(error: any): string {
-    if (error.error?.errors) {
-      return Object.values(error.error.errors).flat().join(', ');
-    }
-    if (error.error?.message) {
-      return error.error.message;
-    }
-    return 'Something went wrong. Please try again later.';
-  }
+  // private formatError(error: any): string {
+  //   if (error.error?.errors) {
+  //     return Object.values(error.error.errors).flat().join(', ');
+  //   }
+  //   if (error.error?.message) {
+  //     return error.error.message;
+  //   }
+  //   return 'Something went wrong. Please try again later.';
+  // }
 
   sendVerificationCode(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/send-verification-code`, data).pipe(
-      catchError((error) => throwError(() => this.formatError(error)))
+      catchError((error) => throwError(() => error))
     );
   }
 
   verifyCode(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/verify-code`, data).pipe(
-      catchError((error) => throwError(() => this.formatError(error)))
+      catchError((error) => throwError(() => error))
     );
   }
 
   forgotPassword(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/forgot-password`, data).pipe(
-      catchError((error) => throwError(() => this.formatError(error)))
+      catchError((error) => throwError(() => error))
     );
   }
 
   resetPassword(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/reset-password`, data).pipe(
-      catchError((error) => throwError(() => this.formatError(error)))
+      catchError((error) => throwError(() => error))
     );
   }
 
