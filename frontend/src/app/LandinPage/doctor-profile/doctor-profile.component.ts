@@ -50,8 +50,6 @@ export class DoctorProfileComponent implements OnInit {
     if (this.currentUser && this.currentUser.patient_id) {
       this.currentPatientId = this.currentUser.patient_id;
     } else if (this.currentUser && this.currentUser.id) {
-      // If patient_id is not directly available, use the user id
-      // You might need to adjust this based on your user object structure
       this.currentPatientId = this.currentUser.id;
     }
 
@@ -73,18 +71,26 @@ export class DoctorProfileComponent implements OnInit {
     });
   }
 
+  // =========================
+  // BOOK APPOINTMENT BUTTON
+  // =========================
   bookAppointment() {
-    this.router.navigate(['/book-appointment']);
+    if (!this.doctor) return;
+
+    this.router.navigate(['/book-appointment'], {
+      queryParams: { doctorId: this.doctor.id }
+    });
   }
 
+  // =========================
+  // REVIEW MODAL HANDLING
+  // =========================
   openReviewModal() {
-    // Check if user is logged in
     if (!this.currentUser) {
       this.router.navigate(['/auth/login']);
       return;
     }
 
-    // Check if patient ID is available
     if (!this.currentPatientId) {
       this.error = 'Unable to submit review. Please complete your profile.';
       return;
@@ -103,10 +109,12 @@ export class DoctorProfileComponent implements OnInit {
     };
   }
 
+  // =========================
+  // SUBMIT REVIEW
+  // =========================
   submitReview() {
     if (!this.doctor || !this.currentPatientId) return;
 
-    // Validation
     if (this.reviewForm.rating < 1 || this.reviewForm.rating > 5) {
       this.reviewError = 'Rating must be between 1 and 5';
       return;
@@ -132,7 +140,6 @@ export class DoctorProfileComponent implements OnInit {
         this.submittingReview = false;
         this.reviewSuccess = 'Review submitted successfully!';
 
-        // Reload doctor data to show new review
         setTimeout(() => {
           this.closeReviewModal();
           this.loadDoctor(this.doctor!.id!);
@@ -144,10 +151,10 @@ export class DoctorProfileComponent implements OnInit {
       }
     });
   }
-    this.router.navigate([`/book-appointment/`], {
-      queryParams: { doctorId: this.doctor?.id }
-    });
 
+  // =========================
+  // SET RATING
+  // =========================
   setRating(rating: number) {
     this.reviewForm.rating = rating;
   }
