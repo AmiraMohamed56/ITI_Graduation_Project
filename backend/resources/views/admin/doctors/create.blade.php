@@ -107,6 +107,15 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                        <select name="status"
+                            class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 focus:ring-1 focus:ring-blue-500">
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
                         <textarea name="bio" rows="3"
                             class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 focus:ring-1 focus:ring-blue-500">{{ old('bio') }}</textarea>
