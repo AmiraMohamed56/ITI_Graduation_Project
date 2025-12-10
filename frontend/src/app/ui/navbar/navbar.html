@@ -78,23 +78,53 @@
           <ng-container *ngIf="isLoggedIn; else loggedOutLinks">
             <button (click)="toggleProfile()"
               class="flex items-center gap-3 hover:bg-blue-50 rounded-full pr-4 transition-all duration-300 profile-button">
-              <img [src]="patient?.profile_pic || '/default_profile.jpg'" class="w-11 h-11 rounded-full border-2 border-blue-200 shadow-md"
-                alt="User Avatar" />
+
+              <!-- Avatar with fallback -->
+              <div class="relative">
+                <img
+                  [src]="patientProfilePic"
+                  (error)="handleImageError($event)"
+                  class="w-11 h-11 rounded-full border-2 border-blue-200 shadow-md object-cover"
+                  alt="User Avatar"
+                  *ngIf="patientProfilePic !== '/default_profile.jpg'"
+                />
+                <div *ngIf="patientProfilePic === '/default_profile.jpg'"
+                     class="w-11 h-11 rounded-full border-2 border-blue-200 shadow-md bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center avatar-fallback">
+                  <span class="text-white font-bold text-lg">{{ userInitials }}</span>
+                </div>
+              </div>
+
               <div class="hidden md:block text-left">
-                <p class="text-sm font-semibold text-gray-900">{{ user?.user?.name }}</p>
-                <p class="text-xs text-gray-500">{{ user?.role || 'Patient' }}</p>
+                <p class="text-sm font-semibold text-gray-900">{{ getUserName() }}</p>
+                <p class="text-xs text-gray-500">{{ getUserRole() }}</p>
               </div>
               <i class="fas fa-chevron-down text-gray-400 text-sm hidden md:block"></i>
             </button>
 
             <div *ngIf="showProfile" class="dropdown-menu absolute right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden profile-dropdown">
               <div class="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center gap-3">
-                <img [src]="patient?.profile_pic || '/default_profile.jpg'" class="w-14 h-14 rounded-full border-2 border-white" alt="User" />
+
+                <!-- Avatar in dropdown -->
+                <div class="relative">
+                  <img
+                    [src]="patientProfilePic"
+                    (error)="handleImageError($event)"
+                    class="w-14 h-14 rounded-full border-2 border-white object-cover"
+                    alt="User"
+                    *ngIf="patientProfilePic !== '/default_profile.jpg'"
+                  />
+                  <div *ngIf="patientProfilePic === '/default_profile.jpg'"
+                       class="w-14 h-14 rounded-full border-2 border-white bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center avatar-fallback">
+                    <span class="text-white font-bold text-xl">{{ userInitials }}</span>
+                  </div>
+                </div>
+
                 <div>
-                  <p class="font-bold">{{ user?.user?.name }}</p>
-                  <p class="text-sm text-blue-100">{{ user?.user?.email }}</p>
+                  <p class="font-bold">{{ getUserName() }}</p>
+                  <p class="text-sm text-blue-100">{{ getUserEmail() }}</p>
                 </div>
               </div>
+
               <div class="p-2">
                 <a routerLink="/patient-profile" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
                   <i class="fas fa-user text-gray-600 w-5"></i> My Profile
@@ -111,8 +141,16 @@
           </ng-container>
 
           <ng-template #loggedOutLinks>
-            <a routerLink="/auth/login" class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2">Login</a>
-            <a routerLink="/auth/register" class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2">Register</a>
+            <div class="flex items-center space-x-3">
+              <a routerLink="/auth/login"
+                 class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-sm">
+                Login
+              </a>
+              <a routerLink="/auth/register"
+                 class="bg-white hover:bg-gray-50 text-blue-600 font-semibold px-5 py-2.5 rounded-lg transition-all duration-300 border border-blue-600 shadow-sm hover:shadow text-sm">
+                Register
+              </a>
+            </div>
           </ng-template>
         </div>
 
@@ -140,22 +178,19 @@
         <i class="fas fa-envelope text-blue-600 w-5"></i> Contact
       </a>
 
-      <ng-container *ngIf="isLoggedIn; else mobileLoginLinks">
-        <a routerLink="/patient-profile" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-semibold">
-          <i class="fas fa-user text-blue-600 w-5"></i> Profile
-        </a>
-        <a (click)="logout(); closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl font-semibold">
-          <i class="fas fa-sign-out-alt w-5"></i> Logout
-        </a>
-      </ng-container>
+
 
       <ng-template #mobileLoginLinks>
-        <a routerLink="/auth/login" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-semibold">
-          Login
-        </a>
-        <a routerLink="/auth/register" (click)="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-xl font-semibold">
-          Register
-        </a>
+        <div class="px-4 py-3 border-t border-gray-200 mt-3">
+          <a routerLink="/auth/login" (click)="closeMobileMenu()"
+             class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold px-4 py-3 rounded-lg mb-3">
+            Login
+          </a>
+          <a routerLink="/auth/register" (click)="closeMobileMenu()"
+             class="block w-full bg-white hover:bg-gray-50 text-blue-600 text-center font-semibold px-4 py-3 rounded-lg border border-blue-600">
+            Register
+          </a>
+        </div>
       </ng-template>
     </div>
   </div>

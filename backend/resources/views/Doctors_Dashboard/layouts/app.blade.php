@@ -44,9 +44,7 @@
         </main>
     </div>
 
-    <!-- Dark Mode Script مبسط -->
     <script>
-        // التحقق من التفضيل المخزن أو تفضيل النظام
         function getThemePreference() {
             if (localStorage.getItem('darkMode') === 'true') {
                 return 'dark';
@@ -57,7 +55,6 @@
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
 
-        // تطبيق الـ Theme
         function applyTheme(theme) {
             const html = document.documentElement;
             if (theme === 'dark') {
@@ -71,7 +68,6 @@
             }
         }
 
-        // تبديل الـ Theme
         window.toggleTheme = function() {
             const html = document.documentElement;
             if (html.classList.contains('dark')) {
@@ -81,14 +77,11 @@
             }
         }
 
-        // التهيئة عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             applyTheme(getThemePreference());
 
-            // تحديث أيقونة الـ toggle
             updateThemeIcon();
 
-            // استماع لتغير تفضيلات النظام
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
                 if (!localStorage.getItem('darkMode')) {
                     applyTheme(e.matches ? 'dark' : 'light');
@@ -119,6 +112,7 @@
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @stack('scripts')
 </body>
