@@ -31,6 +31,16 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
+        if($user->role === 'doctor' && $user->status !== 'active'){
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('login')->withErrors([
+                'email' => 'Your account is suspended. Please contact the admin.'
+            ]);
+        }
+
         if($user->role === 'admin'){
             return redirect()->route('admin.dashboard');
         }
