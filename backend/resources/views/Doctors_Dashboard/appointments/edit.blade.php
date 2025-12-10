@@ -7,14 +7,14 @@
 
     <!-- Page Header -->
     <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Edit Appointment</h1>
-        <p class="text-gray-500 mt-1">Modify appointment details and update status.</p>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Appointment</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-1">Modify appointment details and update status.</p>
     </div>
 
     <!-- Card -->
-    <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
+    <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 border border-gray-100 dark:border-gray-700">
 
-        <h3 class="text-xl font-semibold text-gray-800 mb-6">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-6">
             Appointment #{{ $appointment->id }}
         </h3>
 
@@ -26,46 +26,46 @@
 
                 <!-- Patient Name -->
                 <div>
-                    <label class="text-gray-500 mb-1 block">Patient Name</label>
-                    <input type="text" 
-                           class="w-full border-gray-300 rounded-xl shadow-sm bg-gray-100 text-gray-700"
-                           value="{{ $appointment->patient->user->name }}"
-                           disabled>
+                    <label class="text-gray-500 dark:text-gray-400 mb-1 block">Patient Name</label>
+                    <input type="text"
+                        class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                        value="{{ $appointment->patient->user->name }}"
+                        disabled>
                 </div>
 
                 <!-- Doctor Name -->
                 <div>
-                    <label class="text-gray-500 mb-1 block">Doctor</label>
-                    <input type="text" 
-                           class="w-full border-gray-300 rounded-xl shadow-sm bg-gray-100 text-gray-700"
-                           value="Dr. {{ $appointment->doctor->user->name }}"
-                           disabled>
+                    <label class="text-gray-500 dark:text-gray-400 mb-1 block">Doctor</label>
+                    <input type="text"
+                        class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                        value="Dr. {{ $appointment->doctor->user->name }}"
+                        disabled>
                 </div>
 
                 <!-- Appointment Date -->
                 <div>
-                    <label class="text-gray-500 mb-1 block">Date</label>
+                    <label class="text-gray-500 dark:text-gray-400 mb-1 block">Date</label>
                     <input type="date" name="schedule_date"
-                           class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                           value="{{ \Carbon\Carbon::parse($appointment->schedule_date)->format('Y-m-d') }}"
-                           disabled>
+                        class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        value="{{ \Carbon\Carbon::parse($appointment->schedule_date)->format('Y-m-d') }}"
+                        disabled>
                 </div>
 
                 <!-- Appointment Time -->
                 <div>
-                    <label class="text-gray-500 mb-1 block">Time</label>
+                    <label class="text-gray-500 dark:text-gray-400 mb-1 block">Time</label>
                     <input type="time" name="schedule_time"
-                           class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                           value="{{ \Carbon\Carbon::parse($appointment->schedule_time)->format('H:i') }}"
-                           disabled>
+                        class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        value="{{ \Carbon\Carbon::parse($appointment->schedule_time)->format('H:i') }}"
+                        disabled>
                 </div>
 
                 <!-- Status -->
                 <div>
-                    <label class="text-gray-500 mb-1 block">Status</label>
+                    <label class="text-gray-500 dark:text-gray-400 mb-1 block">Status</label>
                     <select name="status"
-                            class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="pending" 
+                        class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="pending"
                             @selected($appointment->status == 'pending')>
                             Pending
                         </option>
@@ -89,20 +89,20 @@
 
                 <!-- Price -->
                 <div>
-                    <label class="text-gray-500 mb-1 block">Price (EGP)</label>
+                    <label class="text-gray-500 dark:text-gray-400 mb-1 block">Price (EGP)</label>
                     <input type="number" name="price" step="0.01"
-                           class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                           value="{{ $appointment->price }}"
-                           disabled>
+                        class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        value="{{ $appointment->price }}"
+                        disabled>
                 </div>
 
             </div>
 
             <!-- Notes -->
             <div class="mt-8">
-                <label class="text-gray-500 mb-1 block">Notes</label>
+                <label class="text-gray-500 dark:text-gray-400 mb-1 block">Notes</label>
                 <textarea name="notes" rows="4"
-                          class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ $appointment->notes }}</textarea>
+                    class="w-full border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">{{ $appointment->notes }}</textarea>
             </div>
 
             <!-- Action Buttons -->
@@ -110,13 +110,13 @@
 
                 <!-- Back Button -->
                 <a href="{{ route('appointments.index') }}"
-                   class="px-5 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition">
+                    class="px-5 py-3 bg-gray-600 dark:bg-gray-700 text-white rounded-xl hover:bg-gray-700 dark:hover:bg-gray-600 transition">
                     Back
                 </a>
 
                 <!-- Submit Button -->
                 <button type="submit"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow">
+                    class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow dark:bg-blue-700 dark:hover:bg-blue-600">
                     Save Changes
                 </button>
             </div>

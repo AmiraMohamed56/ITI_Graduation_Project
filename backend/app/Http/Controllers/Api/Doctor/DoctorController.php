@@ -75,7 +75,7 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-        $doctor = Doctor::with(['user', 'specialty', 'schedules', 'reviews.patient.user:id,name'])->find($id);
+        $doctor = Doctor::with(['user', 'specialty', 'schedules', 'reviews.patient.user'])->find($id);
 
     if (!$doctor) {
         return response()->json([

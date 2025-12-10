@@ -70,7 +70,8 @@ class GoogleController extends Controller
             "&id=" . $user->id .
             "&name=" . urlencode($user->name) .
             "&email=" . urlencode($user->email) .
-            "&google_id=" . urlencode($user->google_id)
+            "&google_id=" . urlencode($user->google_id) .
+            "&patient_id=" . urlencode($user->patient->id) 
         );
 
 

@@ -122,7 +122,7 @@
 <div class="container">
 
 <header>
-    <h1>ClinicNOva</h1>
+    <h1>CareNOva</h1>
     <div class="company-info">
         123 Health St, City, Country<br>
         +20 123 456 789<br>
@@ -179,7 +179,7 @@
 </div>
 
 <footer>
-    Thank you for choosing ClinicNova. Visit us at www.clinicnova.com
+    Thank you for choosing CareNova. Visit us at www.carenova.com
 </footer>
 
 </div>

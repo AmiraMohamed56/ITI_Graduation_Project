@@ -75,6 +75,7 @@ class DoctorController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'role' => 'doctor',
+            'status' => $request->status,
             'email_verified_at' => now(),
             'password' => Hash::make($request->password),
         ]);
@@ -124,6 +125,7 @@ class DoctorController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone ?? $user->phone,
+            'status' => $request->status,
         ]);
 
         if ($request->filled('password')) {

@@ -10,7 +10,7 @@ class BookingDoctorController extends Controller
 {
     public function index(Request $request)
     {
-        // filter by specialty_id query param later
+        // filter by specialty_id
         $doctors = Doctor::with(['user','specialty'])->get();
         return BookingDoctorResource::collection($doctors);
     }

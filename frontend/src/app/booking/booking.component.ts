@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastService } from '../services/toast.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-booking',
@@ -34,12 +35,48 @@ export class BookingComponent implements OnInit {
     private appointmentService: AppointmentService,
     private toastService: ToastService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+
     this.loadSpecialities();
     this.getLoggedInUser();
+
+    // Check if doctor id exists in the url
+    this.route.queryParams.subscribe(params => {
+      const doctorId = Number(params['doctorId']);
+      console.log('redirected doctor id: ', doctorId);
+      if(doctorId) {
+        this.prefill(doctorId);
+      }
+    })
+  }
+
+  prefill(doctorId: any) {
+    console.log('redirected doctor id form inside prefill: ', doctorId);
+    this.appointmentService.getDoctors().subscribe((res: any) => {
+      const allDoctors = res.data;
+
+      const doctor = allDoctors.find((d: any) => Number(d.id) == doctorId);
+      console.log(allDoctors);
+      console.log('doctor from prefill: ', doctor);
+
+      if(!doctor) return;
+
+      // prefill speciality
+      this.selectedSpecialityId = Number(doctor.specialty_id);
+
+      // load doctors
+      this.loadDoctors();
+
+      // prefill doctor
+      this.selectedDoctorId = Number(doctorId);
+
+      // load doctor schedules
+      this.onDoctorChange();
+    })
   }
 
   getLoggedInUser() {
@@ -67,7 +104,7 @@ export class BookingComponent implements OnInit {
   onSpecialityChange() {
     this.selectedSpecialityId = Number(this.selectedSpecialityId);
     this.loadDoctors();
-    console.log(this.selectedSpecialityId);
+    console.log('specialty: ', this.selectedSpecialityId);
   }
 
   loadDoctors() {
@@ -86,14 +123,15 @@ export class BookingComponent implements OnInit {
   }
 
   onDoctorChange() {
-    // this.availableTimes = [];
+
     if (this.selectedDoctorId) {
-      // this.loadAvailableTimes();
+
       this.loadAvailableDates();
     }
   }
 
   loadAvailableDates() {
+
     if (!this.selectedDoctorId) return;
 
     this.appointmentService.getDoctorSchedules(this.selectedDoctorId).subscribe((res: any) => {
@@ -101,12 +139,12 @@ export class BookingComponent implements OnInit {
       (res.data).forEach((d: any) => {
         this.availableDates.push({id: d.id, date: d.day_of_week});
       });
-      console.log('available dates = ', this.availableDates);
+      // console.log('available dates = ', this.availableDates);
     });
   }
 
   onDateChange() {
-    console.log('seelcted date', this.selectedDate);
+
     if (this.selectedDoctorId && this.selectedDate) {
       this.loadAvailableTimes();
     }
@@ -114,13 +152,15 @@ export class BookingComponent implements OnInit {
 
 
   loadAvailableTimes() {
+    console.log('seelcted date', this.selectedDate);
+    console.log("selectedDoctroId: ", this.selectedDoctorId);
     if (!this.selectedDoctorId || !this.selectedDate) return;
 
     this.appointmentService
       .getDoctorSchedule(this.selectedDoctorId!, Number(this.selectedDate))
       .subscribe((schedules) => {
         this.availableTimes = [];
-
+        // console.log(schedules.data);
         if (!(schedules.data).length) return;
 
         this.appointmentService
@@ -216,7 +256,7 @@ onTimeSelect(event: Event) {
       type: this.appointmentType,
       notes: this.notes,
     };
-    // console.log("final data", data);
+    console.log("final data", data);
 
     this.appointmentService.bookAppointment(data).subscribe(
       (res) => {
@@ -238,5 +278,9 @@ onTimeSelect(event: Event) {
   goToPayment() {
     // optionally do validation or save form data here
     this.router.navigate(['/payment-form']);
+  }
+
+  goToDoctor() {
+    this.router.navigate([`/doctor/${this.selectedDoctor?.id}`])
   }
 }

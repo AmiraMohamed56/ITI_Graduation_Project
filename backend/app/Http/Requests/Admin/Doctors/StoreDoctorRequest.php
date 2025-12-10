@@ -11,7 +11,6 @@ class StoreDoctorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return false;
         return true;
     }
 
@@ -27,6 +26,7 @@ class StoreDoctorRequest extends FormRequest
             'name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:20',
+            'status' => 'required|in:active,suspended',
             'password' => 'required|string|min:8|confirmed',
 
             // From Doctor model

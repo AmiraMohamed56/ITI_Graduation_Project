@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class GoogleCallbackComponent {
   router = inject(Router);
+  auth = inject(AuthService);
 
   ngOnInit() {
     const params = new URLSearchParams(window.location.search);
@@ -20,15 +21,20 @@ export class GoogleCallbackComponent {
     const email = params.get('email');
     const id = params.get('id');
     const google_id = params.get('google_id');
+    const patient_id = params.get('patient_id');
+
 
     if (token) {
       const user = {
-        id,
-        name,
-        email,
-        google_id
+        'id': patient_id,
+        'user' : {
+          id,
+          name,
+          email
+        }
       };
-      localStorage.setItem('auth_token', token);
+
+      localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 
 

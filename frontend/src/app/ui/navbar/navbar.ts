@@ -2,6 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { PatientService } from '../../services/patientProfile.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -16,15 +17,32 @@ export class NavbarComponent implements OnInit {
 
   isLoggedIn = false;
   user: any = null;
+  patient: any = null;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private patientService: PatientService) {}
 
   ngOnInit(): void {
-    // Reactively track login state
-    this.auth.isLoggedIn().subscribe((status) => {
-      this.isLoggedIn = status;
-      this.user = status ? this.auth.getUser() : null;
+    this.loadUserState();
+
+    this.router.events.subscribe(() => {
+      this.showNotifications = false;
+      this.showProfile = false;
+      this.showMobileMenu = false;
     });
+
+  }
+
+  loadUserState() {
+    const savedUser = localStorage.getItem('user');
+    this.isLoggedIn = !!savedUser;
+    this.user = savedUser ? JSON.parse(savedUser) : null;
+
+    if(savedUser){
+
+      const patient = this.patientService.getPatientById(this.user.id).subscribe((res: any) => {
+        this.patient = res.data;
+      })
+    }
   }
 
   toggleNotifications(): void {
