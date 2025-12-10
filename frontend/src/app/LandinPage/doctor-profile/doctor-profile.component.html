@@ -129,10 +129,6 @@
                class="p-4 bg-gray-50 rounded-xl shadow">
 
             <div class="flex items-center justify-between mb-2">
-              <!-- <span class="font-semibold text-gray-800">
-                {{ review?.patient?.user?.name }}
-              </span> -->
-
               <span class="text-yellow-500">⭐ {{ review?.rating }}</span>
             </div>
 
@@ -142,19 +138,85 @@
         </div>
       </div>
 
-      <!-- CTA -->
-       <div class="flex gap-2">
+      <!-- CTA Buttons -->
+      <div class="flex gap-2">
         <button (click)="bookAppointment()"
-              class="mt-8 bg-blue-600 text-white py-3 px-8 text-lg rounded-2xl shadow-md hover:bg-blue-700 active:scale-95 transition">
-        Book Appointment
-      </button>
-      <button (click)="bookAppointment()"
-              class="mt-8 bg-blue-600 text-white py-3 px-8 text-lg rounded-2xl shadow-md hover:bg-blue-700 active:scale-95 transition">
-        Add Review
-      </button>
-       </div>
-
+                class="mt-8 bg-blue-600 text-white py-3 px-8 text-lg rounded-2xl shadow-md hover:bg-blue-700 active:scale-95 transition">
+          Book Appointment
+        </button>
+        <button (click)="openReviewModal()"
+                class="mt-8 bg-green-600 text-white py-3 px-8 text-lg rounded-2xl shadow-md hover:bg-green-700 active:scale-95 transition">
+          Add Review
+        </button>
+      </div>
 
     </div>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div *ngIf="showReviewModal"
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+
+    <!-- Close Button -->
+    <button (click)="closeReviewModal()"
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold">
+      ×
+    </button>
+
+    <!-- Modal Header -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Write a Review</h2>
+
+    <!-- Success Message -->
+    <div *ngIf="reviewSuccess"
+         class="bg-green-100 text-green-700 p-3 rounded-lg mb-4">
+      {{ reviewSuccess }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="reviewError"
+         class="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
+      {{ reviewError }}
+    </div>
+
+    <!-- Rating -->
+    <div class="mb-6">
+      <label class="block text-gray-700 font-semibold mb-2">Rating</label>
+      <div class="flex gap-2">
+        <button *ngFor="let star of [1,2,3,4,5]"
+                (click)="setRating(star)"
+                class="text-3xl transition-transform hover:scale-110"
+                [class.text-yellow-400]="star <= reviewForm.rating"
+                [class.text-gray-300]="star > reviewForm.rating">
+          ⭐
+        </button>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="mb-6">
+      <label class="block text-gray-700 font-semibold mb-2">Your Comment</label>
+      <textarea
+        [(ngModel)]="reviewForm.comment"
+        rows="4"
+        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="Share your experience with this doctor..."></textarea>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-3">
+      <button (click)="closeReviewModal()"
+              class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition">
+        Cancel
+      </button>
+      <button (click)="submitReview()"
+              [disabled]="submittingReview"
+              class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:bg-blue-300 disabled:cursor-not-allowed">
+        {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
+      </button>
+    </div>
+
   </div>
 </div>

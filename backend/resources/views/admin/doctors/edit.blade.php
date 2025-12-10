@@ -129,6 +129,16 @@
                             class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-1 focus:ring-blue-500">{{ old('education', $doctor->education) }}</textarea>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-1">Status</label>
+                        <select name="status" class="w-full border rounded-lg px-3 py-2">
+                            <option value="active" {{ $doctor->user->status == 'active' ? 'selected' : '' }}>Active
+                            </option>
+                            <option value="suspended" {{ $doctor->user->status == 'suspended' ? 'selected' : '' }}>
+                                Suspended</option>
+                        </select>
+                    </div>
+
                     <!-- Online Availability -->
                     <div class="md:col-span-2">
                         <input type="hidden" name="available_for_online" value="0">
