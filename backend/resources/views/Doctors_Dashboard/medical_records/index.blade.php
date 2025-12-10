@@ -114,7 +114,7 @@
                    title="Edit">
                   <i class="fas fa-edit text-sm"></i>
                 </a>
-                <form action="{{ route('medical_records.destroy', $record->id)  }}"
+                {{-- <form action="{{ route('medical_records.destroy', $record->id)  }}"
                       method="POST"
                       class="inline-block"
                       onsubmit="return confirm('Are you sure you want to delete this medical record?');">
@@ -125,7 +125,28 @@
                           title="Delete">
                     <i class="fas fa-trash text-sm"></i>
                   </button>
-                </form>
+                </form> --}}
+{{-- ======================================================================== --}}
+<x-admin.button type="danger" id="delete-button">Delete appointment</x-admin.button>
+
+<!-- Confirmation Modal (Initially Hidden) -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 shadow rounded p-6 w-96">
+        <h2 class="text-xl mb-4">Are you sure you want to delete this record?</h2>
+        <div class="flex justify-end gap-4">
+            <!-- Cancel Button -->
+            <x-admin.button id="cancel-button" type="secondary" size="sm">Cancel</x-admin.button>
+
+            {{-- delete form --}}
+            <form id="delete-form" action="{{ route('medical_records.destroy', $record->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <x-admin.button type="danger" size="sm">Cofirm</x-admin.button>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- ======================================================================== --}}
               </div>
             </td>
           </tr>
@@ -158,9 +179,42 @@
     </div>
   </div>
 
-  @if(session('success'))
+  {{-- @if(session('success'))
   <script>
     alert('{{ session('success') }}');
   </script>
-  @endif
+  @endif --}}
+  @if(session('success'))
+    <x-admin.alert type="success" :message="session('success')" />
+@endif
+
+@if(session('error'))
+    <x-admin.alert type="error" :message="session('error')" />
+@endif
+
+
+@endsection
+
+
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteButton = document.getElementById("delete-button");
+        const cancelButton = document.getElementById("cancel-button");
+        const modal = document.getElementById("modal");
+        const deleteForm = document.getElementById("delete-form");
+
+        // Show Modal
+        deleteButton.addEventListener("click", function() {
+            modal.classList.remove("hidden");
+        });
+
+        // Hide Modal (Cancel)
+        cancelButton.addEventListener("click", function() {
+            modal.classList.add("hidden");
+        });
+
+    });
+</script>
 @endsection

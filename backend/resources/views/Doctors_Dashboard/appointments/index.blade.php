@@ -4,16 +4,25 @@
 
 @section('content')
 
-@if(session('success'))
+{{-- @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
+@endif --}}
+@if(session('success'))
+    <x-admin.alert type="success" :message="session('success')" />
 @endif
+
+@if(session('error'))
+    <x-admin.alert type="error" :message="session('error')" />
+@endif
+
+
 
 <div class="min-h-screen bg-gray-50 p-8">
 
     {{-- Header --}}
     <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
-            
+
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Appointments</h1>
 
@@ -154,13 +163,13 @@
                         <td class="px-4 py-2 text-center flex items-center gap-3">
 
                             {{-- View --}}
-                            <a href="{{ route('appointments.show', $appointment->id) }}" 
+                            <a href="{{ route('appointments.show', $appointment->id) }}"
                             class="text-blue-600 hover:text-blue-800 text-xl">
                                 <i class="fas fa-eye"></i>
                             </a>
 
                             {{-- Edit --}}
-                            <a href="{{ route('appointments.edit', $appointment->id) }}" 
+                            <a href="{{ route('appointments.edit', $appointment->id) }}"
                             class="text-green-600 hover:text-green-800 text-xl">
                                 <i class="fas fa-edit"></i>
                             </a>
