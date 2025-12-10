@@ -11,7 +11,6 @@ class UpdateDoctorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return false;
         return true;
     }
 
@@ -30,6 +29,7 @@ class UpdateDoctorRequest extends FormRequest
             'name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email,' . $userId,
             'phone' => 'nullable|string|max:20',
+            'status' => 'required|in:active,suspended',
             'password' => 'nullable|string|min:8|confirmed',
 
             // From Doctor model

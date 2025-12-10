@@ -383,7 +383,7 @@
     </div>
 </div>
 
-@if(session('success'))
+{{-- @if(session('success'))
 <script>
     alert('{{ session('
         success ') }}');
@@ -395,5 +395,35 @@
     alert('{{ session('
         error ') }}');
 </script>
+@endif --}}
+@if(session('success'))
+    <x-admin.alert type="success" :message="session('success')" />
 @endif
+
+@if(session('error'))
+    <x-admin.alert type="error" :message="session('error')" />
+@endif
+
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteButton = document.getElementById("delete-button");
+        const cancelButton = document.getElementById("cancel-button");
+        const modal = document.getElementById("modal");
+        const deleteForm = document.getElementById("delete-form");
+
+        // Show Modal
+        deleteButton.addEventListener("click", function() {
+            modal.classList.remove("hidden");
+        });
+
+        // Hide Modal (Cancel)
+        cancelButton.addEventListener("click", function() {
+            modal.classList.add("hidden");
+        });
+
+    });
+</script>
 @endsection

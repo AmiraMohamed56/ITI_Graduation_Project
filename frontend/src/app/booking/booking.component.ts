@@ -47,6 +47,7 @@ export class BookingComponent implements OnInit {
     // Check if doctor id exists in the url
     this.route.queryParams.subscribe(params => {
       const doctorId = Number(params['doctorId']);
+      console.log('redirected doctor id: ', doctorId);
       if(doctorId) {
         this.prefill(doctorId);
       }
@@ -54,10 +55,13 @@ export class BookingComponent implements OnInit {
   }
 
   prefill(doctorId: any) {
+    console.log('redirected doctor id form inside prefill: ', doctorId);
     this.appointmentService.getDoctors().subscribe((res: any) => {
       const allDoctors = res.data;
 
       const doctor = allDoctors.find((d: any) => Number(d.id) == doctorId);
+      console.log(allDoctors);
+      console.log('doctor from prefill: ', doctor);
 
       if(!doctor) return;
 
@@ -100,7 +104,7 @@ export class BookingComponent implements OnInit {
   onSpecialityChange() {
     this.selectedSpecialityId = Number(this.selectedSpecialityId);
     this.loadDoctors();
-    console.log(this.selectedSpecialityId);
+    console.log('specialty: ', this.selectedSpecialityId);
   }
 
   loadDoctors() {
@@ -156,7 +160,7 @@ export class BookingComponent implements OnInit {
       .getDoctorSchedule(this.selectedDoctorId!, Number(this.selectedDate))
       .subscribe((schedules) => {
         this.availableTimes = [];
-        console.log(schedules.data);
+        // console.log(schedules.data);
         if (!(schedules.data).length) return;
 
         this.appointmentService
