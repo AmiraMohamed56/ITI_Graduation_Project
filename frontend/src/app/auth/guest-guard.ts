@@ -12,7 +12,7 @@ export class GuestGuard implements CanActivate {
   canActivate(): boolean {
     if (this.auth.isLoggedIn()) {
 
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
       return false;
     }
     return true; 
