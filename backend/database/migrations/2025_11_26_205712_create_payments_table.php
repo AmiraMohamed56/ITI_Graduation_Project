@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['paid','refunded','failed']);
-            $table->enum('method', ['card','wallet','cash']);
+            $table->enum('method',  ['cash', 'card', 'wallet', 'paypal'])->default('cash');
             $table->string('transaction_id')->nullable();
             $table->timestamps();
         });
