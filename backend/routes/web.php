@@ -19,8 +19,10 @@ use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Api\Reviews\ReviewController as ReviewsReviewController;
 use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
@@ -156,6 +158,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('/notifications', action: [notificationsController::class, 'deleteAll'])
         ->name('notifications.delete-all');
 });
+//payment
+Route::middleware(['auth'])->group(function () {
+    // PayPal routes
+    Route::post('paypal/payment', [PayPalController::class, 'createPayment'])->name('paypal.payment');
+    Route::get('paypal/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.success');
+    Route::get('paypal/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.cancel');
+});
 
 
 
@@ -191,10 +200,10 @@ Route::middleware(['auth', 'isDoctor'])->prefix('doctor')->group(function () {
 
 
     // doctor review
-    Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
-    Route::post('reviews/{id}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');
-    Route::post('reviews/{id}/reject', [ReviewController::class, 'reject'])->name('reviews.reject');
-    Route::delete('reviews/{id}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::get('reviews', [ReviewsReviewController::class, 'index'])->name('reviews.index');
+    Route::post('reviews/{id}/approve', [ReviewsReviewController::class, 'approve'])->name('reviews.approve');
+    Route::post('reviews/{id}/reject', [ReviewsReviewController::class, 'reject'])->name('reviews.reject');
+    Route::delete('reviews/{id}', [ReviewsReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 
