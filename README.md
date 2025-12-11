@@ -100,33 +100,33 @@ Custom medical analysis form.
 ---
 ##  **Project Structure**
 ### **Backend**
-backend/
-├── app/
-│ ├── Models/
-│ ├── Http/
-│ │ ├── Controllers/
-│ │ ├── Middleware/
-│ │ └── Resources/
-│ ├── Services/
-├── routes/
-│ ├── api.php
-│ └── web.php
-├── database/
-└── public/
+-backend/
+-├── app/
+-│ ├── Models/
+-│ ├── Http/
+-│ │ ├── Controllers/
+-│ │ ├── Middleware/
+-│ │ └── Resources/
+-│ ├── Services/
+-├── routes/
+-│ ├── api.php
+-│ └── web.php
+-├── database/
+-└── public/
 
 
 ### **Frontend**
-frontend/
-├── src/app/
-│ ├── auth/
-│ ├── navbar/
-│ ├── patient-profile/
-│ ├── doctor-profile/
-│ ├── symptoms-checker/
-│ ├── services/
-│ └── appointments/
-├── assets/
-└── environments/
+-frontend/
+-├── src/app/
+-│ ├── auth/
+-│ ├── navbar/
+-│ ├── patient-profile/
+-│ ├── doctor-profile/
+-│ ├── symptoms-checker/
+-│ ├── services/
+-│ └── appointments/
+-├── assets/
+-└── environments/
 
 
 ---
@@ -134,48 +134,48 @@ frontend/
 ##  **Installation & Run (Backend)**
 
 ###  Clone project
-1️⃣```bash
-git clone https://github.com/AmiraMohamed56/ITI_Graduation_Project.git
-cd ITI_Graduation_Project/backend
+-1️⃣```bash
+-git clone https://github.com/AmiraMohamed56/ITI_Graduation_Project.git
+-cd ITI_Graduation_Project/backend
 ###  Installation & Run (backend)
-2️⃣ Install dependencies
-composer install
-3️⃣ Create .env file
-cp .env.example .env
-4️⃣ Generate key
-php artisan key:generate
-5️⃣ Run migrations
-php artisan migrate --seed
-6️⃣ Serve
-php artisan serve
+-2️⃣ Install dependencies
+-composer install
+-3️⃣ Create .env file
+-cp .env.example .env
+-4️⃣ Generate key
+-php artisan key:generate
+-5️⃣ Run migrations
+-php artisan migrate --seed
+-6️⃣ Serve
+-php artisan serve
 ### Installation & Run (Frontend)
-1️⃣ Navigate to frontend
-cd ../frontend
-2️⃣ Install packages
-npm install
-3️⃣ Run Angular dev server
-ng serve --open
+-1️⃣ Navigate to frontend
+-cd ../frontend
+-2️⃣ Install packages
+-npm install
+-3️⃣ Run Angular dev server
+-ng serve --open
 
 ### API Endpoints Overview
-(In short – a complete list is available within the project)
+-(In short – a complete list is available within the project)
 ### Auth
-POST /api/login
-POST /api/register
-POST /api/logout
+-POST /api/login
+-POST /api/register
+-POST /api/logout
 
 ### Patients
-GET /api/patients
-POST /api/patients
-PATCH /api/patients/{id}
-DELETE /api/patients/{id}
+-GET /api/patients
+-POST /api/patients
+-PATCH /api/patients/{id}
+-DELETE /api/patients/{id}
 
 ### AI
-POST /api/symptoms/analyze
+-POST /api/symptoms/analyze
 
 ### Appointments
-GET /api/appointments
-POST /api/appointments
-PATCH /api/appointments/{id}
+-GET /api/appointments
+-POST /api/appointments
+-PATCH /api/appointments/{id}
 
 ### Team Members
 - Ahmed Ibrahim
