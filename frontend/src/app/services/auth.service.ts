@@ -56,8 +56,8 @@ export class AuthService {
     return user ? JSON.parse(user) : null;
   }
 
-  isLoggedIn(): Observable<boolean> {
-    return this.loggedIn.asObservable();
+  isLoggedIn(): boolean{
+    return !!localStorage.getItem('token');
   }
 
   private hasToken(): boolean {

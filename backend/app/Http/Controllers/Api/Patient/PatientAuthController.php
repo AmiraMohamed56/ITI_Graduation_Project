@@ -16,10 +16,12 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Testing\Fluent\Concerns\Has;
 use Pest\Support\Str;
+use App\Notifications\NewPatientRegistered;
 
 class PatientAuthController extends Controller
 {
@@ -36,6 +38,8 @@ class PatientAuthController extends Controller
             'user_id' => $user->id,
         ]);
 
+        // Notify all admins about new patient registration
+        $this->notifyAdmins($patient);
         $token = $user->createToken('patient_token')->plainTextToken;
 
         return response()->json([
@@ -59,10 +63,10 @@ class PatientAuthController extends Controller
             ], 401);
         }
 
-        
+
         if (!$user->patient) {
             Patient::create(['user_id' => $user->id]);
-            $user->refresh(); 
+            $user->refresh();
         }
 
         $token = $user->createToken('patient_token')->plainTextToken;
@@ -188,5 +192,28 @@ class PatientAuthController extends Controller
             'status' => false,
             'message' => 'Invalid token or email',
         ], 400);
+    }
+
+    /**
+     * Notify all admins about new patient registration
+     */
+    private function notifyAdmins($patient)
+    {
+        try {
+            // Load user relationship
+            $patient->load('user');
+
+            // Get all admin users
+            $admins = User::where('role', 'admin')->get();
+
+            // Send notification to each admin
+            foreach ($admins as $admin) {
+                $admin->notify(new NewPatientRegistered($patient));
+            }
+
+            Log::info("Patient #{$patient->id} registered - Notifications sent to admins");
+        } catch (\Exception $e) {
+            Log::error("Failed to send admin notifications for patient #{$patient->id}: " . $e->getMessage());
+        }
     }
 }

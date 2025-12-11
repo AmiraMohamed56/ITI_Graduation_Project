@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Patient\PatientApiController;
 use App\Http\Controllers\Api\Doctor\DoctorController;
 use App\Http\Controllers\Api\Patient\PatientAuthController;
 use App\Http\Controllers\Api\Reviews\ReviewController;
+use App\Http\Controllers\Api\Patient\ContactController;
 // ============================== Booking Appointment start =======================================
 use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
 use App\Http\Controllers\Api\Booking\BookingAppointmentController;
@@ -96,3 +97,4 @@ Route::get('/user/payments', [PaymentsEndpointController::class, 'index']);
 Route::get('/user/appointments', [AppointmentsEndpointController::class, 'index']);
 // ========================= Appointment Endpoint End ==============================
 
+Route::post('/contacts', [ContactController::class, 'store']);

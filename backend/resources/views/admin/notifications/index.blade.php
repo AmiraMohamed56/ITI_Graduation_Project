@@ -18,7 +18,7 @@
   @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 relative" role="alert">
       <span class="block sm:inline">{{ session('success') }}</span>
-      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+      <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="this.parentElement.remove()">
         <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
           <title>Close</title>
           <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
@@ -114,6 +114,22 @@
                     </svg>
                     View Appointment Details
                   </a>
+                @elseif(isset($notification->data['patient_id']))
+                  <a href="{{ route('admin.patients.show', $notification->data['patient_id']) }}"
+                     class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:text-blue-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    View Patient Profile
+                  </a>
+                @elseif(isset($notification->data['doctor_id']))
+                  <a href="{{ route('admin.doctors.show', $notification->data['doctor_id']) }}"
+                     class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:text-blue-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    View Doctor Profile
+                  </a>
                 @endif
 
                 <!-- Time -->
@@ -184,7 +200,8 @@
     if (strpos($type, 'Appointment') !== false) return 'bg-blue-100 text-blue-600';
     if (strpos($type, 'Reminder') !== false) return 'bg-yellow-100 text-yellow-600';
     if (strpos($type, 'Payment') !== false) return 'bg-green-100 text-green-600';
-    if (strpos($type, 'Patient') !== false) return 'bg-purple-100 text-purple-600';
+    if (strpos($type, 'Patient') !== false || strpos($type, 'patient') !== false) return 'bg-purple-100 text-purple-600';
+    if (strpos($type, 'Schedule') !== false || strpos($type, 'schedule') !== false) return 'bg-indigo-100 text-indigo-600';
     return 'bg-gray-100 text-gray-600';
   }
 
@@ -198,8 +215,11 @@
     if (strpos($type, 'Payment') !== false) {
       return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
     }
-    if (strpos($type, 'Patient') !== false) {
+    if (strpos($type, 'Patient') !== false || strpos($type, 'patient') !== false) {
       return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>';
+    }
+    if (strpos($type, 'Schedule') !== false || strpos($type, 'schedule') !== false) {
+      return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
     }
     return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
   }

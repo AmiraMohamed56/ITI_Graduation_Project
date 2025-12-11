@@ -52,9 +52,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('error', 'You are not allowed to access the dashboard.');
-
-        //return redirect()->intended(route('dashboard', absolute: false));
+        return redirect('login')->withErrors([
+                'email' => 'You are not allowed to access the dashboard.'
+            ]);
     }
 
     /**
