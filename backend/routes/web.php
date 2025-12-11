@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\AdminContactController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -78,6 +79,9 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(f
 
     // admin specialties
     Route::resource('specialties', AdminSpecialtyController::class)->names('specialties');
+    // admin contacts
+    Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');
+    Route::post('/contacts/{id}/reply', [AdminContactController::class, 'reply'])->name('contacts.reply');
 
     // admin doctors control
     // Settings
