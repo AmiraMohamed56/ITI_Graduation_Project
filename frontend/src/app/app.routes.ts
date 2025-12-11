@@ -25,6 +25,7 @@ import { AllDoctors } from './LandinPage/all-doctors/all-doctors';
 import { DoctorsByCategoryComponent } from './LandinPage/doctors-by-categor/doctors-by-category.component';
 import { AllSpecialtiesComponent } from './specialities/all-specialties';
 import { SymptomsCheckerComponent } from './symptoms-checker/symptoms-checker.component';
+import { GuestGuard } from './auth/guest-guard';
 
 export const routes: Routes = [
   // Auth routes (login/register)
@@ -32,10 +33,10 @@ export const routes: Routes = [
     path: 'auth',
     component: AuthLayout,
     children: [
-      { path: 'login', component: Login },
-      { path: 'register', component: Register },
-      { path: 'forgot-password', component: ForgotPassword },
-      { path: 'reset-password', component: ResetPassword },
+      { path: 'login', component: Login, canActivate: [GuestGuard] },
+      { path: 'register', component: Register, canActivate: [GuestGuard] },
+      { path: 'forgot-password', component: ForgotPassword, canActivate: [GuestGuard] },
+      { path: 'reset-password', component: ResetPassword, canActivate: [GuestGuard] },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     ],
