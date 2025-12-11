@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PatientService {
 
-  private api = 'http://localhost:8000/api';
+  private api = 'http://backend.test/api';
 
   constructor(private http: HttpClient) {}
 

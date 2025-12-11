@@ -38,7 +38,7 @@ export class GoogleCallbackComponent {
       localStorage.setItem('user', JSON.stringify(user));
 
 
-      this.router.navigate(['/book-appointment']);
+      this.router.navigate(['/']);
     } else {
       this.router.navigate(['/login']);
     }
