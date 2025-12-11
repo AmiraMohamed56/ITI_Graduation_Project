@@ -7,8 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\DoctorSchedule;
 use App\Http\Requests\schedule\StoreScheduleRequest;
 use App\Http\Requests\schedule\UpdateScheduleRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
+use App\Notifications\DoctorScheduleCreated;
+use App\Notifications\DoctorScheduleUpdated;
 
 class ScheduleController extends Controller
 {
@@ -77,7 +80,12 @@ class ScheduleController extends Controller
             $data = $request->validated();
             $data['doctor_id'] = Auth::user()->doctor->id;
             $data['is_active'] = $request->has('is_active') ? 1 : 0;
-            DoctorSchedule::create($data);
+            $schedule = DoctorSchedule::create($data);
+            // Load relationships for notification
+            $schedule->load('doctor.user');
+
+            // Notify all admins about new schedule
+            $this->notifyAdmins($schedule, 'created');
 
             return redirect()->route('schedules.index')
                 ->with('success', 'Schedule created successfully');
@@ -118,6 +126,12 @@ class ScheduleController extends Controller
             $data['is_active'] = $request->has('is_active') ? 1 : 0;
             $schedule->update($data);
 
+            // Load relationships for notification
+            $schedule->load('doctor.user');
+
+            // Notify all admins about schedule update
+            $this->notifyAdmins($schedule, 'updated');
+
             return redirect()->route('schedules.index')
                 ->with('success', 'Schedule updated successfully');
         } catch (\Exception $e) {
@@ -144,6 +158,30 @@ class ScheduleController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to delete schedule: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Notify all admins about schedule changes
+     */
+    private function notifyAdmins($schedule, $action)
+    {
+        try {
+            // Get all admin users
+            $admins = User::where('role', 'admin')->get();
+
+            // Send appropriate notification to each admin
+            foreach ($admins as $admin) {
+                if ($action === 'created') {
+                    $admin->notify(new DoctorScheduleCreated($schedule));
+                } elseif ($action === 'updated') {
+                    $admin->notify(new DoctorScheduleUpdated($schedule));
+                }
+            }
+
+            Log::info("Schedule #{$schedule->id} {$action} - Notifications sent to admins");
+        } catch (\Exception $e) {
+            Log::error("Failed to send admin notifications for schedule #{$schedule->id}: " . $e->getMessage());
         }
     }
 }
