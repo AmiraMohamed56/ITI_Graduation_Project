@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Patient\PatientApiController;
 use App\Http\Controllers\Api\Doctor\DoctorController;
 use App\Http\Controllers\Api\Patient\PatientAuthController;
 use App\Http\Controllers\Api\Reviews\ReviewController;
+use App\Http\Controllers\Api\Patient\ContactController;
 // ============================== Booking Appointment start =======================================
 use App\Http\Controllers\Api\Booking\BookingDoctorScheduleController;
 use App\Http\Controllers\Api\Booking\BookingAppointmentController;
@@ -90,3 +91,5 @@ Route::middleware('auth:sanctum')->prefix('patient')->group(function () {
     Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
     Route::delete('/notifications/all', [NotificationsController::class, 'destroyAll']);
 });
+
+Route::post('/contacts', [ContactController::class, 'store']);
