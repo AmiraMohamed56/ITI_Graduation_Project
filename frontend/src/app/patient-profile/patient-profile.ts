@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PatientService } from '../services/patientProfile.service';
-
+import { PaymentsService } from '../services/payments.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-patient-profile',
   standalone: true,
@@ -11,6 +12,8 @@ import { PatientService } from '../services/patientProfile.service';
   styleUrl: './patient-profile.css',
 })
 export class PatientProfile implements OnInit {
+
+  payments: any[] = [];
 
   patientId : number = 0;
 
@@ -23,20 +26,24 @@ export class PatientProfile implements OnInit {
 
   activeTab: 'profile' | 'history' | 'appointments' = 'profile';
 
-  constructor(private patientService: PatientService) {}
+  constructor(private patientService: PatientService, private paymentService: PaymentsService, private router: Router) {}
 
   ngOnInit(): void {
   const userData = localStorage.getItem("user");
 
   if (userData) {
     const parsed = JSON.parse(userData);
-    this.patientId = parsed.id;  
+    this.patientId = parsed.id;
   }
 
   if (!this.patientId) {
     console.error("User not logged in!");
     return;
   }
+
+  this.paymentService.getPayments().subscribe((res: any) => {
+    this.payments = res.data;
+  });
 
   this.getPatientData();
 }
@@ -231,4 +238,15 @@ export class PatientProfile implements OnInit {
     if (!this.patient?.appointments) return null;
     return this.patient.appointments.find((app: any) => app.id === upcomingApp.id);
   }
+
+  isPaid(app_id: number) {
+    return this.payments.some(p => p.appointment_id == app_id);
+  }
+
+  goToPayment(app_id: number) {
+    this.router.navigate(['/payment-form'], {
+      queryParams: { appointment_id: app_id }
+    });
+  }
+
 }

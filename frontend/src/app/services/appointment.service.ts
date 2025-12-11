@@ -8,16 +8,16 @@ import { Observable } from "rxjs";
 
 export class AppointmentService {
 
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = 'http://backend.test/api';
 
   constructor(private http: HttpClient) {}
 
   getSpecialities(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/specialties`);
+    return this.http.get(`${this.apiUrl}/booking/specialties`);
   }
 
   getDoctors(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/doctors`);
+    return this.http.get(`${this.apiUrl}/booking/doctors`);
   }
 
   // Get appointments filtered by doctor ID and schedule date

@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\Booking\BookingAppointmentController;
 use App\Http\Controllers\Api\Booking\BookingDoctorController;
 use App\Http\Controllers\Api\AI\SymptomsController;
 use App\Http\Controllers\Api\NotificationsController;
+use App\Http\Controllers\Api\Payment\AppointmentsEndpointController;
+use App\Http\Controllers\Api\Payment\PaymentsEndpointController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,11 +37,11 @@ Route::options('{any}', function () {
 })->where('any', '.*');
 
 
-// Route::get('/specialties', function () {
-//     return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
-// });
+Route::get('/booking/specialties', function () {
+    return \App\Http\Resources\Booking\BookingSpecialtyResource::collection(\App\Models\Specialty::all());
+});
 
-Route::get('/doctors', [BookingDoctorController::class, 'index']);
+Route::get('/booking/doctors', [BookingDoctorController::class, 'index']);
 Route::get('/doctor_schedules', [BookingDoctorScheduleController::class, 'index']); // supports ?doctor_id=&day_of_week=
 Route::get('/appointments', [BookingAppointmentController::class, 'index']); // supports ?doctor_id=&schedule_date=
 Route::post('/appointments', [BookingAppointmentController::class, 'store']);
@@ -79,8 +81,6 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 // ========================= google login end ========================================
 
-
-
 // Patient Notification API Routes
 Route::middleware('auth:sanctum')->prefix('patient')->group(function () {
     Route::get('/notifications', [NotificationsController::class, 'index']);
@@ -90,3 +90,9 @@ Route::middleware('auth:sanctum')->prefix('patient')->group(function () {
     Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
     Route::delete('/notifications/all', [NotificationsController::class, 'destroyAll']);
 });
+
+// ========================= Appointment Endpoint Start ==============================
+Route::get('/user/payments', [PaymentsEndpointController::class, 'index']);
+Route::get('/user/appointments', [AppointmentsEndpointController::class, 'index']);
+// ========================= Appointment Endpoint End ==============================
+

@@ -7,6 +7,7 @@ import { ToastService } from '../services/toast.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { PaymentsService } from '../services/payments.service';
 
 @Component({
   selector: 'app-booking',
@@ -31,12 +32,17 @@ export class BookingComponent implements OnInit {
   appointmentType: string = 'consultation';
   notes: string = '';
 
+  existing_appointments_for_this_patient: any[] = [];
+  active_appointments_for_this_patient: any[] = [];
+  existing_appointment_at_this_time: any = null;
+
   constructor(
     private appointmentService: AppointmentService,
     private toastService: ToastService,
     private router: Router,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private appointments: PaymentsService
   ) {}
 
   ngOnInit(): void {
@@ -44,10 +50,12 @@ export class BookingComponent implements OnInit {
     this.loadSpecialities();
     this.getLoggedInUser();
 
+
+
     // Check if doctor id exists in the url
     this.route.queryParams.subscribe(params => {
       const doctorId = Number(params['doctorId']);
-      console.log('redirected doctor id: ', doctorId);
+      // console.log('redirected doctor id: ', doctorId);
       if(doctorId) {
         this.prefill(doctorId);
       }
@@ -55,13 +63,13 @@ export class BookingComponent implements OnInit {
   }
 
   prefill(doctorId: any) {
-    console.log('redirected doctor id form inside prefill: ', doctorId);
+    // console.log('redirected doctor id form inside prefill: ', doctorId);
     this.appointmentService.getDoctors().subscribe((res: any) => {
       const allDoctors = res.data;
 
       const doctor = allDoctors.find((d: any) => Number(d.id) == doctorId);
-      console.log(allDoctors);
-      console.log('doctor from prefill: ', doctor);
+      // console.log(allDoctors);
+      // console.log('doctor from prefill: ', doctor);
 
       if(!doctor) return;
 
@@ -83,12 +91,25 @@ export class BookingComponent implements OnInit {
     const loggedInUser = this.authService.getUser();
     if(loggedInUser && loggedInUser.id) {
       this.patient_id = Number(loggedInUser.id);
-      console.log('user id : ', this.patient_id);
+      // console.log('user id : ', this.patient_id);
+
+      this.appointments.getAppointments().subscribe((res: any) => {
+        this.existing_appointments_for_this_patient = res.data.filter((app: any) => app.patient_id == this.patient_id );
+        // this.active_appointments_for_this_patient = this.existing_appointments_for_this_patient.filter((app: any) => new Date(app.schedule_date) >= new Date());
+        this.existing_appointments_for_this_patient.forEach(a => {
+          if (a.status != 'cancelled' && a.status != 'completed') {
+            this.active_appointments_for_this_patient.push(a);
+          }
+        });
+      });
+
     } else {
       console.error('User is not logged in.');
       this.toastService.show('User not logged in. Please login first', 'error');
       this.router.navigate(['/auth/login']);
     }
+
+
   }
 
   loadSpecialities() {
@@ -104,7 +125,7 @@ export class BookingComponent implements OnInit {
   onSpecialityChange() {
     this.selectedSpecialityId = Number(this.selectedSpecialityId);
     this.loadDoctors();
-    console.log('specialty: ', this.selectedSpecialityId);
+    // console.log('specialty: ', this.selectedSpecialityId);
   }
 
   loadDoctors() {
@@ -152,8 +173,8 @@ export class BookingComponent implements OnInit {
 
 
   loadAvailableTimes() {
-    console.log('seelcted date', this.selectedDate);
-    console.log("selectedDoctroId: ", this.selectedDoctorId);
+    // console.log('seelcted date', this.selectedDate);
+    // console.log("selectedDoctroId: ", this.selectedDoctorId);
     if (!this.selectedDoctorId || !this.selectedDate) return;
 
     this.appointmentService
@@ -201,6 +222,7 @@ onTimeSelect(event: Event) {
 
     const target = event.target as HTMLSelectElement;
     this.selectedTime = target.value;
+    this.existing_appointment_at_this_time = this.active_appointments_for_this_patient.find((app: any) => app.schedule_time == this.selectedTime);
 
     const slot = this.availableTimes.find((t) => t.time === this.selectedTime);
     this.selectedScheduleId = slot ? slot.scheduleId : null;
@@ -256,29 +278,65 @@ onTimeSelect(event: Event) {
       type: this.appointmentType,
       notes: this.notes,
     };
-    console.log("final data", data);
+    // console.log("final data", data);
+    // console.log("active appointments: ", this.active_appointments_for_this_patient);
 
-    this.appointmentService.bookAppointment(data).subscribe(
-      (res) => {
-        this.toastService.show('Appointment booked successfully', 'success');
-        // redirect to the confirmation
 
-        // remove selected time from available times (load the new data from the backend)
+
+    this.appointmentService.getAppointments(this.selectedDoctorId, Number(this.selectedDate)).subscribe(res => {
+      const existing_appointments_for_this_day = res.data;
+      // console.log(existing_appointments_for_this_day);
+
+      // prevent duplicate booking for the same doctor and same day
+      if (existing_appointments_for_this_day.length > 0) {
+        this.toastService.show('You already have an appointment with this doctor on this day', 'error');
         this.selectedTime = '';
         this.loadAvailableTimes();
-      },
-      (err) => {
-        console.error(err);
-        this.toastService.show('Failed to book appointment', 'error');
+        return;
+      // prevent more thatn 3 upcomming appointments
+      } else if (this.active_appointments_for_this_patient.length >=3) {
+        this.toastService.show('You reached the maximum number of future appointments.', 'error');
+        this.selectedTime = '';
+        this.loadAvailableTimes();
+        return;
+      // prevent the same time with other doctor
+      } else if (this.active_appointments_for_this_patient.find((app: any) => app.schedule_time == this.selectedTime)) {
+        this.toastService.show('You have appointment with other doctor at this same time');
+        this.selectedTime = '';
+        this.loadAvailableTimes();
+        return;
+      } else {
+        this.appointmentService.bookAppointment(data).subscribe(
+          (res) => {
+            this.toastService.show('Appointment booked successfully', 'success');
+
+            const appointmentId = res.data.id;
+
+            // redirect to payment page with appointment id
+            this.router.navigate(['/payment-form'], {queryParams: {appointment_id: appointmentId}});
+
+            // remove selected time from available times (load the new data from the backend)
+            // this.selectedTime = '';
+            // this.loadAvailableTimes();
+          },
+          (err) => {
+            console.error(err);
+            this.toastService.show('Failed to book appointment', 'error');
+          }
+        );
       }
-    );
+    });
+
+
+
+
   }
 
 
-  goToPayment() {
-    // optionally do validation or save form data here
-    this.router.navigate(['/payment-form']);
-  }
+  // goToPayment() {
+  //   // optionally do validation or save form data here
+  //   this.router.navigate(['/payment-form']);
+  // }
 
   goToDoctor() {
     this.router.navigate([`/doctor/${this.selectedDoctor?.id}`])
