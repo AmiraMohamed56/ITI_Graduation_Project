@@ -7,7 +7,7 @@
                 <div class="w-8 h-8 bg-teal-500 dark:bg-teal-600 rounded flex items-center justify-center">
                     <i class="fas fa-heartbeat text-white"></i>
                 </div>
-                <span id="logo-text" class="text-lg font-bold dark:text-white">MediCare</span>
+                <span id="logo-text" class="text-lg font-bold dark:text-white">CareNova</span>
             </div>
             <button id="toggle-btn" class="w-8 h-8 bg-gray-800 dark:bg-gray-700 rounded flex items-center justify-center hover:bg-gray-700 dark:hover:bg-gray-600">
                 <i class="fas fa-bars text-sm dark:text-gray-300"></i>
@@ -38,11 +38,6 @@
                     class="flex items-center px-4 py-3 hover:bg-gray-800 dark:hover:bg-gray-700 text-gray-300 dark:text-gray-400 hover:text-white dark:hover:text-white">
                     <i class="fas fa-procedures w-5"></i>
                     <span class="menu-text ml-3">Patients</span>
-                </a>
-                <a href="{{ route('medical_records.index') }}"
-                    class="flex items-center px-4 py-3 hover:bg-gray-800 dark:hover:bg-gray-700 text-gray-300 dark:text-gray-400 hover:text-white dark:hover:text-white">
-                    <i class="fa-solid fa-star w-5"></i>
-                    <span class="menu-text ml-3">Reviews</span>
                 </a>
                 <a href="{{ route('doctor.notifications.index') }}"
                     class="flex items-center px-4 py-3 hover:bg-gray-800 dark:hover:bg-gray-700 text-gray-300 dark:text-gray-400 hover:text-white dark:hover:text-white">

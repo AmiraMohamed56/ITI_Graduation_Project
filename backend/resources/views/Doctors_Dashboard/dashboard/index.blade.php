@@ -288,7 +288,7 @@
                     <span class="font-semibold dark:text-white">{{ $doctor->years_experience }} years</span>
                 </div>
             </div>
-            <a href="#" class="block w-full bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 text-center py-2 rounded-lg font-medium hover:bg-blue-50 dark:hover:bg-gray-600 transition">
+            <a href="{{ route('profile_setting.index') }}" class="block w-full bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 text-center py-2 rounded-lg font-medium hover:bg-blue-50 dark:hover:bg-gray-600 transition">
                 View Full Profile
             </a>
         </div>

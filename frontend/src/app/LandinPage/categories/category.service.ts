@@ -9,7 +9,7 @@ import { Category } from './category.model';
 })
 export class CategoryService {
 
-  private apiUrl = 'http://backend.test/api/specialties';
+  private apiUrl = 'http://127.0.0.1:8000/api/specialties';
 
   // بيانات مؤقتة للاختبار
   private fallbackSpecialties: Category[] = [
