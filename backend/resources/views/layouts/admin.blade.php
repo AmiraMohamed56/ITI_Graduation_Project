@@ -53,6 +53,13 @@
 
             <nav class="mt-6">
                 <ul class="space-y-1">
+                    <x-admin.nav-item icon="dashboard" text="Dashboard" href="{{ route('admin.dashboard') }}"  />
+                    <x-admin.nav-item icon="group" text="Patients" href="{{ route('admin.patients.index') }}" pattern="admin.patients.*" />
+                    <x-admin.nav-item icon="person" text="Doctors" href="{{ route('admin.doctors.index') }}" pattern="admin.doctors.*" />
+                    <x-admin.nav-item icon="category" text="Specialties" href="{{ route('admin.specialties.index') }}" pattern="admin.specialties.*" />
+                    <x-admin.nav-item icon="calendar_today" text="Appointments" href="{{ route('admin.appointments.index') }}" pattern="admin.appointments.*" />
+                    <x-admin.nav-item icon="how_to_reg" text="Visits" href="{{ route('admin.visits.index') }}" pattern="admin.visits.*" />
+                    <x-admin.nav-item icon="payment" text="Payments" href="{{ route('admin.payments.index') }}" pattern="admin.payments.*" />
                     <x-admin.nav-item icon="dashboard" text="Dashboard" href="{{ route('admin.dashboard') }}" />
                     <x-admin.nav-item icon="group" text="Patients" href="{{ route('admin.patients.index') }}" />
                     <x-admin.nav-item icon="person" text="Doctors" href="{{ route('admin.doctors.index') }}" />

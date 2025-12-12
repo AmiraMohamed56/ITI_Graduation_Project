@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Edit Doctor')
-
+@section('breadcrumb')
+    <a href="{{ route('admin.doctors.index') }} " class="hover:underline">Doctors</a> / <a href="{{ route('admin.doctors.show', $doctor) }}" class="hover:underline"><span>{{ $doctor->user->name }}</span></a> / <span>edit</span>
+@endsection
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 py-10 px-6">
         <div class="max-w-7xl mx-auto">
