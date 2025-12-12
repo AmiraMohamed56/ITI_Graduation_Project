@@ -7,6 +7,7 @@ import { Register } from './auth/register/register';
 // Authenticated pages
 import { PatientProfile } from './patient-profile/patient-profile';
 import { PaymentComponent } from './payments/payment-form/payment-form';
+import { NotificationsComponent } from './notifications/notifications';
 
 // Layouts
 import { MainLayout } from './layouts/main-layout/main-layout';
@@ -59,6 +60,7 @@ export const routes: Routes = [
       { path: 'patient-profile', component: PatientProfile },
       { path: 'payment-form', component: PaymentComponent },
       { path: 'book-appointment', component: BookingComponent },
+      { path: 'notifications', component: NotificationsComponent },
       // { path: 'doctors/all', component: AllDoctors },
        { path: 'doctors', component: AllDoctors }, // This will handle ?specialty_id=X query params
       { path: 'doctors/all', redirectTo: 'doctors', pathMatch: 'full' }, // Redirect old route to new one

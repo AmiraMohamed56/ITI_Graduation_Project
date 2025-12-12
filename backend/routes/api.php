@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Booking\BookingAppointmentController;
 use App\Http\Controllers\Api\Booking\BookingDoctorController;
 use App\Http\Controllers\Api\AI\SymptomsController;
 use App\Http\Controllers\Api\NotificationsController;
+use App\Http\Controllers\Api\TestNotificationController;
 use App\Http\Controllers\Api\Payment\AppointmentsEndpointController;
 use App\Http\Controllers\Api\Payment\PaymentsEndpointController;
 
@@ -49,7 +50,32 @@ Route::post('/appointments', [BookingAppointmentController::class, 'store']);
 
 // =============================== Booking Appointment end =======================================
 
-// API Routes for Patient profile management
+// Auth API Routes for Patient
+Route::post('patient/register', [PatientAuthController::class, 'register']);
+Route::post('patient/login', [PatientAuthController::class, 'login']);
+Route::post('patient/send-verification-code', [PatientAuthController::class, 'sendVerificationCode']);
+Route::post('patient/verify-code', [PatientAuthController::class, 'verifyCode']);
+Route::post('patient/forgot-password', [PatientAuthController::class, 'forgotPassword']);
+Route::post('patient/reset-password', [PatientAuthController::class, 'resetPassword']);
+
+// Protected routes - defined before generic {id} routes to avoid conflicts
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('patient/logout', [PatientAuthController::class, 'logout']);
+
+    Route::prefix('patient')->group(function () {
+        Route::get('notifications', [NotificationsController::class, 'index']);
+        Route::get('notifications/unread-count', [NotificationsController::class, 'unreadCount']);
+        Route::post('notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+        Route::post('notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
+        Route::delete('notifications/{id}', [NotificationsController::class, 'destroy']);
+        Route::delete('notifications/all', [NotificationsController::class, 'destroyAll']);
+        
+        // Test notification endpoint
+        Route::post('notifications/test/create', [TestNotificationController::class, 'create']);
+    });
+});
+
+// API Routes for Patient profile management - defined after specific routes to avoid conflicts
 Route::get('patient', [PatientApiController::class, 'index']);
 Route::get('patient/{id}', [PatientApiController::class, 'show']);
 Route::post('patient/{id}/update-user', [PatientApiController::class, 'updateUser']);
@@ -60,28 +86,6 @@ Route::delete('patient/{id}/profile-pic', [PatientApiController::class, 'removeP
 Route::apiResource('doctors', DoctorController::class);
 Route::apiResource('reviews', ReviewController::class);
 
-
-// Auth API Routes for Patient
-Route::post('patient/register', [PatientAuthController::class, 'register']);
-Route::post('patient/login', [PatientAuthController::class, 'login']);
-Route::post('patient/send-verification-code', [PatientAuthController::class, 'sendVerificationCode']);
-Route::post('patient/verify-code', [PatientAuthController::class, 'verifyCode']);
-Route::post('patient/forgot-password', [PatientAuthController::class, 'forgotPassword']);
-Route::post('patient/reset-password', [PatientAuthController::class, 'resetPassword']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('patient/logout', [PatientAuthController::class, 'logout']);
-
-        Route::prefix('patient')->group(function () {
-        Route::get('notifications', [NotificationsController::class, 'index']);
-        Route::get('notifications/unread-count', [NotificationsController::class, 'unreadCount']);
-        Route::post('notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
-        Route::post('notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
-        Route::delete('notifications/{id}', [NotificationsController::class, 'destroy']);
-        Route::delete('notifications/all', [NotificationsController::class, 'destroyAll']);
-    });
-});
-
-
 Route::post('/ai/symptoms', [SymptomsController::class, 'analyze']);
 // ========================= google login start ========================================
 use App\Http\Controllers\Auth\GoogleController;
@@ -90,17 +94,6 @@ Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 // ========================= google login end ========================================
-
-
-// // Patient Notification API Routes
-//     Route::prefix('patient')->group(function () {
-//     Route::get('/notifications', [NotificationsController::class, 'index']);
-//     Route::get('/notifications/unread-count', [NotificationsController::class, 'unreadCount']);
-//     Route::post('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
-//     Route::post('/notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
-//     Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
-//     Route::delete('/notifications/all', [NotificationsController::class, 'destroyAll']);
-// });
 
 // ========================= Appointment Endpoint Start ==============================
 Route::get('/user/payments', [PaymentsEndpointController::class, 'index']);
