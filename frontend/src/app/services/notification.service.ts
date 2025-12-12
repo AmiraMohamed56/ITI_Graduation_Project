@@ -1,311 +1,157 @@
+// src/app/services/notification.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+import { BehaviorSubject, Observable, interval, of } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
-declare global {
-  interface Window {
-    Pusher: any;
-    Echo: any;
-  }
-}
 
 export interface Notification {
   id: string;
   type: string;
-  data: {
-    title: string;
-    message: string;
-    appointment_id?: number;
-    type: string;
-  };
+  data: any;
   read_at: string | null;
   created_at: string;
-  created_at_full: string;
+  created_at_full?: string;
+}
+
+export interface NotificationResponse {
+  status: boolean;
+  data: Notification[];
+  unread_count: number;
+  meta?: any;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/patient`;
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
   private unreadCountSubject = new BehaviorSubject<number>(0);
-  private echo: Echo<any> | null = null;
 
   public notifications$ = this.notificationsSubject.asObservable();
   public unreadCount$ = this.unreadCountSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Poll for new notifications every 30 seconds
+    interval(30000).subscribe(() => this.loadNotifications());
+  }
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token'); // FIXED: match AuthService
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
   }
 
-  /**
-   * Initialize Echo for real-time notifications
-   */
-  initializeEcho(userId: number): void {
-    if (this.echo) {
-      console.log('Echo already initialized');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No auth token found');
-      return;
-    }
-
-    try {
-      window.Pusher = Pusher;
-
-      this.echo = new Echo({
-        broadcaster: 'pusher',
-        key: environment.pusherKey,
-        cluster: environment.pusherCluster,
-        forceTLS: true,
-        authEndpoint: `${this.apiUrl.replace('/api', '')}/broadcasting/auth`,
-        auth: {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-        },
-      });
-
-      // Listen for notifications on the private channel
-      this.echo
-        .private(`App.Models.User.${userId}`)
-        .notification((notification: any) => {
-          console.log('New notification received:', notification);
-
-          // Add new notification to the list
-          const currentNotifications = this.notificationsSubject.value;
-          const newNotification: Notification = {
-            id: notification.id || Date.now().toString(),
-            type: notification.type,
-            data: notification,
-            read_at: null,
-            created_at: new Date().toISOString(),
-            created_at_full: new Date().toISOString()
-          };
-
-          this.notificationsSubject.next([newNotification, ...currentNotifications]);
-          this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
-
-          // Show browser notification
-          this.showBrowserNotification(notification.title || 'New Notification', notification.message);
-        });
-
-      console.log('Echo initialized successfully for user:', userId);
-    } catch (error) {
-      console.error('Error initializing Echo:', error);
-    }
-  }
-
-  /**
-   * Load notifications from API
-   */
   loadNotifications(): void {
-    const headers = this.getAuthHeaders();
-
-    this.http.get<any>(`${this.apiUrl}/patient/notifications`, { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('Notifications loaded:', response);
-
-          if (response.status && response.data) {
-            // Map API response to our Notification interface
-            const notifications: Notification[] = response.data.map((item: any) => ({
-              id: item.id,
-              type: item.type,
-              data: {
-                title: item.title,
-                message: item.message,
-                appointment_id: item.appointment_id,
-                type: item.type
-              },
-              read_at: item.read_at,
-              created_at: item.created_at,
-              created_at_full: item.created_at_full
-            }));
-
-            this.notificationsSubject.next(notifications);
-            this.unreadCountSubject.next(response.unread_count || 0);
-          }
-        },
-        error: (error) => {
-          console.error('Error loading notifications:', error);
-        }
-      });
-  }
-
-  /**
-   * Load unread count only
-   */
-  loadUnreadCount(): void {
-    const headers = this.getAuthHeaders();
-
-    this.http.get<any>(`${this.apiUrl}/patient/notifications/unread-count`, { headers })
-      .subscribe({
-        next: (response) => {
-          if (response.status) {
+    this.http.get<NotificationResponse>(`${this.apiUrl}/notifications`, { headers: this.getHeaders() })
+      .pipe(
+        tap(response => {
+          if (response?.status) {
+            this.notificationsSubject.next(response.data);
             this.unreadCountSubject.next(response.unread_count);
           }
-        },
-        error: (error) => {
-          console.error('Error loading unread count:', error);
-        }
-      });
+        }),
+        catchError(error => {
+          console.error('Error loading notifications:', error);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  /**
-   * Mark notification as read
-   */
+  getUnreadCount(): Observable<{ status: boolean; unread_count: number }> {
+    return this.http.get<{ status: boolean; unread_count: number }>(
+      `${this.apiUrl}/notifications/unread-count`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      tap(response => {
+        if (response?.status) this.unreadCountSubject.next(response.unread_count);
+      })
+    );
+  }
+
   markAsRead(notificationId: string): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.post(
-      `${this.apiUrl}/patient/notifications/${notificationId}/mark-as-read`,
-      {},
-      { headers }
-    ).pipe(
-      tap(() => {
-        console.log('Notification marked as read:', notificationId);
-      })
-    );
+    return this.http.post(`${this.apiUrl}/notifications/${notificationId}/mark-as-read`, {}, { headers: this.getHeaders() })
+      .pipe(
+        tap(() => {
+          const updated = this.notificationsSubject.value.map(n =>
+            n.id === notificationId ? { ...n, read_at: new Date().toISOString() } : n
+          );
+          this.notificationsSubject.next(updated);
+          this.updateUnreadCount();
+        })
+      );
   }
 
-  /**
-   * Mark all notifications as read
-   */
   markAllAsRead(): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.post(
-      `${this.apiUrl}/patient/notifications/mark-all-as-read`,
-      {},
-      { headers }
-    ).pipe(
-      tap(() => {
-        console.log('All notifications marked as read');
-      })
-    );
+    return this.http.post(`${this.apiUrl}/notifications/mark-all-as-read`, {}, { headers: this.getHeaders() })
+      .pipe(
+        tap(() => {
+          const updated = this.notificationsSubject.value.map(n => ({ ...n, read_at: new Date().toISOString() }));
+          this.notificationsSubject.next(updated);
+          this.unreadCountSubject.next(0);
+        })
+      );
   }
 
-  /**
-   * Delete a notification
-   */
   deleteNotification(notificationId: string): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.delete(
-      `${this.apiUrl}/patient/notifications/${notificationId}`,
-      { headers }
-    ).pipe(
-      tap(() => {
-        console.log('Notification deleted:', notificationId);
-      })
-    );
+    return this.http.delete(`${this.apiUrl}/notifications/${notificationId}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(() => {
+          const updated = this.notificationsSubject.value.filter(n => n.id !== notificationId);
+          this.notificationsSubject.next(updated);
+          this.updateUnreadCount();
+        })
+      );
   }
 
-  /**
-   * Delete all notifications
-   */
   deleteAllNotifications(): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.delete(
-      `${this.apiUrl}/patient/notifications/all`,
-      { headers }
-    ).pipe(
-      tap(() => {
-        console.log('All notifications deleted');
-      })
-    );
+    return this.http.delete(`${this.apiUrl}/notifications/all`, { headers: this.getHeaders() })
+      .pipe(
+        tap(() => {
+          this.notificationsSubject.next([]);
+          this.unreadCountSubject.next(0);
+        })
+      );
   }
 
-  /**
-   * Update local notification state to read
-   */
-  updateNotificationAsRead(notificationId: string): void {
-    const notifications = this.notificationsSubject.value.map(n =>
-      n.id === notificationId ? { ...n, read_at: new Date().toISOString() } : n
-    );
-    this.notificationsSubject.next(notifications);
-    this.unreadCountSubject.next(Math.max(0, this.unreadCountSubject.value - 1));
+  private updateUnreadCount(): void {
+    const unreadCount = this.notificationsSubject.value.filter(n => !n.read_at).length;
+    this.unreadCountSubject.next(unreadCount);
   }
 
-  /**
-   * Update all local notifications to read
-   */
-  updateAllNotificationsAsRead(): void {
-    const notifications = this.notificationsSubject.value.map(n => ({
-      ...n,
-      read_at: new Date().toISOString()
-    }));
-    this.notificationsSubject.next(notifications);
-    this.unreadCountSubject.next(0);
+  getNotificationIcon(type: string): string {
+    const typeMap: any = {
+      'appointment': 'fa-calendar-check',
+      'reminder': 'fa-clock',
+      'payment': 'fa-credit-card',
+      'general': 'fa-bell'
+    };
+    return typeMap[type] || 'fa-bell';
   }
 
-  /**
-   * Remove notification from local state
-   */
-  removeNotification(notificationId: string): void {
-    const notifications = this.notificationsSubject.value.filter(n => n.id !== notificationId);
-    const removedNotification = this.notificationsSubject.value.find(n => n.id === notificationId);
-
-    this.notificationsSubject.next(notifications);
-
-    if (removedNotification && !removedNotification.read_at) {
-      this.unreadCountSubject.next(Math.max(0, this.unreadCountSubject.value - 1));
-    }
+  getNotificationColor(type: string): string {
+    const colorMap: any = {
+      'appointment': 'text-blue-600',
+      'reminder': 'text-orange-600',
+      'payment': 'text-green-600',
+      'general': 'text-gray-600'
+    };
+    return colorMap[type] || 'text-gray-600';
   }
 
-  /**
-   * Clear all local notifications
-   */
-  clearAllNotifications(): void {
-    this.notificationsSubject.next([]);
-    this.unreadCountSubject.next(0);
-  }
+  formatNotificationTime(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  /**
-   * Request browser notification permission
-   */
-  requestNotificationPermission(): void {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission().then(permission => {
-        console.log('Notification permission:', permission);
-      });
-    }
-  }
-
-  /**
-   * Show browser notification
-   */
-  private showBrowserNotification(title: string, body: string): void {
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(title, {
-        body: body,
-        icon: '/assets/logo.png',
-        badge: '/assets/badge.png'
-      });
-    }
-  }
-
-  /**
-   * Disconnect Echo
-   */
-  disconnect(): void {
-    if (this.echo) {
-      this.echo.disconnect();
-      this.echo = null;
-      console.log('Echo disconnected');
-    }
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)} mins ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)} days ago`;
+    return date.toLocaleDateString();
   }
 }
