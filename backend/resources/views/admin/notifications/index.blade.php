@@ -1,4 +1,3 @@
-{{-- File: resources/views/admin/notifications/index.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Notifications')
@@ -106,7 +105,16 @@
                 <p class="text-gray-600 mt-1">{{ $notification->data['message'] ?? '' }}</p>
 
                 <!-- Additional Info -->
-                @if(isset($notification->data['appointment_id']))
+                @if(isset($notification->data['contact_id']))
+                  {{-- Contact Message Notification --}}
+                  <a href="{{ route('admin.contacts.index') }}"
+                     class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:text-blue-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    View Contact Message
+                  </a>
+                @elseif(isset($notification->data['appointment_id']))
                   <a href="{{ route('admin.appointments.show', $notification->data['appointment_id']) }}"
                      class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:text-blue-800">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,6 +137,14 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     View Doctor Profile
+                  </a>
+                @elseif(isset($notification->data['schedule_id']))
+                  <a href="{{ route('admin.doctors.show', $notification->data['doctor_id']) }}"
+                     class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:text-blue-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    View Doctor Schedule
                   </a>
                 @endif
 
@@ -202,6 +218,7 @@
     if (strpos($type, 'Payment') !== false) return 'bg-green-100 text-green-600';
     if (strpos($type, 'Patient') !== false || strpos($type, 'patient') !== false) return 'bg-purple-100 text-purple-600';
     if (strpos($type, 'Schedule') !== false || strpos($type, 'schedule') !== false) return 'bg-indigo-100 text-indigo-600';
+    if (strpos($type, 'Contact') !== false || strpos($type, 'contact') !== false) return 'bg-orange-100 text-orange-600';
     return 'bg-gray-100 text-gray-600';
   }
 
@@ -220,6 +237,9 @@
     }
     if (strpos($type, 'Schedule') !== false || strpos($type, 'schedule') !== false) {
       return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+    }
+    if (strpos($type, 'Contact') !== false || strpos($type, 'contact') !== false) {
+      return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>';
     }
     return '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
   }

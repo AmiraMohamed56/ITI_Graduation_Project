@@ -1,18 +1,28 @@
+// import { NotificationDropdownComponent } from './../../notification-dropdown/notification-dropdown';
+// import { CommonModule, NgFor, NgIf } from '@angular/common';
+// import { Component, HostListener, OnInit } from '@angular/core';
+// import { Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+// import { AuthService } from '../../services/auth.service';
+// import { PatientService } from '../../services/patientProfile.service';
+
 import { NgFor, NgIf } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PatientService } from '../../services/patientProfile.service';
+import { NotificationService, Notification } from '../../services/notification.service';
+import { NotificationDropdownComponent } from '../../notification-dropdown/notification-dropdown';
+import { Subscription } from 'rxjs';
 
+// Add to imports array
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgIf, NgFor],
+  imports: [RouterLink, RouterLinkActive, NgIf, NgFor, NotificationDropdownComponent],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css'],
 })
 export class NavbarComponent implements OnInit {
-  showNotifications = false;
   showProfile = false;
   showMobileMenu = false;
 
@@ -22,13 +32,16 @@ export class NavbarComponent implements OnInit {
   patientProfilePic: string = '/default_profile.jpg';
   userInitials: string = 'U';
 
-  constructor(private auth: AuthService, private router: Router, private patientService: PatientService) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private patientService: PatientService,
+  ) {}
 
   ngOnInit(): void {
     this.loadUserState();
 
     this.router.events.subscribe(() => {
-      this.showNotifications = false;
       this.showProfile = false;
       this.showMobileMenu = false;
     });
@@ -39,18 +52,18 @@ export class NavbarComponent implements OnInit {
     this.isLoggedIn = !!savedUser;
     this.user = savedUser ? JSON.parse(savedUser) : null;
 
-    if(this.isLoggedIn && this.user) {
+    if (this.isLoggedIn && this.user) {
       // تأكد من استخراج البيانات من الهيكل الصحيح
       this.processUserData();
 
       // جلب بيانات المريض إذا كان موجودًا
-      if(this.user.id) {
+      if (this.user.id) {
         this.patientService.getPatientById(this.user.id).subscribe(
           (res: any) => {
-            if(res && res.data) {
+            if (res && res.data) {
               this.patient = res.data;
               // تحديث الصورة إذا كانت موجودة
-              if(this.patient?.profile_pic) {
+              if (this.patient?.profile_pic) {
                 this.patientProfilePic = this.patient.profile_pic;
               }
               // تحديث الحروف الأولى
@@ -67,11 +80,11 @@ export class NavbarComponent implements OnInit {
 
   private processUserData() {
     // معالجة البيانات بناءً على الهيكل المزدوج
-    if(this.user && this.user.user) {
+    if (this.user && this.user.user) {
       // إذا كان الهيكل: {user: {id: xxx, name: xxx, email: xxx}}
       // نستخدم البيانات الداخلية
       this.userInitials = this.getInitials(this.user.user.name);
-    } else if(this.user && this.user.name) {
+    } else if (this.user && this.user.name) {
       // إذا كان الهيكل: {id: xxx, name: xxx, email: xxx}
       this.userInitials = this.getInitials(this.user.name);
     } else {
@@ -80,20 +93,20 @@ export class NavbarComponent implements OnInit {
   }
 
   private updateUserInitials() {
-    if(this.patient && this.patient.user && this.patient.user.name) {
+    if (this.patient && this.patient.user && this.patient.user.name) {
       this.userInitials = this.getInitials(this.patient.user.name);
-    } else if(this.user && this.user.user && this.user.user.name) {
+    } else if (this.user && this.user.user && this.user.user.name) {
       this.userInitials = this.getInitials(this.user.user.name);
-    } else if(this.user && this.user.name) {
+    } else if (this.user && this.user.name) {
       this.userInitials = this.getInitials(this.user.name);
     }
   }
 
   getInitials(name: string): string {
-    if(!name || name.trim() === '') return 'U';
+    if (!name || name.trim() === '') return 'U';
 
     const names = name.trim().split(' ');
-    if(names.length === 1) {
+    if (names.length === 1) {
       return names[0].charAt(0).toUpperCase();
     } else {
       return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
@@ -101,42 +114,38 @@ export class NavbarComponent implements OnInit {
   }
 
   getUserName(): string {
-    if(this.patient && this.patient.user && this.patient.user.name) {
+    if (this.patient && this.patient.user && this.patient.user.name) {
       return this.patient.user.name;
-    } else if(this.user && this.user.user && this.user.user.name) {
+    } else if (this.user && this.user.user && this.user.user.name) {
       return this.user.user.name;
-    } else if(this.user && this.user.name) {
+    } else if (this.user && this.user.name) {
       return this.user.name;
     }
     return 'User';
   }
 
   getUserEmail(): string {
-    if(this.patient && this.patient.user && this.patient.user.email) {
+    if (this.patient && this.patient.user && this.patient.user.email) {
       return this.patient.user.email;
-    } else if(this.user && this.user.user && this.user.user.email) {
+    } else if (this.user && this.user.user && this.user.user.email) {
       return this.user.user.email;
-    } else if(this.user && this.user.email) {
+    } else if (this.user && this.user.email) {
       return this.user.email;
     }
     return '';
   }
 
   getUserRole(): string {
-    if(this.user && this.user.role) {
+    if (this.user && this.user.role) {
       return this.user.role;
     }
     return 'Patient';
   }
 
-  toggleNotifications(): void {
-    this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) this.showProfile = false;
-  }
+
 
   toggleProfile(): void {
     this.showProfile = !this.showProfile;
-    if (this.showProfile) this.showNotifications = false;
   }
 
   toggleMobileMenu(): void {
@@ -173,17 +182,6 @@ export class NavbarComponent implements OnInit {
     ) {
       this.showProfile = false;
     }
-
-    // Notifications dropdown
-    const notifDropdown = document.querySelector('.notifications-dropdown');
-    if (
-      this.showNotifications &&
-      notifDropdown &&
-      !notifDropdown.contains(target) &&
-      !target.closest('.notifications-button')
-    ) {
-      this.showNotifications = false;
-    }
   }
 
   // دالة للتعامل مع أخطاء تحميل الصور
@@ -191,7 +189,7 @@ export class NavbarComponent implements OnInit {
     event.target.style.display = 'none';
     const parent = event.target.parentElement;
     const fallback = parent.querySelector('.avatar-fallback');
-    if(fallback) {
+    if (fallback) {
       fallback.style.display = 'flex';
     }
   }

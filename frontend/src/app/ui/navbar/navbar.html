@@ -36,42 +36,7 @@
       <!-- RIGHT: Actions -->
       <div class="flex items-center space-x-4">
         <!-- Notifications -->
-        <div class="relative">
-          <button (click)="toggleNotifications()"
-            class="relative p-3 rounded-full hover:bg-blue-50 transition-all duration-300 group notifications-button">
-            <i class="fas fa-bell text-gray-600 group-hover:text-blue-600 text-xl transition-colors"></i>
-            <span
-              class="notification-badge absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full font-bold">
-              3
-            </span>
-          </button>
-
-          <div *ngIf="showNotifications" class="dropdown-menu absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden notifications-dropdown">
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex justify-between items-center">
-              <h3 class="font-bold text-lg">Notifications</h3>
-              <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">3 New</span>
-            </div>
-            <div class="max-h-96 overflow-y-auto">
-              <!-- Example notifications -->
-              <div class="p-4 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100">
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-calendar text-blue-600"></i>
-                  </div>
-                  <div class="flex-1">
-                    <p class="text-sm font-semibold text-gray-900">Appointment Reminder</p>
-                    <p class="text-xs text-gray-600 mt-1">Your appointment is tomorrow at 2:00 PM</p>
-                    <span class="text-xs text-gray-400 mt-2 block">2 hours ago</span>
-                  </div>
-                </div>
-              </div>
-              <!-- Add more notifications as needed -->
-            </div>
-            <div class="p-3 bg-gray-50 text-center border-t border-gray-100">
-              <a routerLink="/notifications" class="text-sm text-blue-600 font-semibold hover:text-blue-700">View All</a>
-            </div>
-          </div>
-        </div>
+         <app-notification-dropdown *ngIf="isLoggedIn"></app-notification-dropdown>
 
         <!-- Profile / Login -->
         <div class="relative">
@@ -128,9 +93,6 @@
               <div class="p-2">
                 <a routerLink="/patient-profile" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
                   <i class="fas fa-user text-gray-600 w-5"></i> My Profile
-                </a>
-                <a routerLink="/settings" class="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors">
-                  <i class="fas fa-cog text-gray-600 w-5"></i> Settings
                 </a>
                 <hr class="my-2">
                 <a (click)="logout()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 rounded-xl transition-colors text-red-600 cursor-pointer">
