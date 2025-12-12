@@ -44,7 +44,7 @@
                     <i class="fa-solid fa-star w-5"></i>
                     <span class="menu-text ml-3">Reviews</span>
                 </a>
-                <a href=""
+                <a href="{{ route('doctor.notifications.index') }}"
                     class="flex items-center px-4 py-3 hover:bg-gray-800 dark:hover:bg-gray-700 text-gray-300 dark:text-gray-400 hover:text-white dark:hover:text-white">
                     <i class="fas fa-bell w-5"></i>
                     <span class="menu-text ml-3">Notifications</span>
