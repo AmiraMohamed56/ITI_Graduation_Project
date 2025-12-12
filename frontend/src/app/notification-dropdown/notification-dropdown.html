@@ -1,114 +1,116 @@
-<div class="notification-dropdown relative">
-  <!-- Bell Icon Button -->
-  <button
-    (click)="toggleDropdown()"
-    class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-colors"
-    aria-label="Notifications">
-
-    <!-- Bell Icon -->
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-    </svg>
-
-    <!-- Unread Badge -->
-    <span
-      *ngIf="unreadCount > 0"
-      class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full transform translate-x-1/2 -translate-y-1/2">
-      {{ unreadCount > 99 ? '99+' : unreadCount }}
-    </span>
-  </button>
-
-  <!-- Dropdown Menu -->
-  <div
-    *ngIf="isOpen"
-    class="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[600px] flex flex-col">
-
-    <!-- Header -->
-    <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-lg">
-      <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
+ <div class="relative">
+      <!-- Notification Bell Button -->
       <button
-        *ngIf="unreadCount > 0"
-        (click)="markAllAsRead()"
-        class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
-        Mark all as read
+        (click)="toggleDropdown()"
+        class="relative p-2 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500 transition-colors notifications-button"
+        aria-label="Notifications">
+        <i class="fas fa-bell text-xl"></i>
+
+        <!-- Unread Badge -->
+        <span
+          *ngIf="unreadCount > 0"
+          class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full notification-badge">
+          {{ unreadCount > 99 ? '99+' : unreadCount }}
+        </span>
       </button>
-    </div>
 
-    <!-- Notifications List -->
-    <div class="overflow-y-auto flex-1">
-      <!-- Loading State -->
-      <div *ngIf="isLoading" class="p-4 text-center">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
+      <!-- Dropdown Menu -->
+      <div
+        *ngIf="isOpen"
+        class="absolute right-0 mt-3 w-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden notifications-dropdown z-50">
 
-      <!-- Empty State -->
-      <div *ngIf="!isLoading && notifications.length === 0"
-        class="p-8 text-center text-gray-500">
-        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-        <p class="text-lg font-medium">No notifications</p>
-        <p class="text-sm mt-1">You're all caught up!</p>
-      </div>
-
-      <!-- Notification Items -->
-      <div *ngFor="let notification of notifications"
-        (click)="markAsRead(notification, $event)"
-        class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
-        [class.bg-blue-50]="!notification.read_at">
-
-        <div class="flex items-start gap-3">
-          <!-- Icon -->
-          <div class="flex-shrink-0 text-2xl">
-            {{ getNotificationIcon(notification.data.type) }}
-          </div>
-
-          <!-- Content -->
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-gray-900 mb-1">
-              {{ notification.data.title }}
-            </p>
-            <p class="text-sm text-gray-600 line-clamp-2">
-              {{ notification.data.message }}
-            </p>
-            <p class="text-xs text-gray-400 mt-1">
-              {{ getTimeAgo(notification.created_at) }}
-            </p>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex-shrink-0 flex items-center gap-2">
-            <!-- Unread Indicator -->
-            <span
-              *ngIf="!notification.read_at"
-              class="w-2 h-2 bg-blue-600 rounded-full">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-bell text-white"></i>
+            <h3 class="text-white font-semibold">Notifications</h3>
+            <span *ngIf="unreadCount > 0" class="px-2 py-0.5 text-xs bg-white/20 text-white rounded-full">
+              {{ unreadCount }}
             </span>
+          </div>
 
-            <!-- Delete Button -->
+          <button
+            *ngIf="notifications.length > 0"
+            (click)="markAllAsRead()"
+            class="text-xs text-white/90 hover:text-white transition-colors">
+            Mark all read
+          </button>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="max-h-96 overflow-y-auto">
+          <!-- No Notifications -->
+          <div *ngIf="notifications.length === 0" class="px-4 py-8 text-center">
+            <i class="fas fa-bell-slash text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">No notifications yet</p>
+          </div>
+
+          <!-- Notification Items -->
+          <div *ngFor="let notification of notifications"
+               class="border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <div
+              (click)="handleNotificationClick(notification)"
+              class="px-4 py-3 cursor-pointer"
+              [class.bg-blue-50]="!notification.read_at"
+              [class.dark:bg-blue-900/20]="!notification.read_at">
+
+              <div class="flex gap-3">
+                <!-- Icon -->
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-10 h-10 rounded-full flex items-center justify-center"
+                    [ngClass]="getIconBackground(getNotificationType(notification.type))">
+                    <i
+                      class="fas {{ getNotificationIcon(getNotificationType(notification.type)) }}"
+                      [ngClass]="getIconColor(getNotificationType(notification.type))"></i>
+                  </div>
+                </div>
+
+                <!-- Content -->
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                    {{ notification.data?.title || 'Notification' }}
+                  </p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-1">
+                    {{ notification.data?.message }}
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-500 dark:text-gray-500">
+                      {{ formatTime(notification.created_at) }}
+                    </span>
+                    <button
+                      (click)="deleteNotification($event, notification.id)"
+                      class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Unread Indicator -->
+                <div *ngIf="!notification.read_at" class="flex-shrink-0">
+                  <div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div *ngIf="notifications.length > 0"
+             class="px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between">
             <button
-              (click)="deleteNotification(notification.id, $event)"
-              class="text-gray-400 hover:text-red-600 transition-colors p-1"
-              aria-label="Delete notification">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              (click)="deleteAll()"
+              class="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium">
+              <i class="fas fa-trash-alt mr-1"></i> Clear All
             </button>
+            <a
+              routerLink="/notifications"
+              (click)="closeDropdown()"
+              class="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+              View All <i class="fas fa-arrow-right ml-1"></i>
+            </a>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Footer -->
-    <div class="px-4 py-3 border-t border-gray-200 bg-gray-50 rounded-b-lg">
-      <a
-        routerLink="/notifications"
-        (click)="isOpen = false"
-        class="block text-center text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
-        View all notifications
-      </a>
-    </div>
-  </div>
-</div>

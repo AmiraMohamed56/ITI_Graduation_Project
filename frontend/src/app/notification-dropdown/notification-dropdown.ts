@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { NotificationService, Notification } from '../services/notification.service';
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-notification-dropdown',
@@ -12,199 +14,134 @@ import { Subscription } from 'rxjs';
   templateUrl: './notification-dropdown.html',
   styleUrls: ['./notification-dropdown.css']
 })
+
 export class NotificationDropdownComponent implements OnInit, OnDestroy {
   isOpen = false;
   notifications: Notification[] = [];
   unreadCount = 0;
-  isLoading = false;
+  private destroy$ = new Subject<void>();
 
-  private subscriptions = new Subscription();
-
-  constructor(
-    private notificationService: NotificationService,
-    private authService: AuthService
-  ) {}
+  constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
-    console.log('NotificationDropdown initialized');
-
-    // Get user from localStorage and initialize
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      try {
-        const userData = JSON.parse(userStr);
-        console.log('User data:', userData);
-
-        // Handle different user data structures
-        let userId: number | null = null;
-
-        if (userData.user && userData.user.id) {
-          // Structure: {user: {id: xxx}}
-          userId = userData.user.id;
-        } else if (userData.id) {
-          // Structure: {id: xxx}
-          userId = userData.id;
-        }
-
-        console.log('Extracted user ID:', userId);
-
-        if (userId) {
-          // Initialize Echo for real-time notifications
-          this.notificationService.initializeEcho(userId);
-
-          // Request browser notification permission
-          this.notificationService.requestNotificationPermission();
-        } else {
-          console.error('Could not extract user ID from:', userData);
-        }
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-      }
-    } else {
-      console.warn('No user data found in localStorage');
-    }
+    // Load notifications on init
+    this.notificationService.loadNotifications();
 
     // Subscribe to notifications
-    this.subscriptions.add(
-      this.notificationService.notifications$.subscribe(notifications => {
-        console.log('Notifications updated:', notifications);
+    this.notificationService.notifications$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(notifications => {
         this.notifications = notifications;
-      })
-    );
+      });
 
     // Subscribe to unread count
-    this.subscriptions.add(
-      this.notificationService.unreadCount$.subscribe(count => {
-        console.log('Unread count updated:', count);
+    this.notificationService.unreadCount$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(count => {
         this.unreadCount = count;
-      })
-    );
-
-    // Load initial notifications
-    this.loadNotifications();
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-    this.notificationService.disconnect();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
-    if (this.isOpen && this.notifications.length === 0) {
-      this.loadNotifications();
-    }
   }
 
-  loadNotifications(): void {
-    console.log('Loading notifications...');
-    this.isLoading = true;
-
-    // Load notifications from API
-    this.notificationService.loadNotifications();
-
-    // Also load unread count
-    this.notificationService.loadUnreadCount();
-
-    // Small delay to show loading state
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
+  closeDropdown(): void {
+    this.isOpen = false;
   }
 
-  markAsRead(notification: Notification, event: Event): void {
-    event.stopPropagation();
-
-    if (notification.read_at) {
-      console.log('Notification already read:', notification.id);
-      return;
+  handleNotificationClick(notification: Notification): void {
+    // Mark as read
+    if (!notification.read_at) {
+      this.notificationService.markAsRead(notification.id).subscribe();
     }
 
-    console.log('Marking notification as read:', notification.id);
-    this.notificationService.markAsRead(notification.id).subscribe({
-      next: () => {
-        this.notificationService.updateNotificationAsRead(notification.id);
-        console.log('Notification marked as read successfully');
-      },
-      error: (error) => {
-        console.error('Error marking notification as read:', error);
-        alert('Failed to mark notification as read');
-      }
-    });
+    // Navigate based on notification type
+    if (notification.data?.appointment_id) {
+      // Navigate to appointment details
+      // this.router.navigate(['/appointments', notification.data.appointment_id]);
+    }
+
+    this.closeDropdown();
   }
 
   markAllAsRead(): void {
-    console.log('Marking all notifications as read');
     this.notificationService.markAllAsRead().subscribe({
       next: () => {
-        this.notificationService.updateAllNotificationsAsRead();
-        console.log('All notifications marked as read successfully');
+        console.log('All notifications marked as read');
       },
       error: (error) => {
-        console.error('Error marking all as read:', error);
-        alert('Failed to mark all notifications as read');
+        console.error('Error marking notifications as read:', error);
       }
     });
   }
 
-  deleteNotification(id: string, event: Event): void {
+  deleteNotification(event: Event, notificationId: string): void {
     event.stopPropagation();
 
-    if (!confirm('Are you sure you want to delete this notification?')) {
-      return;
-    }
-
-    console.log('Deleting notification:', id);
-    this.notificationService.deleteNotification(id).subscribe({
+    this.notificationService.deleteNotification(notificationId).subscribe({
       next: () => {
-        this.notificationService.removeNotification(id);
-        console.log('Notification deleted successfully');
+        console.log('Notification deleted');
       },
       error: (error) => {
         console.error('Error deleting notification:', error);
-        alert('Failed to delete notification');
       }
     });
   }
 
-  getNotificationIcon(type: string): string {
-    switch (type) {
-      case 'appointment':
-        return '📅';
-      case 'reminder':
-        return '⏰';
-      case 'payment':
-        return '💳';
-      case 'schedule':
-        return '📆';
-      case 'patient':
-        return '👤';
-      default:
-        return '🔔';
+  deleteAll(): void {
+    if (confirm('Are you sure you want to delete all notifications?')) {
+      this.notificationService.deleteAllNotifications().subscribe({
+        next: () => {
+          console.log('All notifications deleted');
+          this.closeDropdown();
+        },
+        error: (error) => {
+          console.error('Error deleting notifications:', error);
+        }
+      });
     }
   }
 
-  getTimeAgo(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  getNotificationType(type: string): string {
+    if (type.includes('Appointment')) return 'appointment';
+    if (type.includes('Reminder')) return 'reminder';
+    if (type.includes('Payment')) return 'payment';
+    return 'general';
+  }
 
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-    });
+  getNotificationIcon(type: string): string {
+    return this.notificationService.getNotificationIcon(type);
+  }
+
+  getIconColor(type: string): string {
+    return this.notificationService.getNotificationColor(type);
+  }
+
+  getIconBackground(type: string): string {
+    const bgMap: { [key: string]: string } = {
+      'appointment': 'bg-blue-100 dark:bg-blue-900/30',
+      'reminder': 'bg-orange-100 dark:bg-orange-900/30',
+      'payment': 'bg-green-100 dark:bg-green-900/30',
+      'general': 'bg-gray-100 dark:bg-gray-700'
+    };
+    return bgMap[type] || 'bg-gray-100';
+  }
+
+  formatTime(dateString: string): string {
+    return this.notificationService.formatNotificationTime(dateString);
   }
 
   @HostListener('document:click', ['$event'])
-  onClickOutside(event: Event): void {
+  onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (!target.closest('.notification-dropdown')) {
-      this.isOpen = false;
+    if (!target.closest('.relative')) {
+      this.closeDropdown();
     }
   }
 }

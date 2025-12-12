@@ -42,3 +42,57 @@
 .notification-dropdown > div:last-child {
   animation: slideDown 0.2s ease-out;
 }
+
+ .notification-badge {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+
+    .notifications-dropdown {
+      animation: slideDown 0.2s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .overflow-y-auto::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 3px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+      background: #a0aec0;
+    }
+
+    @keyframes bellRing {
+      0% { transform: rotate(0deg); }
+      10% { transform: rotate(15deg); }
+      20% { transform: rotate(-15deg); }
+      30% { transform: rotate(10deg); }
+      40% { transform: rotate(-10deg); }
+      50% { transform: rotate(0deg); }
+    }
+
+    .notifications-button:hover .fa-bell {
+      animation: bellRing 0.5s ease-in-out;
+    }
