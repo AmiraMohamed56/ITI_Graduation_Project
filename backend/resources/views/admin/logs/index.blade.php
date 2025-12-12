@@ -87,6 +87,7 @@
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">User</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Action</th>
+                        <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Description</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Model ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">IP Address</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Date</th>
@@ -148,6 +149,9 @@
                             </span>
                         </td>
 
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            {{ $log->description ?? '-' }}
+                        </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                             #{{ $log->model_id }}

@@ -117,37 +117,39 @@ export class PatientProfile implements OnInit {
   }
 
   /** Save all changes */
-  saveChanges(editForm: any) {
-    if (editForm.invalid) {
-      Object.values(editForm.controls).forEach((ctrl: any) => ctrl.markAsTouched());
-      return;
-    }
-
-    // User update
-    const formData = new FormData();
-    if (this.editUser.name) formData.append("name", this.editUser.name);
-    if (this.editUser.email) formData.append("email", this.editUser.email);
-    if (this.editUser.phone) formData.append("phone", this.editUser.phone);
-    if (this.editUser.profile_pic instanceof File)
-      formData.append("profile_pic", this.editUser.profile_pic);
-
-    this.patientService.updateUser(this.patientId, formData).subscribe({
-      next: () => {
-        // Patient update
-        const patientInfo = {
-          blood_type: this.editPatient.blood_type,
-          chronic_diseases: this.editPatient.chronic_diseases,
-        };
-
-        this.patientService.updatePatientInfo(this.patientId, patientInfo).subscribe({
-          next: () => {
-            this.closeModal();
-            this.getPatientData();
-          }
-        });
-      }
-    });
+saveChanges(editForm: any) {
+  if (editForm.invalid) {
+    Object.values(editForm.controls).forEach((ctrl: any) => ctrl.markAsTouched());
+    return;
   }
+
+  // User update
+  const formData = new FormData();
+  if (this.editUser.name) formData.append("name", this.editUser.name);
+  if (this.editUser.email) formData.append("email", this.editUser.email);
+  if (this.editUser.phone) formData.append("phone", this.editUser.phone);
+  if (this.editUser.profile_pic instanceof File)
+    formData.append("profile_pic", this.editUser.profile_pic);
+
+  this.patientService.updateUser(this.patientId, formData).subscribe({
+    next: () => {
+      // Patient update
+      const patientInfo = {
+        blood_type: this.editPatient.blood_type,
+        chronic_diseases: this.editPatient.chronic_diseases || ''  // تحفظ حتى لو فاضية
+      };
+
+      this.patientService.updatePatientInfo(this.patientId, patientInfo).subscribe({
+        next: () => {
+          this.closeModal();
+          this.getPatientData();
+        }
+      });
+    }
+  });
+}
+
+
 
   /** Validators */
   getNameError(ctrl: any) {
