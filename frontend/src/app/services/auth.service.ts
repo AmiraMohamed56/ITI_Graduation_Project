@@ -8,7 +8,7 @@ import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 })
 export class AuthService {
 
-  private baseUrl = 'http://backend.test/api/patient';
+  private baseUrl = 'http://127.0.0.1:8000/api/patient';
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(private http: HttpClient, private router: Router) { }
