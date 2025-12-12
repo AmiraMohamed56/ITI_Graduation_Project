@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PayPalController extends Controller
 {
@@ -15,97 +16,127 @@ class PayPalController extends Controller
      */
     public function createPayment(Request $request)
     {
-        $appointment = Appointment::findOrFail($request->appointment_id);
+        try {
+            $appointment = Appointment::findOrFail($request->appointment_id);
 
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $provider->getAccessToken();
+            // Initialize PayPal provider
+            $provider = new PayPalClient;
+            $provider->setApiCredentials(config('paypal'));
+            $provider->getAccessToken();
 
-        $order = $provider->createOrder([
-            "intent" => "CAPTURE",
-            "application_context" => [
-                "return_url" => route('paypal.success'),
-                "cancel_url" => route('paypal.cancel'),
-            ],
-            "purchase_units" => [
-                [
-                    "reference_id" => "appointment_" . $appointment->id,
-                    "amount" => [
-                        "currency_code" => config('paypal.currency'),
-                        "value" => $request->amount
-                    ],
-                    "description" => "Payment for Appointment #{$appointment->id}"
+            // Create order
+            $order = $provider->createOrder([
+                "intent" => "CAPTURE",
+                "application_context" => [
+                    "return_url" => route('paypal.success'),
+                    "cancel_url" => route('paypal.cancel'),
+                ],
+                "purchase_units" => [
+                    [
+                        "reference_id" => "appointment_" . $appointment->id,
+                        "amount" => [
+                            "currency_code" => config('paypal.currency', 'USD'),
+                            "value" => number_format($request->amount, 2, '.', '')
+                        ],
+                        "description" => "Payment for Appointment #{$appointment->id}"
+                    ]
                 ]
-            ]
-        ]);
-
-        if (isset($order['id']) && $order['id'] != null) {
-            // Store pending payment
-            Payment::create([
-                'appointment_id' => $appointment->id,
-                'patient_id' => $appointment->patient_id,
-                'amount' => $request->amount,
-                'method' => 'paypal',
-                'status' => 'pending',
-                'transaction_id' => $order['id']
             ]);
 
-            // Redirect to PayPal approval URL
-            foreach ($order['links'] as $link) {
-                if ($link['rel'] === 'approve') {
-                    return redirect()->away($link['href']);
+            if (isset($order['id']) && $order['id'] != null) {
+                // Store pending payment in database
+                Payment::create([
+                    'appointment_id' => $appointment->id,
+                    'patient_id' => $appointment->patient_id,
+                    'amount' => $request->amount,
+                    'method' => 'paypal',
+                    'status' => 'pending',
+                    'transaction_id' => $order['id']
+                ]);
+
+                // Redirect to PayPal approval URL
+                foreach ($order['links'] as $link) {
+                    if ($link['rel'] === 'approve') {
+                        return redirect()->away($link['href']);
+                    }
                 }
             }
-        }
 
-        return redirect()->back()->with('error', 'Failed to create PayPal payment');
+            return redirect()->route('admin.payments.index')
+                ->with('error', 'Failed to create PayPal payment order');
+
+        } catch (\Exception $e) {
+            Log::error('PayPal Create Payment Error: ' . $e->getMessage());
+            return redirect()->route('admin.payments.index')
+                ->with('error', 'PayPal payment creation failed: ' . $e->getMessage());
+        }
     }
 
-    /**
+
+   /**
      * Handle successful payment
      */
     public function paymentSuccess(Request $request)
     {
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $provider->getAccessToken();
+        try {
+            // Get the token from the request
+            $token = $request->query('token');
 
-        $result = $provider->capturePaymentOrder($request->token);
-
-        if (isset($result['status']) && $result['status'] === 'COMPLETED') {
-            $orderId = $result['id'];
-
-            // Update payment record
-            $payment = Payment::where('transaction_id', $orderId)->first();
-
-            if ($payment) {
-                $payment->update([
-                    'status' => 'paid',
-                    'transaction_id' => $orderId
-                ]);
-
-                // Generate invoice
-                $invoice = Invoice::firstOrCreate(
-                    ['appointment_id' => $payment->appointment_id],
-                    [
-                        'total' => $payment->amount,
-                        'pdf_path' => null
-                    ]
-                );
-
-                app(\App\Http\Controllers\Invoice\InvoiceController::class)->generatePdf($invoice);
-
-                Log::info("PayPal payment successful for appointment #{$payment->appointment_id}");
-
-                return redirect()
-                    ->route('admin.payments.show', $payment)
-                    ->with('success', 'Payment completed successfully via PayPal!');
+            if (!$token) {
+                return redirect()->route('admin.payments.index')
+                    ->with('error', 'Payment token not found');
             }
-        }
 
-        return redirect()
-            ->route('admin.payments.index')
-            ->with('error', 'Payment verification failed');
+            // Initialize PayPal provider
+            $provider = new PayPalClient;
+            $provider->setApiCredentials(config('paypal'));
+            $provider->getAccessToken();
+
+            // Capture the payment
+            $result = $provider->capturePaymentOrder($token);
+
+            if (isset($result['status']) && $result['status'] === 'COMPLETED') {
+                // Find the payment by transaction_id
+                $payment = Payment::where('transaction_id', $token)->first();
+
+                if ($payment) {
+                    // Update payment status
+                    $payment->update([
+                        'status' => 'paid'
+                    ]);
+
+                    // Create or update invoice
+                    $invoice = Invoice::firstOrCreate(
+                        ['appointment_id' => $payment->appointment_id],
+                        [
+                            'total' => $payment->amount,
+                            'pdf_path' => null
+                        ]
+                    );
+
+                    // Generate PDF invoice
+                    app(\App\Http\Controllers\Invoice\InvoiceController::class)->generatePdf($invoice);
+
+                    Log::info("PayPal payment successful for appointment #{$payment->appointment_id}");
+
+                    return redirect()
+                        ->route('admin.payments.show', $payment)
+                        ->with('success', 'Payment completed successfully via PayPal!');
+                }
+
+                return redirect()->route('admin.payments.index')
+                    ->with('error', 'Payment record not found in database');
+            }
+
+            // Payment was not completed
+            return redirect()->route('admin.payments.index')
+                ->with('error', 'Payment was not completed. Status: ' . ($result['status'] ?? 'Unknown'));
+
+        } catch (\Exception $e) {
+            Log::error('PayPal Success Callback Error: ' . $e->getMessage());
+            return redirect()->route('admin.payments.index')
+                ->with('error', 'Payment verification failed: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -113,16 +144,25 @@ class PayPalController extends Controller
      */
     public function paymentCancel(Request $request)
     {
-        // Optionally update payment status to 'failed'
-        if ($request->has('token')) {
-            $payment = Payment::where('transaction_id', $request->token)->first();
-            if ($payment) {
-                $payment->update(['status' => 'failed']);
-            }
-        }
+        try {
+            $token = $request->query('token');
 
-        return redirect()
-            ->route('admin.appointments.index')
-            ->with('error', 'PayPal payment was cancelled');
+            if ($token) {
+                // Update payment status to failed
+                $payment = Payment::where('transaction_id', $token)->first();
+                if ($payment) {
+                    $payment->update(['status' => 'failed']);
+                }
+            }
+
+            return redirect()
+                ->route('admin.payments.index')
+                ->with('error', 'PayPal payment was cancelled');
+
+        } catch (\Exception $e) {
+            Log::error('PayPal Cancel Error: ' . $e->getMessage());
+            return redirect()->route('admin.payments.index')
+                ->with('error', 'Error handling payment cancellation');
+        }
     }
 }
