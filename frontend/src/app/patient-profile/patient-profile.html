@@ -583,18 +583,20 @@
                 </div>
               </div>
 
-              <!-- Chronic Diseases -->
-              <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Chronic Diseases</label>
-                <textarea [(ngModel)]="editPatient.chronic_diseases" name="chronic_diseases" required minlength="5" #chronicCtrl="ngModel"
-                          rows="3"
-                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                          placeholder="List any chronic diseases or conditions..."></textarea>
-                <div *ngIf="chronicCtrl.invalid && chronicCtrl.touched" class="mt-2 text-sm text-red-600">
-                  <span *ngIf="chronicCtrl.errors?.['required']">Chronic diseases information required</span>
-                  <span *ngIf="chronicCtrl.errors?.['minlength']">Minimum 5 characters</span>
-                </div>
-              </div>
+<!-- Chronic Diseases -->
+<div class="mt-4">
+  <label class="block text-sm font-medium text-gray-700 mb-2">Chronic Diseases</label>
+  <textarea [(ngModel)]="editPatient.chronic_diseases"
+            name="chronic_diseases"
+            minlength="5"
+            #chronicCtrl="ngModel"
+            rows="3"
+            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            placeholder="List any chronic diseases or conditions..."></textarea>
+
+
+</div>
+
             </div>
 
             <!-- Modal Footer -->

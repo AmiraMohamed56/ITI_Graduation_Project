@@ -9,12 +9,12 @@ return new class extends Migration {
     {
         Schema::create('admin_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(); // الـ admin أو المستخدم اللي عمل الحدث
-            $table->string('action'); // create, update, delete, login, logout
-            $table->string('model');  // الموديل المتأثر
-            $table->unsignedBigInteger('model_id')->nullable(); // رقم الـ record المتأثر
-            $table->text('description')->nullable(); // وصف الحدث
-            $table->string('ip_address')->nullable(); // ip address
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('action');
+            $table->string('model');
+            $table->unsignedBigInteger('model_id')->nullable();
+            $table->text('description')->nullable();
+            $table->string('ip_address')->nullable();
             $table->timestamps();
 
             $table->index('user_id');
