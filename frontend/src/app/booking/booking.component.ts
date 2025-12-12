@@ -284,7 +284,10 @@ onTimeSelect(event: Event) {
 
 
     this.appointmentService.getAppointments(this.selectedDoctorId, Number(this.selectedDate)).subscribe(res => {
-      const existing_appointments_for_this_day = res.data;
+      // Filter appointments by current patient ID - THIS IS THE FIX
+      const existing_appointments_for_this_day = res.data.filter(
+        (app: any) => app.patient_id == this.patient_id
+      );
       // console.log(existing_appointments_for_this_day);
 
       // prevent duplicate booking for the same doctor and same day
