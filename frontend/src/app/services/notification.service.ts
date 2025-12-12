@@ -39,6 +39,11 @@ export class NotificationService {
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token'); // FIXED: match AuthService
+    // console.log('Token:', token); // ← Add this debug
+    
+    // if (!token) {
+    //     console.error('No token found in localStorage');
+    // }
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
