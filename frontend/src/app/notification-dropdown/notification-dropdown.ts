@@ -6,6 +6,7 @@ import { NotificationService, Notification } from '../services/notification.serv
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
 import { Subject, takeUntil } from 'rxjs';
+import { ConfirmService } from '../shared/confirm.service';
 
 @Component({
   selector: 'app-notification-dropdown',
@@ -21,7 +22,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   unreadCount = 0;
   private destroy$ = new Subject<void>();
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService, private confirm: ConfirmService) {}
 
   ngOnInit(): void {
     // Load notifications on init
@@ -83,35 +84,42 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
 
   deleteNotification(event: Event, notificationId: string): void {
     event.stopPropagation();
-
-    this.notificationService.deleteNotification(notificationId).subscribe({
-      next: () => {
-        console.log('Notification deleted');
-      },
-      error: (error) => {
-        console.error('Error deleting notification:', error);
-      }
-    });
+    this.confirm.confirm('Delete notification', 'Are you sure you want to delete this notification?', 'Delete', 'Cancel')
+      .then(ok => {
+        if (!ok) return;
+        this.notificationService.deleteNotification(notificationId).subscribe({
+          next: () => {
+            console.log('Notification deleted');
+          },
+          error: (error) => {
+            console.error('Error deleting notification:', error);
+          }
+        });
+      });
   }
 
   deleteAll(): void {
-    if (confirm('Are you sure you want to delete all notifications?')) {
-      this.notificationService.deleteAllNotifications().subscribe({
-        next: () => {
-          console.log('All notifications deleted');
-          this.closeDropdown();
-        },
-        error: (error) => {
-          console.error('Error deleting notifications:', error);
-        }
+    this.confirm.confirm('Clear all notifications', 'Are you sure you want to delete all notifications?', 'Clear All', 'Cancel')
+      .then(ok => {
+        if (!ok) return;
+        this.notificationService.deleteAllNotifications().subscribe({
+          next: () => {
+            console.log('All notifications deleted');
+            this.closeDropdown();
+          },
+          error: (error) => {
+            console.error('Error deleting notifications:', error);
+          }
+        });
       });
-    }
   }
 
   getNotificationType(type: string): string {
-    if (type.includes('Appointment')) return 'appointment';
-    if (type.includes('Reminder')) return 'reminder';
-    if (type.includes('Payment')) return 'payment';
+    if (!type) return 'general';
+    const lower = type.toLowerCase();
+    if (lower.includes('appointment')) return 'appointment';
+    if (lower.includes('reminder')) return 'reminder';
+    if (lower.includes('payment')) return 'payment';
     return 'general';
   }
 

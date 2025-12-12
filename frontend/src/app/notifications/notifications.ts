@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NotificationService, Notification } from '../services/notification.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ConfirmService } from '../shared/confirm.service';
 
 @Component({
   selector: 'app-notifications',
- imports: [CommonModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './notifications.html',
   styleUrl: './notifications.css',
 })
@@ -27,7 +29,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     { label: 'Unread', value: 'unread', icon: 'fa-envelope', count: 0 }
   ];
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService, private confirm: ConfirmService) {}
 
   ngOnInit(): void {
     this.loadNotifications();
@@ -98,22 +100,24 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteNotification(notificationId: string): void {
-    if (confirm('Are you sure you want to delete this notification?')) {
-      this.notificationService.deleteNotification(notificationId).subscribe({
-        next: () => console.log('Notification deleted'),
-        error: (error) => console.error('Error:', error)
-      });
-    }
+  async deleteNotification(notificationId: string): Promise<void> {
+    const ok = await this.confirm.confirm('Delete notification', 'Are you sure you want to delete this notification?', 'Delete', 'Cancel');
+    if (!ok) return;
+
+    this.notificationService.deleteNotification(notificationId).subscribe({
+      next: () => console.log('Notification deleted'),
+      error: (error) => console.error('Error:', error)
+    });
   }
 
-  deleteAll(): void {
-    if (confirm('Are you sure you want to delete all notifications?')) {
-      this.notificationService.deleteAllNotifications().subscribe({
-        next: () => console.log('All notifications deleted'),
-        error: (error) => console.error('Error:', error)
-      });
-    }
+  async deleteAll(): Promise<void> {
+    const ok = await this.confirm.confirm('Clear all notifications', 'Are you sure you want to delete all notifications?', 'Clear All', 'Cancel');
+    if (!ok) return;
+
+    this.notificationService.deleteAllNotifications().subscribe({
+      next: () => console.log('All notifications deleted'),
+      error: (error) => console.error('Error:', error)
+    });
   }
 
   loadMore(): void {
@@ -121,9 +125,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   getNotificationType(type: string): string {
-    if (type.includes('Appointment')) return 'appointment';
-    if (type.includes('Reminder')) return 'reminder';
-    if (type.includes('Payment')) return 'payment';
+     if (!type) return 'general';
+     const lowerType = type.toLowerCase();
+     if (lowerType.includes('appointment')) return 'appointment';
+     if (lowerType.includes('reminder')) return 'reminder';
+     if (lowerType.includes('payment')) return 'payment';
     return 'general';
   }
 

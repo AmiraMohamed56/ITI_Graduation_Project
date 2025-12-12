@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class NotificationsController extends Controller
 {
@@ -12,9 +13,15 @@ class NotificationsController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
+    {    
         $user = $request->user();
-
+        
+        if (!$user) {
+            return response()->json([
+                'error' => 'User not authenticated',
+            ], 401);
+        }
+        
         $query = $user->notifications();
 
         // Filter by read/unread
@@ -30,11 +37,13 @@ class NotificationsController extends Controller
                 return [
                     'id' => $notification->id,
                     'type' => $this->getNotificationType($notification->type),
-                    'title' => $notification->data['title'] ?? 'Notification',
-                    'message' => $notification->data['message'] ?? '',
-                    'appointment_id' => $notification->data['appointment_id'] ?? null,
+                    'data' => [
+                        'title' => $notification->data['title'] ?? 'Notification',
+                        'message' => $notification->data['message'] ?? '',
+                        'appointment_id' => $notification->data['appointment_id'] ?? null,
+                    ],
                     'read_at' => $notification->read_at,
-                    'created_at' => $notification->created_at->diffForHumans(),
+                    'created_at' => $notification->created_at->toIso8601String(),
                     'created_at_full' => $notification->created_at->format('Y-m-d H:i:s'),
                 ];
             }),
@@ -48,8 +57,6 @@ class NotificationsController extends Controller
         ]);
     }
 
-
-    /**
 
     /**
      * Remove the specified resource from storage.
