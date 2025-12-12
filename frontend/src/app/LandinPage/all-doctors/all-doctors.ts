@@ -33,7 +33,7 @@ export class AllDoctors implements OnInit {
 
   // Available filter options
   specialties: string[] = [];
-  genders = ['Male', 'Female', 'Other'];
+  genders = ['Male', 'Female'];
   onlineStatuses = [
     { label: 'All', value: '' },
     { label: 'Available Online', value: 'true' },
@@ -133,7 +133,7 @@ export class AllDoctors implements OnInit {
     // Add filters if they exist
     if (this.searchName) params.name = this.searchName;
     if (this.searchSpecialty) params.specialty = this.searchSpecialty;
-    if (this.searchGender) params.gender = this.searchGender;
+    if (this.searchGender) params.gender = this.searchGender.toLowerCase();
     if (this.searchOnlineStatus) params.available_for_online = this.searchOnlineStatus;
 
     console.log('Loading doctors with params:', params); // Debug log

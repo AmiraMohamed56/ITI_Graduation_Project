@@ -63,10 +63,28 @@
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">#{{ $doctor->id }}</td>
 
                                 <td class="px-6 py-4 flex items-center gap-3">
-                                    <img src="{{ asset('images/doctor.jpg') }}" alt="Doctor"
-                                        class="w-10 h-10 rounded-full object-cover">
-                                    <span
-                                        class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $doctor->user->name }}</span>
+
+                                    @php
+                                        $name = $doctor->user->name;
+                                        $initial = strtoupper(substr($name, 0, 1));
+
+                                        $image = $doctor->user->profile_pic ?? null;
+                                        $imageFile = $image ? basename($image) : null;
+                                        $imageUrl = $imageFile ? asset('storage/profile_pictures/' . $imageFile) : null;
+                                    @endphp
+                                    @if ($imageFile && file_exists(public_path('storage/profile_pictures/' . $imageFile)))
+                                        <img src="{{ $imageUrl }}"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                            class="w-10 h-10 rounded-full object-cover" alt="{{ $name }}">
+                                    @endif
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg font-bold
+                                    @if ($imageFile && file_exists(public_path('storage/profile_pictures/' . $imageFile))) hidden @endif">
+                                        {{ $initial }}
+                                    </div>
+                                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $name }}
+                                    </span>
                                 </td>
 
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
