@@ -1,123 +1,200 @@
 @extends('layouts.admin')
 
-@section('title','Appointments')
+@section('title', 'Appointments')
+
 @section('breadcrumb')
     <a href="{{ route('admin.appointments.index') }}" class="hover:underline">Appointments</a>
 @endsection
 
 @section('content')
 
-@if(session('success'))
-    <x-admin.alert type="success" :message="session('success')" />
-@endif
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
-@if(session('error'))
-    <x-admin.alert type="error" :message="session('error')" />
-@endif
+    <div class="max-w-7xl mx-auto py-10 px-6">
 
-<x-admin.card>
-    <div class="flex justify-between items-center mb-10">
-        <h2 class="text-lg font-semibold">All Appointments</h2>
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
 
-        <a href="{{ route('admin.appointments.create') }}">
-            <x-admin.button type="secondary">Create Appointment</x-admin.button>
-        </a>
-    </div>
-    <div class="flex justify-between items-center mb-10">
-        <div></div>
-
-        <form method="GET">
-            @csrf
-            <div class="flex items-center space-x-2">
-                {{-- <input type="number" name="id"> --}}
-
-                <select name="type"
-                id="type"
-                class="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-                    <option value="">All types</option>
-                    <option value="consultation">Consultation</option>
-                    <option value="follow_up">Follow_up</option>
-                    <option value="telemedicine">Telemedicine</option>
-                </select>
-
-                <input type="date" name="date_from" placeholder="date from" class="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-
-                <input type="date" name="date_to" class="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-
-                <input name="q" value="{{ request('q') }}" placeholder="Search patient or doctor" class="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" />
-                {{-- <x-admin.input label="" name="q" value="{{ request('q') }}" placeholder="Seach patient or doctor"/> --}}
-
-                <select name="status" class="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-                    <option value="">All status</option>
-                    <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="confirmed" {{ request('status')=='confirmed' ? 'selected' : '' }}>Confirmed</option>
-                    <option value="cancelled" {{ request('status')=='cancelled' ? 'selected' : '' }}>Cancelled</option>
-                    <option value="completed" {{ request('status')=='completed' ? 'selected' : '' }}>Completed</option>
-                </select>
-                <x-admin.button>Filter</x-admin.button>
-                @if(request('status') || request('type') || request('q') || request('date_from') || request('date_to'))
-                <x-admin.button type="secondary">
-                    <a href="{{ route('admin.appointments.index') }}" >Clear</a>
-                </x-admin.button>
-            @endif
+            <div class="flex items-center gap-2">
+                <h1 class="text-xl font-semibold">All Appointments</h1>
+                <span class="bg-blue-600 text-white text-sm font-medium px-3 py-1 rounded">
+                    {{ $appointments->total() }}
+                </span>
             </div>
-        </form>
-    </div>
 
-    <div class="overflow-x-auto">
-        <x-admin.table>
-            <thead>
-                <tr class="text-left">
-                    <th class="px-4 py-2">#</th>
-                    <th class="px-4 py-2">Patient</th>
-                    <th class="px-4 py-2">Doctor</th>
-                    <th class="px-4 py-2">Date</th>
-                    <th class="px-4 py-2">Time</th>
-                    <th class="px-4 py-2">Type</th>
-                    <th class="px-4 py-2">Status</th>
-                    <th class="px-4 py-2">Price</th>
-                    <th class="px-4 py-2">Notes</th>
-                    <th class="px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($appointments as $appointment)
-                    <tr class="border-t">
-                        <td class="px-4 py-3">{{ $appointment->id }}</td>
-                        <td class="px-4 py-3">{{ $appointment->patient->user->name ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ $appointment->doctor->user->name ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ $appointment->schedule_date->format('Y-m-d') }}</td>
-                        {{-- <td class="px-4 py-3">{{ \Carbon\Carbon::createFromFormat('H:i:s',$appointment->schedule_time)->format('H:i') }}</td> --}}
-                        <td class="px-4 py-3">{{ $appointment->schedule_time }}</td>
-                        <td class="px-4 py-3">{{ ucfirst($appointment->type) }}</td>
-                        <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded-lg text-xs shadow {{
-                                $appointment->status === 'pending' ? 'bg-amber-100 text-amber-800' :
-                                ($appointment->status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' :
-                                ($appointment->status === 'cancelled' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-800')) }}">
+            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <span>⇅ Sort By :</span>
+                <select 
+                    onchange="window.location.href='?sort='+this.value"
+                    class="border-none bg-transparent cursor-pointer text-gray-600 dark:text-gray-300">
+                    <option value="newest" {{ request('sort')=='newest' ? 'selected' : '' }}>Newest</option>
+                    <option value="oldest" {{ request('sort')=='oldest' ? 'selected' : '' }}>Oldest</option>
+                    <option value="date" {{ request('sort')=='date' ? 'selected' : '' }}>Date</option>
+                    <option value="status" {{ request('sort')=='status' ? 'selected' : '' }}>Status</option>
+                </select>
+            </div>
+
+            <a href="{{ route('admin.appointments.create') }}"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">
+                Create Appointment
+            </a>
+        </div>
+
+        <!-- Alerts -->
+        @if(session('success'))
+            <x-admin.alert type="success" :message="session('success')" />
+        @endif
+
+        @if(session('error'))
+            <x-admin.alert type="error" :message="session('error')" />
+        @endif
+
+
+        <!-- Filters -->
+        <div class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+
+                <!-- Type -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Type</label>
+                    <select name="type"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-sm">
+                        <option value="">All types</option>
+                        <option value="consultation" {{ request('type')=='consultation'?'selected':'' }}>Consultation</option>
+                        <option value="follow_up" {{ request('type')=='follow_up'?'selected':'' }}>Follow Up</option>
+                        <option value="telemedicine" {{ request('type')=='telemedicine'?'selected':'' }}>Telemedicine</option>
+                    </select>
+                </div>
+
+                <!-- Date From -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Date From</label>
+                    <input type="date" name="date_from"
+                        value="{{ request('date_from') }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-sm">
+                </div>
+
+                <!-- Date To -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Date To</label>
+                    <input type="date" name="date_to"
+                        value="{{ request('date_to') }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-sm">
+                </div>
+
+                <!-- Search -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Patient or Doctor</label>
+                    <input type="text" name="q" placeholder="Search..."
+                        value="{{ request('q') }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-sm">
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Status</label>
+                    <select name="status"
+                        class="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-sm">
+                        <option value="">All status</option>
+                        <option value="pending" {{ request('status')=='pending'?'selected':'' }}>Pending</option>
+                        <option value="confirmed" {{ request('status')=='confirmed'?'selected':'' }}>Confirmed</option>
+                        <option value="cancelled" {{ request('status')=='cancelled'?'selected':'' }}>Cancelled</option>
+                        <option value="completed" {{ request('status')=='completed'?'selected':'' }}>Completed</option>
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex items-end gap-2">
+                    <button type="submit"
+                        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
+                        Filter
+                    </button>
+                    <a href="{{ route('admin.appointments.index') }}"
+                        class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium text-center">
+                        Clear
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+
+        <!-- Table -->
+        <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow">
+            <table class="w-full text-left">
+                <thead class="bg-gray-100 dark:bg-gray-700">
+                    <tr>
+                        <th class="px-6 py-4 text-sm font-medium">ID</th>
+                        <th class="px-6 py-4 text-sm font-medium">Patient</th>
+                        <th class="px-6 py-4 text-sm font-medium">Doctor</th>
+                        <th class="px-6 py-4 text-sm font-medium">Date</th>
+                        <th class="px-6 py-4 text-sm font-medium">Time</th>
+                        <th class="px-6 py-4 text-sm font-medium">Type</th>
+                        <th class="px-6 py-4 text-sm font-medium">Status</th>
+                        <th class="px-6 py-4 text-sm font-medium">Price</th>
+                        <th class="px-6 py-4 text-sm font-medium">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    @forelse ($appointments as $appointment)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+
+                        <td class="px-6 py-4 text-sm">#{{ $appointment->id }}</td>
+
+                        <td class="px-6 py-4 text-sm">
+                            {{ $appointment->patient->user->name ?? '-' }}
+                        </td>
+
+                        <td class="px-6 py-4 text-sm">
+                            {{ $appointment->doctor->user->name ?? '-' }}
+                        </td>
+
+                        <td class="px-6 py-4 text-sm">{{ $appointment->schedule_date->format('Y-m-d') }}</td>
+
+                        <td class="px-6 py-4 text-sm">{{ $appointment->schedule_time }}</td>
+
+                        <td class="px-6 py-4 text-sm">{{ ucfirst($appointment->type) }}</td>
+
+                        <td class="px-6 py-4 text-sm">
+                            <span class="px-3 py-1 rounded-lg text-xs shadow
+                                {{ $appointment->status=='pending' ? 'bg-amber-100 text-amber-800' :
+                                   ($appointment->status=='confirmed' ? 'bg-emerald-100 text-emerald-800' :
+                                   ($appointment->status=='cancelled' ? 'bg-rose-100 text-rose-800' :
+                                   'bg-slate-100 text-slate-800')) }}">
                                 {{ ucfirst($appointment->status) }}
                             </span>
                         </td>
-                        <td class="px-4 py-3">{{ $appointment->price ? number_format($appointment->price,2) : '-' }}</td>
-                        <td class="px-4 py-3">{{ \Illuminate\Support\Str::limit($appointment->notes, 30) }}</td>
-                        <td class="px-4 py-3">
-                            {{-- <a href="{{ route('admin.appointments.show', $appointment) }}" class="text-sm">View</a> --}}
-                            <a href="{{ route('admin.appointments.show', $appointment) }}" class="hover:underline">View</a>
-                            {{-- <a href="{{ route('admin.appointments.show', $appointment) }}" class="text-gray-400 hover:text-gray-600"><span class="material-icons text-base">visibility</span></a> --}}
-                            {{-- <a href="#" class="text-gray-400 hover:text-gray-600"><span class="material-icons text-base">edit</span></a> --}}
-                            {{-- <a href="#" class="text-gray-400 hover:text-gray-600"><span class="material-icons text-base">delete</span></a> --}}
-                            {{-- Optionally add Confirm / Cancel actions with forms --}}
+
+                        <td class="px-6 py-4 text-sm">
+                            {{ $appointment->price ? number_format($appointment->price,2) : '-' }}
+                        </td>
+
+                        <td class="px-6 py-4 text-sm">
+                            <a href="{{ route('admin.appointments.show', $appointment) }}"
+                                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                                <span class="material-icons text-base">visibility</span>
+                            </a>
+                        </td>
+
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="text-center py-6 text-gray-500 dark:text-gray-400">
+                            No appointments found.
                         </td>
                     </tr>
-                @empty
-                    <tr><td colspan="10" class="px-4 py-6 text-center">No appointments found.</td></tr>
-                @endforelse
-            </tbody>
-        </x-admin.table>
-    </div>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <div class="mt-4">
-        {{ $appointments->links() }}
+        <!-- Pagination -->
+        <div class="mt-6">
+            {{ $appointments->links() }}
+        </div>
+
     </div>
-</x-admin.card>
+</div>
+
 @endsection

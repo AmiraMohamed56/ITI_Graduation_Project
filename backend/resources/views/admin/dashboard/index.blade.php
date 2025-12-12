@@ -2,6 +2,10 @@
 
 @section('title', 'Admin Dashboard')
 
+@section('breadcrumb')
+    <a href="{{ route('admin.dashboard') }} " class="hover:underline">Dashboard</a>
+@endsection
+
 @section('content')
 
 <div x-data="{ activeChart: 'overview' }" class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">

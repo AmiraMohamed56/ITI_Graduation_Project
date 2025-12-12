@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Completed Visits')
-
+@section('breadcrumb')
+    <a href="{{ route('admin.visits.index') }}" class="hover:underline">Visits</a>
+@endsection
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-8 text-gray-900 dark:text-gray-100">
         <div class="max-w-7xl mx-auto">

@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Doctor Details')
+@section('breadcrumb')
+    <a href="{{ route('admin.doctors.index') }} " class="hover:underline">Doctors</a> / <span>{{ $doctor->user->name }}</span>
+@endsection
 @section('content')
 
     <div x-data="{ bio: false, education: false, experience: false, rating: false, created_at: false }"
