@@ -158,15 +158,32 @@
                                 @endif
 
                                 <!-- Delete Button (always available) -->
-                                <form action="{{ route('doctor.reviews.destroy', $review->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this review permanently?')"
-                                            class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition">
-                                        <i class="fas fa-trash mr-2"></i> Delete
-                                    </button>
-                                </form>
+
+{{-- ======================================================================================== --}}
+                            <button 
+                            id="delete-button"
+                            class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition">
+                            <i class="fas fa-trash mr-2"></i> Delete
+                            </button>
+                            <!-- Confirmation Modal (Initially Hidden) -->
+                            <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+                                <div class="bg-white dark:bg-gray-800 shadow rounded p-6 w-96">
+                                    <h2 class="text-xl mb-4">Are you sure you want to delete this review?</h2>
+                                    <div class="flex justify-end gap-4">
+                                        <!-- Cancel Button -->
+                                        <x-admin.button id="cancel-button" type="secondary" size="sm">Cancel</x-admin.button>
+
+                                        {{-- delete form --}}
+                                        <form id="delete-form" action="{{ route('doctor.reviews.destroy', $review->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-admin.button type="danger" size="sm">Cofirm</x-admin.button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+{{-- ============================================================================================ --}}
+
                             </div>
 
                             <!-- Reviewed At Info -->
@@ -188,4 +205,33 @@
         </div>
     @endif
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteButton = document.getElementById("delete-button");
+        const cancelButton = document.getElementById("cancel-button");
+        const modal = document.getElementById("modal");
+        const deleteForm = document.getElementById("delete-form");
+
+        // Show Modal
+        deleteButton.addEventListener("click", function() {
+            modal.classList.remove("hidden");
+        });
+
+        // Hide Modal (Cancel)
+        cancelButton.addEventListener("click", function() {
+            modal.classList.add("hidden");
+        });
+
+        // submit the form after confirmation
+        // deleteForm.addEventListener("submit", function(event) {
+        //     // You could add a confirmation prompt if you want a final check
+        //     if (!confirm("Are you sure you want to delete this payment?")) {
+        //         event.preventDefault();  // Prevent the form from being submitted if the user cancels
+        //     }
+        // });
+    });
+</script>
 @endsection

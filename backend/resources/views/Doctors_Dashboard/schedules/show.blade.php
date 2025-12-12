@@ -16,18 +16,34 @@
                 <i class="fas fa-edit"></i>
                 Edit Schedule
             </a>
-            <form action="{{ route('schedules.destroy', $schedule->id) }}"
-                method="POST"
-                class="inline-block"
-                onsubmit="return confirm('Are you sure you want to delete this schedule? This action cannot be undone.');">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                    class="flex items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                    <i class="fas fa-trash"></i>
-                    Delete Schedule
-                </button>
-            </form>
+
+{{-- ======================================================================================== --}}
+                            <button
+                                id="delete-button"
+                                class="flex items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                title="Delete">
+                                <i class="fas fa-trash text-sm"></i>
+                                Delete Schedule
+                            </button>
+                            <!-- Confirmation Modal (Initially Hidden) -->
+                            <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+                                <div class="bg-white dark:bg-gray-800 shadow rounded p-6 w-96">
+                                    <h2 class="text-xl mb-4">Are you sure you want to delete this schedule?</h2>
+                                    <div class="flex justify-end gap-4">
+                                        <!-- Cancel Button -->
+                                        <x-admin.button id="cancel-button" type="secondary" size="sm">Cancel</x-admin.button>
+
+                                        {{-- delete form --}}
+                                        <form id="delete-form" action="{{ route('schedules.destroy', $schedule->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-admin.button type="danger" size="sm">Cofirm</x-admin.button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+{{-- ============================================================================================ --}}
+
             <a href="{{ route('schedules.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 <i class="fas fa-times text-xl"></i>
             </a>
@@ -424,6 +440,35 @@
             modal.classList.add("hidden");
         });
 
+    });
+</script>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const deleteButton = document.getElementById("delete-button");
+        const cancelButton = document.getElementById("cancel-button");
+        const modal = document.getElementById("modal");
+        const deleteForm = document.getElementById("delete-form");
+
+        // Show Modal
+        deleteButton.addEventListener("click", function() {
+            modal.classList.remove("hidden");
+        });
+
+        // Hide Modal (Cancel)
+        cancelButton.addEventListener("click", function() {
+            modal.classList.add("hidden");
+        });
+
+        // submit the form after confirmation
+        // deleteForm.addEventListener("submit", function(event) {
+        //     // You could add a confirmation prompt if you want a final check
+        //     if (!confirm("Are you sure you want to delete this payment?")) {
+        //         event.preventDefault();  // Prevent the form from being submitted if the user cancels
+        //     }
+        // });
     });
 </script>
 @endsection
