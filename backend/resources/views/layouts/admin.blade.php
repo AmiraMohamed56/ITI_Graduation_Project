@@ -60,15 +60,8 @@
                     <x-admin.nav-item icon="calendar_today" text="Appointments" href="{{ route('admin.appointments.index') }}" pattern="admin.appointments.*" />
                     <x-admin.nav-item icon="how_to_reg" text="Visits" href="{{ route('admin.visits.index') }}" pattern="admin.visits.*" />
                     <x-admin.nav-item icon="payment" text="Payments" href="{{ route('admin.payments.index') }}" pattern="admin.payments.*" />
-                    <x-admin.nav-item icon="dashboard" text="Dashboard" href="{{ route('admin.dashboard') }}" />
-                    <x-admin.nav-item icon="group" text="Patients" href="{{ route('admin.patients.index') }}" />
-                    <x-admin.nav-item icon="person" text="Doctors" href="{{ route('admin.doctors.index') }}" />
-                    <x-admin.nav-item icon="category" text="Specialties" href="{{ route('admin.specialties.index') }}" />
-                    <x-admin.nav-item icon="calendar_today" text="Appointments" href="{{ route('admin.appointments.index') }}" />
-                    <x-admin.nav-item icon="how_to_reg" text="Visits" href="{{ route('admin.visits.index') }}" />
                     <x-admin.nav-item icon="rate_review" text="Reviews" href="{{ route('admin.reviews.index') }}" />
                     <x-admin.nav-item icon="how_to_reg"  text="Notifications" href="{{ route('admin.notifications.index') }}" />
-                    <x-admin.nav-item icon="payment" text="Payments" href="{{ route('admin.payments.index') }}" />
                     <x-admin.nav-item icon="contacts" text="contacts" href="{{ route('admin.contacts.index') }}" />
                     <x-admin.nav-item icon="receipt_long" text="Logs" href="{{ route('admin.logs.index') }}" />
                     <x-admin.nav-item icon="settings" text="Profile" href="{{ route('admin.settings.edit') }}" />
