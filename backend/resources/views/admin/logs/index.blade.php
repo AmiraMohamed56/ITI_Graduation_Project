@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Admin Logs')
-
+@section('breadcrumb')
+    <a href="{{ route('admin.logs.index') }}" class="hover:underline">Logs</a>
+@endsection
 @section('content')
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -87,6 +89,7 @@
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">User</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Action</th>
+                        <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Description</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Model ID</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">IP Address</th>
                         <th class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-gray-200">Date</th>
@@ -148,6 +151,9 @@
                             </span>
                         </td>
 
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            {{ $log->description ?? '-' }}
+                        </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                             #{{ $log->model_id }}

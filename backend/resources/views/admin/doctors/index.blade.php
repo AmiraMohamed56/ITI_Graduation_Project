@@ -2,6 +2,10 @@
 
 @section('title', 'Doctors')
 
+@section('breadcrumb')
+    <a href="{{ route('admin.doctors.index') }} " class="hover:underline">Doctors</a>
+@endsection
+
 @section('content')
 
     <div x-data="{ deleteModal: false, deleteId: null }" class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">

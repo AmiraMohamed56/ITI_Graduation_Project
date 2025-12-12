@@ -3,7 +3,7 @@
 @section('title', 'Profile Settings')
 
 @section('breadcrumb')
-<a href="#" class="hover:underline">Dashboard</a> / <span>Profile</span>
+<a href="{{ route('admin.settings.edit') }}" class="hover:underline">Profile</a>
 @endsection
 
 @section('content')
@@ -36,7 +36,7 @@
             </div>
             @endif
             <div class="flex items-center justify-center">
-                <x-admin.input label="Update Profile Picture" type="file" name="profile_pic" hidden/>
+                <x-admin.input label="Click here to update Profile Picture" type="file" name="profile_pic" hidden/>
             </div>
             @error('profile_pic')
             <p class="text-xs text-red-500 font-semibold mt-1">{{ $message }}</p>
