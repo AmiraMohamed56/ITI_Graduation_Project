@@ -35,7 +35,7 @@ export interface AiAnalysisResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AiService {
-private api = 'http://backend.test/api/ai/symptoms';
+private api = 'http://127.0.0.1:8000//api/ai/symptoms';
 
   constructor(private http: HttpClient) {}
 
