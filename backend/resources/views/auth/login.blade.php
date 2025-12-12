@@ -64,11 +64,7 @@
                                 class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg rounded-lg shadow transition">
                             Login
                         </button>
-
-                        <!-- Signup Link -->
-                        <p class="text-center mt-6 text-sm text-gray-700">
-                            New User? <a href="{{ route('register') }}" class="text-blue-600 font-semibold hover:underline">Signup</a>
-                        </p>
+                        
                     </form>
                 </div>
 
