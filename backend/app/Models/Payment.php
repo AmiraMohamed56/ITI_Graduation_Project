@@ -10,7 +10,13 @@ class Payment extends Model
     use HasFactory, AdminLoggable;
 
     protected $fillable = [
-        'appointment_id', 'patient_id', 'amount', 'status', 'method', 'transaction_id'
+        'appointment_id',
+        'patient_id',
+        'amount',
+        'status',
+        'method',
+        'transaction_id',
+        'payment_proof'
     ];
 
     protected $casts = [
@@ -26,5 +32,10 @@ class Payment extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function getPaymentProofUrlAttribute()
+    {
+        return $this->payment_proof ? asset('storage/' . $this->payment_proof) : null;
     }
 }

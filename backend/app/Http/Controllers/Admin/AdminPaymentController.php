@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\ViewFinderInterface;
 use Pest\Support\View;
+use Illuminate\Support\Facades\Storage;
+
 
 use function Pest\Laravel\session;
 
@@ -78,10 +80,21 @@ class AdminPaymentController extends Controller
         $transation_id = 'TXN-' . Str::uuid();
         $data['transaction_id'] = $transation_id;
 
-        Payment::create($data);
+        // Handle payment proof upload
+        if ($request->hasFile('payment_proof')) {
+            $file = $request->file('payment_proof');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('payment_proofs', $fileName, 'public');
+            $data['payment_proof'] = $path;
+        }
 
-        $payment = Payment::where('appointment_id', $data['appointment_id'])->where('patient_id', $data['patient_id'])->first();
-        $payment->load(['appointment', 'appointment.doctor.user','patient.user']);
+        // Payment::create($data);
+
+        // $payment = Payment::where('appointment_id', $data['appointment_id'])->where('patient_id', $data['patient_id'])->first();
+        // $payment->load(['appointment', 'appointment.doctor.user','patient.user']);
+
+        $payment = Payment::create($data);
+        $payment->load(['appointment', 'appointment.doctor.user', 'patient.user']);
 
         // creaet invoice record
         if($payment->status == 'paid') {
@@ -124,8 +137,37 @@ class AdminPaymentController extends Controller
         $data = $request->validated();
         $transation_id = 'TXN-' . Str::uuid();
         $data['transaction_id'] = $transation_id;
+
+        // Handle payment proof upload
+        if ($request->hasFile('payment_proof')) {
+            // Delete old file if exists
+            if ($payment->payment_proof) {
+                Storage::disk('public')->delete($payment->payment_proof);
+            }
+            $file = $request->file('payment_proof');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('payment_proofs', $fileName, 'public');
+            $data['payment_proof'] = $path;
+        }
+
+
         $payment->update($data);
         $payment->load(['appointment.doctor.user', 'patient.user']);
+
+
+        // Create invoice if payment status changed to paid
+        if ($payment->status == 'paid') {
+            $invoice = Invoice::firstOrCreate(
+                ['appointment_id' => $payment->appointment_id],
+                [
+                    'total' => $payment->amount,
+                    'pdf_path' => null
+                ]
+            );
+            app(\App\Http\Controllers\Invoice\InvoiceController::class)->generatePdf($invoice);
+        }
+
+
         return redirect()->route('admin.payments.show', compact('payment'))->with('success', 'Payment updated successfully.');
     }
 
@@ -134,6 +176,10 @@ class AdminPaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
+        // Delete payment proof if exists
+        if ($payment->payment_proof) {
+            Storage::disk('public')->delete($payment->payment_proof);
+        }
         $payment->delete();
         return redirect()->route('admin.payments.index')->with('success', 'Payment deleted successfully');
     }
