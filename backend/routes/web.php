@@ -23,8 +23,9 @@ use App\Http\Controllers\Api\Reviews\ReviewController as ReviewsReviewController
 use App\Http\Controllers\Doctor\NotificationController as DoctorNotificationController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\PayPalController;
-use App\Http\Controllers\ReviewController;
+// use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\AdminContactController;
+use App\Http\Controllers\Admin\ReviewController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -75,6 +76,11 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(f
 
     // admin appointment
     Route::resource('appointments', AdminAppointmentController::class)->names('appointments');
+
+    // admin reviews
+    Route::resource('reviews', ReviewController::class)->only([
+        'index', 'show', 'destroy'
+    ])->names('reviews');
 
     // admin payment
     Route::resource('payments', AdminPaymentController::class)->names('payments');

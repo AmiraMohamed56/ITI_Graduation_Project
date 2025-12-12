@@ -70,6 +70,15 @@ Route::post('patient/forgot-password', [PatientAuthController::class, 'forgotPas
 Route::post('patient/reset-password', [PatientAuthController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('patient/logout', [PatientAuthController::class, 'logout']);
+
+        Route::prefix('patient')->group(function () {
+        Route::get('notifications', [NotificationsController::class, 'index']);
+        Route::get('notifications/unread-count', [NotificationsController::class, 'unreadCount']);
+        Route::post('notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+        Route::post('notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
+        Route::delete('notifications/{id}', [NotificationsController::class, 'destroy']);
+        Route::delete('notifications/all', [NotificationsController::class, 'destroyAll']);
+    });
 });
 
 
@@ -82,19 +91,22 @@ Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallb
 
 // ========================= google login end ========================================
 
-// Patient Notification API Routes
-Route::middleware('auth:sanctum')->prefix('patient')->group(function () {
-    Route::get('/notifications', [NotificationsController::class, 'index']);
-    Route::get('/notifications/unread-count', [NotificationsController::class, 'unreadCount']);
-    Route::post('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
-    Route::post('/notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
-    Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
-    Route::delete('/notifications/all', [NotificationsController::class, 'destroyAll']);
-});
+
+// // Patient Notification API Routes
+//     Route::prefix('patient')->group(function () {
+//     Route::get('/notifications', [NotificationsController::class, 'index']);
+//     Route::get('/notifications/unread-count', [NotificationsController::class, 'unreadCount']);
+//     Route::post('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+//     Route::post('/notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
+//     Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy']);
+//     Route::delete('/notifications/all', [NotificationsController::class, 'destroyAll']);
+// });
 
 // ========================= Appointment Endpoint Start ==============================
 Route::get('/user/payments', [PaymentsEndpointController::class, 'index']);
 Route::get('/user/appointments', [AppointmentsEndpointController::class, 'index']);
 // ========================= Appointment Endpoint End ==============================
+
+
 
 Route::post('/contacts', [ContactController::class, 'store']);

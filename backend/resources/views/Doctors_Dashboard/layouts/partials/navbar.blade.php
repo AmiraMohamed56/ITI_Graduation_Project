@@ -122,11 +122,6 @@
 
                     <a href="{{ route('profile_setting.index') }}"
                         class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-user mr-2"></i> Profile
-                    </a>
-
-                    <a href="{{ route('profile_setting.index') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
 

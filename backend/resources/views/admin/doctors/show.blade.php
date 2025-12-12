@@ -13,14 +13,21 @@
             <!-- Doctor Header -->
             <div class="text-center mb-6">
                 @if ($doctor->user->profile_pic)
-                    <img src="{{ $doctor->user->profile_pic }}" alt="{{ $doctor->user->name }}"
-                        class="w-24 h-24 rounded-full mx-auto mb-3 object-cover" />
-                @else
-                    <div
-                        class="w-24 h-24 rounded-full mx-auto mb-3 bg-blue-500 text-white flex items-center justify-center text-2xl font-bold">
-                        {{ strtoupper(substr($doctor->user->name, 0, 1)) }}
-                    </div>
-                @endif
+    @php
+        $imageFile = basename($doctor->user->profile_pic);
+        $imagePath = asset('storage/profile_pictures/' . $imageFile);
+    @endphp
+
+    <img src="{{ $imagePath }}" alt="{{ $doctor->user->name }}"
+         class="w-24 h-24 rounded-full mx-auto mb-3 object-cover" />
+
+@else
+    <div
+        class="w-24 h-24 rounded-full mx-auto mb-3 bg-blue-500 text-white flex items-center justify-center text-2xl font-bold">
+        {{ strtoupper(substr($doctor->user->name, 0, 1)) }}
+    </div>
+@endif
+
                 <p class="text-blue-600 dark:text-blue-400 text-sm font-medium mb-1">#DR{{ $doctor->id }}</p>
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">{{ $doctor->user->name }}</h1>
                 <p class="text-gray-600 dark:text-gray-300 text-sm">{{ $doctor->specialty->name }}</p>

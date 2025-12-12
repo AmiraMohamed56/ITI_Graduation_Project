@@ -175,10 +175,10 @@
                                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                                 <span class="material-icons text-base">visibility</span>
                             </a>
-                            <a href="{{ route('admin.patients.edit', $patient->id) }}"
+                            {{-- <a href="{{ route('admin.patients.edit', $patient->id) }}"
                                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                                 <span class="material-icons text-base">edit</span>
-                            </a>
+                            </a> --}}
                             <button @click="deleteModal=true; deleteId={{ $patient->id }}"
                                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                                 <span class="material-icons text-base">delete</span>

@@ -102,7 +102,8 @@
                     </thead>
 
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach ($visits as $visit)
+
+                        @forelse ($visits as $visit)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
 
                                 {{-- Visit ID --}}
@@ -115,19 +116,34 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <a href="{{ route('admin.patients.show', $visit->patient->id) }}"
                                         class="flex items-center gap-3">
+
                                         @php
-                                            $name = $visit->patient->user->name;
+                                            $image = $visit->patient->user->profile_pic ?? null;
+                                            $name = $visit->patient->user->name ?? 'User';
                                             $initial = strtoupper(substr($name, 0, 1));
+
+                                            $imageFile = $image ? basename($image) : null;
+                                            $imagePath = $imageFile
+                                                ? asset('storage/profile_pics/' . $imageFile)
+                                                : null;
                                         @endphp
-                                        <div
-                                            class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
-                                            {{ $initial }}
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            {{ $name }}
-                                        </span>
+
+                                        @if ($imagePath && file_exists(public_path('storage/profile_pics/' . $imageFile)))
+                                            <img src="{{ $imagePath }}" class="w-10 h-10 rounded-full object-cover"
+                                                alt="{{ $name }}">
+                                        @else
+                                            <div
+                                                class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
+                                                {{ $initial }}
+                                            </div>
+                                        @endif
+
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $name }}</span>
+
                                     </a>
                                 </td>
+
 
                                 {{-- Specialty --}}
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
@@ -138,19 +154,34 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <a href="{{ route('admin.doctors.show', $visit->doctor->id) }}"
                                         class="flex items-center gap-3">
+
                                         @php
-                                            $name = $visit->doctor->user->name;
+                                            $image = $visit->doctor->user->profile_pic ?? null;
+                                            $name = $visit->doctor->user->name ?? 'Doctor';
                                             $initial = strtoupper(substr($name, 0, 1));
+
+                                            $imageFile = $image ? basename($image) : null;
+                                            $imagePath = $imageFile
+                                                ? asset('storage/profile_pictures/' . $imageFile)
+                                                : null;
                                         @endphp
-                                        <div
-                                            class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
-                                            {{ $initial }}
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            {{ $name }}
-                                        </span>
+
+                                        @if ($imagePath && file_exists(public_path('storage/profile_pictures/' . $imageFile)))
+                                            <img src="{{ $imagePath }}" class="w-10 h-10 rounded-full object-cover"
+                                                alt="{{ $name }}">
+                                        @else
+                                            <div
+                                                class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
+                                                {{ $initial }}
+                                            </div>
+                                        @endif
+
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $name }}</span>
+
                                     </a>
                                 </td>
+
 
                                 {{-- Date --}}
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
@@ -160,15 +191,19 @@
                                 {{-- Status --}}
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
-                                        class="inline-flex px-3 py-1 text-xs font-semibold rounded-full 
-                                    bg-green-100 dark:bg-green-900 
-                                    text-green-700 dark:text-green-200">
+                                        class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200">
                                         Completed
                                     </span>
                                 </td>
 
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" class="py-6 text-center text-gray-600 dark:text-gray-300 text-sm">
+                                    No Data Found
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

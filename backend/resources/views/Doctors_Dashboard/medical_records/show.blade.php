@@ -3,7 +3,7 @@
 @section('title', 'Medical Record Details')
 
 @section('content')
-<div class="max-w-6xl mx-auto dark:bg-gray-900">
+<div id="printable-area" class="max-w-6xl mx-auto dark:bg-gray-900">
     <!-- Header -->
     <div class="mb-6">
         <div class="flex items-center justify-between">
@@ -11,7 +11,7 @@
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Medical Record Details</h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-1">Complete patient medical information</p>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 no-print">
                 <a href="{{ route('medical_records.edit', $medicalRecord->id) }}"
                     class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     <i class="fas fa-edit"></i>
@@ -22,7 +22,7 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit"
-                        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        class="no-print flex items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                         <i class="fas fa-trash"></i>
                         Delete Record
                     </button>
@@ -156,7 +156,7 @@
 
         <!-- Medical Files Section -->
         @if ($medicalRecord->medicalFiles && $medicalRecord->medicalFiles->count() > 0)
-        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="no-print p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <i class="fas fa-file-medical text-blue-600 dark:text-blue-400"></i>
                 Medical Files & Documents
@@ -164,7 +164,7 @@
                     {{ $medicalRecord->medicalFiles->count() }}
                 </span>
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-4">
                 @foreach ($medicalRecord->medicalFiles as $file)
                 @php
                 $extension = pathinfo($file->file_path, PATHINFO_EXTENSION);
@@ -262,7 +262,7 @@
                                 @endif
 
                                 <a href="{{ $fileUrl }}" download
-                                    class="text-xs border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1">
+                                    class="no-print text-xs border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1">
                                     <i class="fas fa-download"></i>
                                     Download
                                 </a>
@@ -324,13 +324,13 @@
 </div>
 
 <!-- Action Buttons at Bottom -->
-<div class="mt-6 flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow dark:shadow-gray-700/50">
+<div class="no-print mt-6 flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow dark:shadow-gray-700/50">
     <a href="{{ route('medical_records.index') }}"
         class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center gap-2">
         <i class="fas fa-arrow-left"></i>
         Back to Records List
     </a>
-    <div class="flex items-center gap-3">
+    <div class="no-print flex items-center gap-3">
         <button onclick="window.print()"
             class="flex items-center gap-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
             <i class="fas fa-print"></i>
@@ -419,26 +419,43 @@
 
 <style>
     @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #printable-area,
+        #printable-area * {
+            visibility: visible;
+        }
+
+        #printable-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
         .no-print {
             display: none !important;
         }
 
-        body {
-            background: white !important;
-        }
-
-        .bg-white,
-        .dark\:bg-gray-800 {
+        body, #printable-area {
             background: white !important;
             color: black !important;
         }
 
-        .dark\:text-white {
+        .shadow, .rounded-lg, .border {
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        h1, h2, h3 {
             color: black !important;
         }
 
-        .dark\:border-gray-700 {
-            border-color: #e5e7eb !important;
+        a {
+            color: black !important;
+            text-decoration: none !important;
         }
     }
 </style>

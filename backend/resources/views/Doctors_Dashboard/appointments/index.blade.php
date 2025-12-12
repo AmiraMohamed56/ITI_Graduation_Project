@@ -25,32 +25,6 @@
                     <span>Appointments</span>
                 </div>
             </div>
-
-            <div class="flex items-center gap-3">
-                <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9M20 20v-5h-.581m-15.357-2a8.003 8.003 0 0115.357 2">
-                        </path>
-                    </svg>
-                </button>
-
-                <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" stroke="currentColor" fill="none" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M6 9l6-6 6 6M12 3v12"></path>
-                    </svg>
-                </button>
-
-                <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M4 4v16h16V4H4z"></path>
-                    </svg>
-                </button>
-            </div>
-
         </div>
     </div>
 

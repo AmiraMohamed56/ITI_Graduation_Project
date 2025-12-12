@@ -127,16 +127,24 @@
                                     @php
                                         $name = $doctor->user->name;
                                         $initial = strtoupper(substr($name, 0, 1));
+                                        $image = $doctor->user->profile_pic ?? null;
+                                        $imageFile = $image ? basename($image) : null;
+                                        $imagePath = $imageFile
+                                            ? asset('storage/profile_pictures/' . $imageFile): null;
                                     @endphp
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
-                                        {{ $initial }}
-                                    </div>
+                                    @if ($imagePath && file_exists(public_path('storage/profile_pictures/' . $imageFile)))
+                                        <img src="{{ $imagePath }}" class="w-10 h-10 rounded-full object-cover"
+                                            alt="{{ $name }}">
+                                    @else
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold">
+                                            {{ $initial }}
+                                        </div>
+                                    @endif
                                     <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
                                         {{ $name }}
                                     </span>
                                 </td>
-
                                 <td class="px-6 py-4 text-sm">
                                     <span
                                         class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs rounded-lg">
