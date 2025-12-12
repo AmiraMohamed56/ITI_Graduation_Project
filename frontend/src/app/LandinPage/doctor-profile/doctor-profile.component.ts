@@ -61,10 +61,14 @@ export class DoctorProfileComponent implements OnInit {
     this.loading = true;
     this.doctorService.getDoctorById(id).subscribe({
       next: data => {
+              console.log("Doctor Data:", data);
+      console.log("Reviews:", data.reviews);  // 👈 هنا هتشوف شكل الريفيو
+
         this.doctor = data;
         this.loading = false;
       },
       error: () => {
+
         this.error = 'Error loading doctor profile.';
         this.loading = false;
       }
@@ -132,7 +136,7 @@ export class DoctorProfileComponent implements OnInit {
       patient_id: this.currentPatientId,
       doctor_id: this.doctor.id!,
       rating: this.reviewForm.rating,
-      comment: this.reviewForm.comment
+      comment: this.reviewForm.comment,
     };
 
     this.reviewService.createReview(review).subscribe({
@@ -158,4 +162,9 @@ export class DoctorProfileComponent implements OnInit {
   setRating(rating: number) {
     this.reviewForm.rating = rating;
   }
+  getRatingText(rating: number): string {
+  const texts = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+  return texts[rating];
+  }
+
 }
