@@ -1,9 +1,9 @@
 # 🏥 CareNova Clinic & Doctor Appointment Management System
 
-[![Laravel](https://img.shields.io/badge/Laravel-10.x-red.svg)](https://laravel.com)
-[![Angular](https://img.shields.io/badge/Angular-16.x-red.svg)](https://angular.io)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
+[![Angular](https://img.shields.io/badge/Angular-20.x-red.svg)](https://angular.io)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![PHP](https://img.shields.io/badge/PHP-8.1+-purple.svg)](https://php.net)
+[![PHP](https://img.shields.io/badge/PHP-8.4.13+-purple.svg)](https://php.net)
 
 A comprehensive, enterprise-grade web-based platform designed to revolutionize healthcare delivery by connecting patients, doctors, and administrators in a seamless digital ecosystem.
 
