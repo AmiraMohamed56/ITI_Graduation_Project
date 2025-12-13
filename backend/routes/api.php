@@ -17,15 +17,14 @@ use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\TestNotificationController;
 use App\Http\Controllers\Api\Payment\AppointmentsEndpointController;
 use App\Http\Controllers\Api\Payment\PaymentsEndpointController;
+use App\Http\Controllers\Api\PaymentController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 // Protected routes (authentication required)
-Route::middleware(['auth:sanctum'])->group(function () {
-
-});
+Route::middleware(['auth:sanctum'])->group(function () {});
 
 // Specialty routes
 Route::prefix('specialties')->group(function () {
@@ -69,10 +68,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead']);
         Route::delete('notifications/{id}', [NotificationsController::class, 'destroy']);
         Route::delete('notifications/all', [NotificationsController::class, 'destroyAll']);
-        
         // Test notification endpoint
         Route::post('notifications/test/create', [TestNotificationController::class, 'create']);
     });
+    // payment routs
+    Route::post('/payments', [PaymentController::class, 'store']);
+    // Route::get('/payment-info', [PaymentController::class, 'getAppointmentPaymentInfo']);
+    // Route::get('/payment/appointment-info', [PaymentController::class, 'getAppointmentPaymentInfo']);
+    Route::get('/payment/appointment-info', [PaymentController::class, 'getAppointmentPaymentInfo']);
 });
 
 // API Routes for Patient profile management - defined after specific routes to avoid conflicts
@@ -101,5 +104,7 @@ Route::get('/user/appointments', [AppointmentsEndpointController::class, 'index'
 // ========================= Appointment Endpoint End ==============================
 
 
+// Route::post('/payments', [ApiPaymentController::class, 'store']);
+// Route::get('/payments/appointment-info', [ApiPaymentController::class, 'getAppointmentPaymentInfo']);
 
 Route::post('/contacts', [ContactController::class, 'store']);

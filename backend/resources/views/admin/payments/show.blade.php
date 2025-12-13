@@ -69,6 +69,20 @@
                 </span>
         </div>
         <div><strong>Transaction id: </strong> {{ $payment->transaction_id }}</div>
+        @if($payment->payment_proof)
+    <div><strong>Payment Proof: </strong>
+        <a href="{{ $payment->payment_proof_url }}" target="_blank" class="text-blue-600 hover:underline">
+            View Proof
+        </a>
+        <div class="mt-2">
+            @if(Str::endsWith($payment->payment_proof, '.pdf'))
+                <embed src="{{ $payment->payment_proof_url }}" type="application/pdf" width="100%" height="500px" />
+            @else
+                <img src="{{ $payment->payment_proof_url }}" alt="Payment Proof" class="max-w-md rounded border">
+            @endif
+        </div>
+    </div>
+@endif
         <div><strong>Created at: </strong> {{ $payment->created_at->format('d-m-Y H:i:s') }}</div>
         <div><strong>Updated at: </strong>{{ $payment->updated_at->format('d-m-Y H:i:s') }}</div>
 
